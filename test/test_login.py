@@ -2,7 +2,7 @@ from io import StringIO
 import pytest
 import login
 
-tAdmin=StringIO("admin")
+tAdmin=StringIO("admi")
 tPass=StringIO("password")
 
 def test_enterUsername(monkeypatch):
