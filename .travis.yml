@@ -8,6 +8,6 @@ install:
   - pip install coveralls
   - pip install -r requirements.txt
 script:
-  - pytest --cov=test/
+  - pytest --cov=ml-frontend test/
 after_success:
   - coveralls
