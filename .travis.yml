@@ -8,7 +8,6 @@ install:
   - pip install coveralls
   - pip install -r requirements.txt
 script:
-  - python helloWorld.py
-  - py.test -v
+  - pytest --cov
 after_success:
   - coveralls
