@@ -8,28 +8,30 @@
 </head>
 <body>
     <main>
-        <div id = "canvasDiv"style="float:right; border: 2px solid black">
-            <canvas id="thecanvas" width="800" height="600" style="display:gird"></canvas>
-            
-        </div>
-       
-        <div id = "modelsDiv">
-            <label id = "modelLabels"for="models">Choose a Machine Learning Model:</label>
-             <select name="models" id="models">
-                <option value="None">None</option>
-                <option value="NB">Naive Bayes</option>
-                <option value="LR">Linear Regression</option>
-                </select>
-        </div>
+        <div class="flexbox-container-body">
+            <div id = "canvasDiv"style="float:right; border: 2px solid black">
+                <canvas id="thecanvas" width="800" height="600" style="display:gird"></canvas>
+                
+            </div>
+        
+            <div id = "modelsDiv" class="flexbox-item">
+                <label id = "modelLabels"for="models">Choose a Machine Learning Model:</label>
+                <select name="models" id="models">
+                    <option value="None">None</option>
+                    <option value="NB">Naive Bayes</option>
+                    <option value="LR">Linear Regression</option>
+                    </select>
+            </div>
 
-        <div id="uploadDiv">
-            <label id="dataUpload">Upload your data here:</label>
-            <form id="fileLoader" action="/action_page.php">
-                <input type="file" id="myFile" name="filename">
-                <input id="upload" type="submit">
-              </form>
-        </div>
-      
-       
+            <div id="uploadDiv" class="flexbox-item">
+                <label id="dataUpload">Upload your data here:</label>
+                <form id="fileLoader" action="/action_page.php">
+                    <input type="file" id="myFile" name="filename">
+                    <input id="upload" type="submit">
+                </form>
+            </div>
+          
+          
+        </div>   
     </main>
 </body>
