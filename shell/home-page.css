@@ -1,0 +1,53 @@
+html{
+ height: 100%;
+}
+body{
+  height: 100%;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  background-color: #3a3a3a;
+  
+}
+#canvasDiv{
+  padding-bottom: 10px;
+}
+#thecanvas{
+  padding-bottom: 10px;
+}
+#modelsDiv{
+  padding-top: 10px;
+  padding-bottom:10px;
+}
+
+#modelLabels{
+  color: aliceblue;
+  padding-top: 10px;
+}
+#models{
+  padding-right: 7px;
+}
+#uploadDiv{
+  padding-top: 10px;
+}
+#dataUpload{
+  padding-bottom: 10px;
+  padding-top: 10px;
+  color: aliceblue;
+}
+#fileLoader{
+  padding-bottom: 10px;
+  padding-top: 10px;
+  background-color:#3a3a3a;
+  cursor: pointer;
+ 
+}
+#myFile{
+  color:aliceblue;
+  cursor: pointer;
+}
+#upload{
+  cursor: pointer;
+}

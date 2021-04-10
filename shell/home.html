@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="home-page.css">
+    <script defer src="home-page.js"></script>
+</head>
+<body>
+    <main>
+        <div id = "canvasDiv"style="float:right; border: 2px solid black">
+            <canvas id="thecanvas" width="800" height="600" style="display:gird"></canvas>
+            
+        </div>
+       
+        <div id = "modelsDiv">
+            <label id = "modelLabels"for="models">Choose a Machine Learning Model:</label>
+             <select name="models" id="models">
+                <option value="None">None</option>
+                <option value="NB">Naive Bayes</option>
+                <option value="LR">Linear Regression</option>
+                </select>
+        </div>
+
+        <div id="uploadDiv">
+            <label id="dataUpload">Upload your data here:</label>
+            <form id="fileLoader" action="/action_page.php">
+                <input type="file" id="myFile" name="filename">
+                <input id="upload" type="submit">
+              </form>
+        </div>
+      
+       
+    </main>
+</body>
