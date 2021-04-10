@@ -6,10 +6,27 @@ body{
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
   background-color: #3a3a3a;
-  display: grid;
+  
+}
+main{
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
 }
-
+#helpBtn{
+  align-self: auto;
+  margin-bottom: 10px;
+  height: 40px;
+  width: 40px;
+  background: #ccc;
+  font-size: 32px;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 50%;
+  cursor: pointer;
+}
 
 .flexbox-container-body{
   display: flex;
@@ -33,6 +50,7 @@ body{
   padding-bottom: 10px;
 }
 #modelsDiv{
+  display: flex;
   padding-top: 10px;
   padding-bottom:10px;
 }
