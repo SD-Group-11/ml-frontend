@@ -6,7 +6,7 @@ const model_selector_div = document.getElementById("modelsDiv");
 const help_button = document.getElementById("helpBtn")
 
 graphics.strokeStyle ="White";
-graphics.translate(250,300);
+graphics.translate(190,230);
 graphics.scale(2,2);
 graphics.strokeText("Visualisation of Models will occur here.",0,0);
 
