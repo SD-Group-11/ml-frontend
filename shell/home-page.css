@@ -4,9 +4,9 @@ html{
 body{
   height: 100%;
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: lato;
   background-color: #3a3a3a;
-  
+  background: linear-gradient(120deg, #2980b9, #8e44ad); /*I like this background gradient */
 }
 main{
   display: flex;
@@ -18,6 +18,7 @@ main{
 #helpBtn{
   align-self: auto;
   margin-bottom: 10px;
+  margin-left: 750px;
   height: 40px;
   width: 40px;
   background: #ccc;
@@ -29,6 +30,7 @@ main{
 }
 
 .flexbox-container-body{
+  
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -36,7 +38,7 @@ main{
 }
 
 .flexbox-item{
-
+  
   min-width: auto;
   min-height: auto;
 
@@ -45,40 +47,41 @@ main{
 
 #canvasDiv{
   padding-bottom: 10px;
+  margin-top: 50px;
 }
 #thecanvas{
   padding-bottom: 10px;
+  color: white;
 }
 #modelsDiv{
   display: flex;
-  padding-top: 10px;
-  padding-bottom:10px;
+  padding-top: 5px;
+  padding-bottom:5px;
 }
 
 #modelLabels{
-  color: aliceblue;
-  padding-top: 10px;
+  color: white;
+  padding-top: 7px;
 }
 #models{
-  padding-right: 7px;
+  margin-top: 9px;
+  padding-right: 20px;
 }
 #uploadDiv{
-  padding-top: 10px;
+  padding-top: 5px;
 }
 #dataUpload{
-  padding-bottom: 10px;
-  padding-top: 10px;
-  color: aliceblue;
+  padding-top: 5px;
+  color: white;
 }
 #fileLoader{
-  padding-bottom: 10px;
   padding-top: 10px;
-  background-color:#3a3a3a;
+  
   cursor: pointer;
  
 }
 #myFile{
-  color:aliceblue;
+  color:white;
   cursor: pointer;
 }
 #upload{
