@@ -1,7 +1,8 @@
+
 html {
     height: 100%;
   }
-  
+
   body {
     margin: 0;
     padding: 0;
@@ -10,31 +11,164 @@ html {
     display: grid;
     justify-items: center;
     align-items: center; */
-    background: linear-gradient(120deg, #2980b9, #8e44ad); /*I like this background gradient */
+    background: white; /*I like this background gradient */
     height: 100vh;
     overflow: hidden;
 }
+
+
+/*class for animation and container*/
+.animation {
+    display: flex;
+    align-items: center;
+    margin-left: 40%;
+    margin-top: 7%;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    top: 150%
+    position: absolute;
+    animation: animate 5s linear infinite;
+    transform: rotate(45deg);
+}
+/*team name writing*/
+#name{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  text-align: center;
+  align-items: center;
+  margin-top: 0px;
+  font-size: 10px;
+  /*animation: textani 5s linear 1;*/
+  font-size: 30px;
+  color: black;
+  text-align: center;
+}
+
+/*creation of blocks for animation*/
+span {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    animation: rotate 5s linear infinite;
+}
+
+span:nth-child(1) {
+    top: 0;
+    left: 0;
+    background-color: #026670;
+}
+
+span:nth-child(2) {
+    top: 0;
+    right: 0;
+    background-color: #9fedd7;
+}
+
+span:nth-child(3) {
+    bottom: 0;
+    left: 0;
+    background-color: #fef9c7;
+}
+
+span:nth-child(4) {
+    bottom: 0;
+    right: 0;
+    background-color: #fce181;
+}
+
+/*animation loops*/
+@keyframes textani {
+    0% {
+
+    }
+    50% {
+        margin-top: 100px;
+        font-size: 20px;
+    }
+    100% {
+        margin-top: 200px;
+        font-size: 30px;
+    }
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    10% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(90deg);
+        background-color: #edeae5;
+    }
+    90% {
+        transform: rotate(90deg);
+    }
+    100% {
+        transform: rotate(90deg);
+    }
+}
+
+@keyframes animate {
+    0% {
+        width: 80px;
+        height: 80px;
+
+    }
+    10% {
+        width: 80px;
+        height: 80px;
+    }
+    50% {
+        width: 100px;
+        height: 100px;
+    }
+    90% {
+        width: 80px;
+        height: 80px;
+    }
+    100% {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+
 .center{ /* white block */
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -60%);
   width: 440px;
   background: white;
   border-radius:10px;
-  height: 55%;
+  border-style: solid;
+  border-width: 10px;
+  border-color: #edeae5;
+  height: 80%;
+  background: white;
+
 }
+
   #project-name{
       color: black;
       text-align: center;
       padding: 0 0 10px 0;
-      border-bottom:0.5px solid silver;
+      border-bottom:0.5px solid #026670;
+      color: #026670;
   }
   #login-header{
-    color:black;
+    color: #026670;
     text-align: center;
+    background-size: contain;
+    size:150%;
   }
-  
+
   #main-holder {
     width: 50%;
     height: 0%;
@@ -45,7 +179,7 @@ html {
     border-radius: 7px;
     box-shadow: 0px 0px 5px 2px black;
   }
-  
+
   #login-error-msg-holder {
     width: 100%;
     height: 100%;
@@ -54,7 +188,7 @@ html {
     justify-items: center;
     align-items: center;
   }
-  
+
   #login-error-msg {
     width: 30%;
     text-align: center;
@@ -68,55 +202,70 @@ html {
     /* background-color: #e58f8f; */
     opacity: 0;
   }
-  
-  #error-msg-second-line {
-    display: block;
-  }
-  
+
+
+
   #login-form {
     align-self: flex-start;
     display: grid;
     justify-items: center;
     align-items: center;
   }
-  
+
   .login-form-field::placeholder {
     color: #3a3a3a;
   }
-  
+
   .login-form-field {
     border: none;
     width: 45%;
-    border-bottom: 1px solid #3a3a3a;
+    height: 60%;
     margin-bottom: 10px;
-    border-radius: 3px;
-    outline: none;
+    border-radius: 6px;
     padding: 0px 0px 5px 5px;
+    border-style: inset;
+    border-color:  #edeaff;
   }
-  
+
+
+
+
   #login-form-submit {
     width: 50%;
+    height: 100%;
     padding: 7px;
     border: none;
     margin-top: 17px;
     border-radius: 15px;
     color: white;
     font-weight: bold;
-    background-color: #2691d9;
+    background-color: #026670;
     cursor: pointer;
     outline: none;
   }
+
+  #login-form-submit:hover{
+      background-color: #fce181;
+      color: black;
+  }
+
   #login-form-register{
     width: 50%;
+    height: 65%;
     padding: 7px;
     border: none;
-    margin-top: 15px;
+    margin-top: 30px;
     border-radius: 15px;
     color: white;
     font-weight: bold;
-    background-color: #2691d9;
+    background-color: #026670;
     cursor: pointer;
     outline: none;
+  }
+
+  #login-form-register:hover{
+      background-color: #fce181;
+      color: black;
   }
 
 #register-button{
