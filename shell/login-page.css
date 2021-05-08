@@ -189,6 +189,8 @@ span:nth-child(4) {
     border-radius: 15px;
     justify-items: center;
     align-items: center;
+    margin-top: -15px;
+    padding-bottom: 10px;
   }
 
   #login-error-msg {

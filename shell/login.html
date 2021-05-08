@@ -15,7 +15,7 @@
         <h2 id="login-header">Login</h2>
 
         <div id = "login-error-msg-holder">
-            <p id = "login-error-msg">Invalid username </br>and/or password</p>
+            <p id = "login-error-msg">Invalid username</p>
         </div>
 
         <form id="login-form">
@@ -68,8 +68,8 @@
                     window.location.href ="home.html";
                   }
                   else{
-                    loginErrorMsg.style.opacity = 1;
-                  }
+                    loginErrorMsg.innerHTML=res['response'];
+                    loginErrorMsg.style.opacity = 1;                  }
                 }
           })
         })
