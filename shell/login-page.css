@@ -11,7 +11,9 @@ html {
     display: grid;
     justify-items: center;
     align-items: center; */
-    background: white; /*I like this background gradient */
+    background:white;/*I like this background gradient */
+    background-size: auto;
+    background-image: url("trianglify-lowres.png");
     height: 100vh;
     overflow: hidden;
 }
@@ -125,8 +127,8 @@ span:nth-child(4) {
         height: 80px;
     }
     50% {
-        width: 100px;
-        height: 100px;
+        width: 115px;
+        height: 115px;
     }
     90% {
         width: 80px;
@@ -148,9 +150,9 @@ span:nth-child(4) {
   background: white;
   border-radius:10px;
   border-style: solid;
-  border-width: 10px;
-  border-color: #edeae5;
-  height: 80%;
+  border-width: 2px;
+  border-color: grey;
+  height: 85%;
   background: white;
 
 }
