@@ -8,6 +8,14 @@ install:
   #- pip install coveralls
   - pip install codecov
   - pip install -r requirements.txt
+services:
+  - postgresql
+before_script:
+  - psql -c 'create database ml-frontend;' -U postgres
+  - psql -c'alter database test owner to dev;' -U postgres
+
+env:       
+  -DJANGO=3.1.2 DB=postgresql   
 script:
   - pytest --cov=test/
 after_success:
