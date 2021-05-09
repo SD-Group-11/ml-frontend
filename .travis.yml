@@ -1,4 +1,4 @@
-language: python
+llanguage: python
 python:
   - "3.6"
 cache: pip
@@ -28,4 +28,3 @@ script:
 after_success:
   #- coveralls
   - codecov
-
