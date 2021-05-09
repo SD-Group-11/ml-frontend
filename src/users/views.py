@@ -43,7 +43,7 @@ def login_view(request):
 
         try:
 
-            user = User.objects.get(email=Email) ##get user by the email 
+            user = User.objects.get(email=Email) ##get user by the email  
             if(user):
                 if(user.password==Password):  ## if passwords match , allow login
                       data['response'] ="Valid user"

@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path,include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls,name='admin'),
     path('users/',include('users.urls')),  ## we include the urls from our users app because django looks at this file, then we redirect it to the apps urls file which has 
                                             ## the urls of our app and rest api.
 ]
