@@ -35,7 +35,7 @@ class TestViews(TestCase):
         #check wether the view returns a message saying that the user has been registered
         self.assertEquals(response.data['response'],'Successfully Registered')
         #check whether the new user has been added to the databases
-        self.assertEquals(User.objects.get(username='test').username, '')
+        self.assertEquals(User.objects.get(username='test').username, 'test')
 
     #test that a user is not added if no user data is given
     def test_user_registration_POST_no_data(self):  
