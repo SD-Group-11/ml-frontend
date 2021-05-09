@@ -13,7 +13,8 @@ html {
     align-items: center; */
     background:white;/*I like this background gradient */
     background-size: auto;
-    background-image: url("trianglify-lowres.png");
+    background-position: center;
+    background-image: url("background.jpeg");
     height: 100vh;
     overflow: hidden;
 }
