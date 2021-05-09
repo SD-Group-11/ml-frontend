@@ -14,7 +14,3 @@ after_success:
   #- coveralls
   - codecov
 
-branches:
-  only:
-  - maain
-  - unit_tests
