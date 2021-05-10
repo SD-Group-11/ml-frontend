@@ -18,7 +18,7 @@ def registration_view(request):
     
     if request.method =='POST':
         serializer = RegistrationSerializer(data=request.data)  ## We are just passing the data into a serializer we created which will perform all the validation checks
-        data={}                                                 ## such as valid email etc
+        data={}                                                 ## such as valid email etc 
 
         if serializer.is_valid():  ## this actually does the validation
             user = serializer.save()  ## save the user if all is good
