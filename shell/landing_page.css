@@ -16,7 +16,7 @@ body
 .Navbar
 {
     /*change colour here*/
-    background-image:url(../img/grey3.jpg);
+    background-image:url(grey3.jpg);
     text-align: center;
 }
 
@@ -62,7 +62,7 @@ rest of the drop downs are higlighted when you hover over them*/
     /*shows our sub menu*/
     display: block;
     position: absolute;
-    background-image: url(../img/grey3.jpg);
+    background-image: url(grey3.jpg);
     margin-top: 15px;
     margin-left: -15px;
 }
@@ -112,7 +112,7 @@ rest of the drop downs are higlighted when you hover over them*/
 
 #showcase
 {
-    background-image:url("../img/grey3.jpg"); 
+    background-image:url("grey3.jpg"); 
     /*this only places the image where the rest of the content is
     we want it on the whole window and to be able to scale w the window*/
     /*we want to cater for diff devices browsers etc*/
