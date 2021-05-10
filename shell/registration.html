@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration</title>
     <link rel="stylesheet" href="registration-page.css">
-	<script defer src="registration-page.js"></script>
+
 
 </head>
 
@@ -60,10 +60,9 @@
 
     <script>
         const registerButton = document.getElementById("register-button");
-        const register = document.getElementById("registration-form"); who dis
+        const register = document.getElementById("registration-form");
         const registrationErrorMsg = document.getElementById("registration-error-msg");
         const backButton = document.getElementById("registration-form-back");
-
         registerButton.addEventListener("click", (e) => {
         e.preventDefault();
           //fields I had
@@ -79,18 +78,23 @@
         $.ajax({
           type: 'POST',
           data: data,
-          url: 'http://127.0.0.1:8000/users/registration',
+          url: 'http://127.0.0.1:8000/users/register',
           dataType : "json",
           success: function(res){
 
-                  console.log(res['response']);
-                  if (res['response'] == 'Valid Registration.'){
+                  console.log(res[Object.keys(res)[0]] );
+                  if (res[Object.keys(res)[0]] == 'Successfully Registered'){
                     window.location.href ="landing_page.html";
                   }
                   else{
-                    loginErrorMsg.innerHTML=res['response'];
-                    loginErrorMsg.style.opacity = 1;                  }
-                }
+                    registrationErrorMsg.innerHTML=res[Object.keys(res)[0]];
+                    registrationErrorMsg.style.opacity = 1;                  }
+                },
+          error: function(res){
+            console.log(res);
+            registrationErrorMsg.innerHTML=res['responseJSON']['response'];
+                    registrationErrorMsg.style.opacity = 1;    
+          }
           })
         })
 
