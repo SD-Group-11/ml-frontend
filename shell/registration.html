@@ -3,30 +3,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration</title>
-    <link rel="stylesheet" href="registration.css">
-    <script defer src="registration.js"></script>
+    <link rel="stylesheet" href="registration-page.css">
+	<script defer src="registration-page.js"></script>
+
 </head>
 
-
 <body>
+  <p id=name>Intelligent Skills Exception<p>
   <div class = "center">
     <main>
-        <h1 id="heading">Machine Learning Frontend</h1>
-        <h2 id = "registration-header">Registration</h2>
-        
-        <div id ="registration-error-msg-holder">
-            <p id="registration-error-msg">Username already exists.<span id="registration-error-secondline">Please select a new username.</span></p>
+        <h1 id = "project-name">Machine Learning Frontend</h1>
+        <h2 id="registration-header">Registration</h2>
+
+        <div id = "registration-error-msg-holder">
+            <p id = "registration-error-msg">Invalid registration.</p>
         </div>
 
         <form id="registration-form">
-            <input type="text" name="username" id="register-email" class="registration-form" placeholder="Username or Email">
-            <input type="password"name="password" id="register-password" class="registration-form" placeholder="Password">
-            <input type ="submit" id="register-button">
+          <input type="text" name="first_name" id="first_name-field" class="registration-form-field" placeholder="Name">
+          <input type="text" name="last_name" id="last_name-field" class="registration-form-field" placeholder="Surname">
+          <input type="text" name="username" id="username-field" class="registration-form-field" placeholder="Username">
+          
+            <input type="text" name="mail" id="mail-field" class="registration-form-field" placeholder="E-mail">
+            <input type="password" name="password" id="password-field" class="registration-form-field" placeholder="Password">
+          <input type="password" name="password2" id="password-field" class="registration-form-field" placeholder="Confirm Password">
+          
+          
+       <input type="submit" value="Register" id="register-button" >
+          <input type="submit" value="Go Back" id="registration-form-back" >
+		  
+          
+          </form>
+		  
+         
+		  
+          <div class="closer">
+            <div class="animation" id="animation1">
 
-        </form>
-      
-      <input type ="back" id="back-button" placeholder= "← Go Back">
-
-
+                    <div class="container">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                  </div>
+                </div>
     </main>
+
+        </div>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous">
+    </script>
+
+    <script>
+        const registerButton = document.getElementById("register-button");
+        const register = document.getElementById("registration-form"); who dis
+        const registrationErrorMsg = document.getElementById("registration-error-msg");
+        const backButton = document.getElementById("registration-form-back");
+
+        registerButton.addEventListener("click", (e) => {
+        e.preventDefault();
+          //fields I had
+        const email = register.mail.value;
+        const password = register.password.value;
+        const password2 = register.password2.value;
+          //new fields
+        const username = register.username.value;
+        const first_name = register.first_name.value;
+        const last_name = register.last_name.value;
+        var data = {email:email,password:password,password2:password2, username:username,first_name:first_name, last_name:last_name};
+
+        $.ajax({
+          type: 'POST',
+          data: data,
+          url: 'http://127.0.0.1:8000/users/registration',
+          dataType : "json",
+          success: function(res){
+
+                  console.log(res['response']);
+                  if (res['response'] == 'Valid Registration.'){
+                    window.location.href ="home.html";
+                  }
+                  else{
+                    loginErrorMsg.innerHTML=res['response'];
+                    loginErrorMsg.style.opacity = 1;                  }
+                }
+          })
+        })
+
+
+        //go back to home page
+        backButton.addEventListener("click", (e) => {
+
+          e.preventDefault();
+
+          window.location.href ="login.html";
+
+        })
+
+    </script>
 </body>
