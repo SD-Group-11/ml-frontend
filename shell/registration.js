@@ -29,12 +29,15 @@ registerButton.addEventListener("click", (e) => {
         registrationErrorMsg.style.opacity = 1;
     }
     else{ //successful registration, above cases didnt run
-      
-	if (username == "user" && password == "web_dev") 
+    
          window.location.href = "landing_page.html";
         
     }
   
+    if (username == "user" && password == "web_dev"){
+         window.location.href = "landing_page.html";
+    }
+	
     if (username == "user"){ //shortcut - remove later
       window.location.href = "landing_page.html";
     }
