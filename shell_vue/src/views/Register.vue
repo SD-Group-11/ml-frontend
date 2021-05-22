@@ -94,9 +94,7 @@
                                 >
                             </div>
                         </div>
-                        <div class="notification is-danger" v-if="errors.length">
-                            <p v-for="pass_error in errors" v-bind:key="pass_error">{{ error }}</p>
-                        </div>
+                        
 
                         <div class="field has-text-centered">
                             <div class="control">
