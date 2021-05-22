@@ -2,8 +2,6 @@
 shell_vue/node_modules/
 shell_vue/dist/
 
-shell_vue/public/
-
 
 # local env files
 .env.local
