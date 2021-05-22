@@ -132,7 +132,6 @@
 </template>
 
 
-
 <style scoped>
     @import '../assets/styles/rotatingSquares.css';  
       
