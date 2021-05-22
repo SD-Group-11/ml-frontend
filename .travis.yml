@@ -5,10 +5,8 @@ cache: pip
 install:
   - pip install pytest
   - pip install pytest-cov
-  #- pip install coveralls
   - pip install codecov
   - pip install -r requirements.txt
-
   
 services:
   - postgresql
@@ -16,7 +14,6 @@ before_script:
   #- psql -c 'create database ml_frontend;' -U postgres
   - psql -c 'create role dev login superuser;' -U postgres
   #- psql -c 'alter database ml_frontend owner to dev;' -U postgres
-  
 
 env:       
   -DJANGO=3.2 DB=postgresql   
