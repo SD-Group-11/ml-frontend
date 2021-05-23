@@ -1,9 +1,13 @@
 <template>
-    <nav class="navbar  is-warning " role="navigation" aria-label="dropdown navigation">
+    <nav class="navbar is-warning " role="navigation" aria-label="dropdown navigation">
         <div class="navbar-brand">
             <a class="navbar-item" href="http://getdrawings.com/confused-icon">
                 <img src="@/assets/images/confused-icon-6.png" alt="Logo">
             </a>
+            
+
+            
+            
             
         </div>
 
@@ -66,14 +70,14 @@
 
                         <div class="navbar-dropdown">
                             <a class="navbar-item">
-                                Decision Trees
+                                <router-link to="/decision-trees" class="navbar-item">Decision Trees</router-link>
                             </a>
                             <a class="navbar-item">
                                 Naive Bayes
                             </a>
-                                
-                                <router-link to="/models/linear-regression" class="navbar-item"><strong>Linear Regression</strong></router-link>
-                            
+                            <a class="navbar-item">
+                                <router-link to="/linear-regression" class="navbar-item">Linear Regression</router-link>
+                            </a>
                             <a class="navbar-item">
                                 Logistic Regression
                             </a>
