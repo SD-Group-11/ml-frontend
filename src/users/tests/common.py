@@ -19,15 +19,14 @@ Token = djoser_settings.TOKEN_MODEL
 
 def create_user(use_custom_data=False, **kwargs):
     data = (
-        {"first_name": "Johnny","last_name":"Test","username": "jt", "password": "secret","re_password": "secret", "email": "john@test.com"}
-
+        {"first_name": "Johnny","last_name":"Test","username": "jt", "password": "5ecret@$123", "email": "john@test.com"}    
+        
         if not use_custom_data
         else {
             "first_name": "Johnny",
             "last_name":"Test",
             "username": "jt",
-            "password": "secret",
-            "re_password": "secret",
+            "password": "5ecret@$123",
             "email": "john@test.com"
         }
     )
