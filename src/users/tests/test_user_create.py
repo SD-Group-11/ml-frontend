@@ -105,6 +105,7 @@ class UserCreateViewTest(
 
         self.assert_status_equal(response, status.HTTP_400_BAD_REQUEST)
         response.render()
+        
         self.assertEqual(response.data["last_name"][0].code, "required")
 
 
