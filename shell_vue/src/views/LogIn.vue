@@ -14,7 +14,7 @@
                         <div class="control">
                             <input type="email" name="email" placeholder="enter your email address..." class="input" v-model="email">
                         </div>
-                        <p class="help is-danger">This email is invalid</p>
+                        
 
                     </div>
 

@@ -20,7 +20,13 @@
                                             v-model="first_name"
                                         >
                                     </div>
+                                    <p class="help is-danger" v-if="field_errors.first_name">
+                                        {{field_errors.first_name}}
+                                    </p>
                                 </div>
+                                
+                                
+            
                             </div>
 
                             
@@ -36,6 +42,9 @@
                                             v-model="last_name"
                                         >
                                     </div>
+                                    <p class="help is-danger" v-if="field_errors.last_name">
+                                        {{field_errors.last_name}}
+                                    </p>
                                 </div>
                             </div>
 
@@ -53,13 +62,16 @@
                                     v-model="username"
                                 >
                             </div>
+                            <p class="help is-danger" v-if="field_errors.username">
+                                {{field_errors.username}}
+                            </p>
                         </div>
                         
                         <div class="field">
                             <label>Email</label>
                             <div class="control ">
                                 <input
-                                    type="email"
+                                    type="text"
                                     name="email"
                                     placeholder="enter your email address..."
                                     class="input"
@@ -67,6 +79,12 @@
                                 >
                                 
                             </div>
+                            <p class="help is-danger" v-if="field_errors.email">
+                                {{field_errors.email}}
+                            </p>
+                            <p class="help is-danger" v-for="email_error in email_errors" v-bind:key="email_error">{{ email_error }}</p>
+
+
                         </div>       
 
                         <div class="field">
@@ -80,6 +98,14 @@
                                 v-model="password1"
                                 >
                             </div>
+                            <p class="help is-danger" v-if="field_errors.password">
+                                {{field_errors.password}}
+                            </p>
+
+                            <p class="help is-danger" v-if="password_errors.length">
+                                {{field_errors.password}}
+                            </p>
+                            
                         </div>
 
                         <div class="field">
@@ -93,6 +119,10 @@
                                 v-model="password2"
                                 >
                             </div>
+                            <p class="help is-danger" v-if="field_errors.password_confirm">
+                                {{field_errors.password_confirm}}
+                            </p>
+                            <p class="help is-danger" v-for="password_error in password_errors" v-bind:key="password_error">{{ password_error }}</p>
                         </div>
                         
 
@@ -102,6 +132,7 @@
                             </div>
                         </div>
 
+                        
                         <div class="notification is-danger" v-if="errors.length">
                             <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
                         </div>
@@ -153,44 +184,57 @@
                 email:'',
                 password1:'',
                 password2:'',
-                errors:[]
+                errors:[],
+                field_errors:{},
+                password_errors:[],
+                email_errors:[],
 
             }
         },
         methods: {
             async submitForm(){
                 this.errors=[]
+                this.field_errors={}
+                this.password_errors=[]
+                this.email_errors=[]
                 if (this.first_name === '') {
-                    this.errors.push('Please enter your first name.')
+                    //this.errors.push('Please enter your first name.')
+                    this.field_errors['first_name']='Please enter your first name.'
                 }
                 if (this.last_name === '') {
-                    this.errors.push('Please enter your last name.')
+                    //this.errors.push('Please enter your last name.')
+                    this.field_errors['last_name']='Please enter your last name.'
                 }
 
                 if (this.username === '') {
-                    this.errors.push('Please enter a username.')
+                    //this.errors.push('Please enter a username.')
+                    this.field_errors['username']='Please enter a username.'
                 }
 
                 if (this.email === '') {
-                    this.errors.push('Please enter a valid email address.')
+                    //this.errors.push('Please enter a valid email address.')
+                    this.field_errors['email']='Please enter a email address.'
                 }
 
                 if (this.password1 === '') {
-                    this.errors.push('Please enter a password.')
+                    //this.errors.push('Please enter a password.')
+                    this.field_errors['password']='Please enter a password.'
                 }
                 else{
                     if (this.password2 === '') {
-                        this.errors.push('Please confirm the password.')
+                        //this.errors.push('Please confirm the password.')
+                        this.field_errors['password_confirm']='Please confirm the password.'
                     }
                     else{
                         if (this.password1 !== this.password2) {
-                            this.errors.push('The entered passwords do not match.')
+                            //this.errors.push('The entered passwords do not match.')
+                            this.field_errors['password_mismatch']='The entered passwords do not match.'
                         }
                     }
                 }
                 
 
-                if (!this.errors.length) {
+                if (!this.errors.length && !Object.keys(this.field_errors).length) {
                     this.$store.commit('setIsLoading', true)
                     
                     const formData = {
@@ -220,7 +264,32 @@
                         .catch(error => {
                             if (error.response) {
                                 for (const property in error.response.data) {
-                                    this.errors.push(`${property}: ${error.response.data[property]}`)
+                                    
+                                    
+                                    if(property==='password'){
+                                        
+                                        for (var i = 0; i < error.response.data[property].length; i++){
+                                            this.password_errors.push(error.response.data[property][i])   
+                                        }
+                                           
+                                    }
+                                    else if(property==='email'){
+                                        
+                                        for (var i = 0; i < error.response.data[property].length; i++){
+                                            if(error.response.data[property][i]=='Enter a valid email address.'){
+                                                this.email_errors.push('Please enter a valid email address')    
+                                            }
+                                            else{
+                                                this.email_errors.push(error.response.data[property][i]) 
+                                            }
+                                              
+                                        }
+                                           
+                                    }
+                                    else{
+                                        this.errors.push(`${property}: ${error.response.data[property]}`)
+                                    }
+
                                 }
                                 console.log(this.errors)
                             } else if (error.message) {
