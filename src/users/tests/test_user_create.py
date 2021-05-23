@@ -95,7 +95,7 @@ class UserCreateViewTest(
     #         [default_settings.CONSTANTS.messages.CANNOT_CREATE_USER_ERROR],
     #     )
     
-    
+    # Abacus
 
     # # @mock.patch("users.serializers.UserSerializer", User)
     # # @mock.patch("users.serializers.UserCreatePasswordRetypeSerializer.Meta.model", User)
