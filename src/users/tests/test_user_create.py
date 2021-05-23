@@ -21,9 +21,9 @@ class UserCreateViewTest(
         self.base_url = reverse("user-list") 
 
 
-    # @mock.patch("users.serializers.UserSerializer", User)
-    # @mock.patch("users.serializers.UserCreatePasswordRetypeSerializer.Meta.model", User)
-    # @mock.patch("djoser.views.User", User)
+    @mock.patch("users.serializers.UserSerializer", User)
+    @mock.patch("users.serializers.UserCreatePasswordRetypeSerializer.Meta.model", User)
+    @mock.patch("djoser.views.User", User)
 
     def test_user_create_with_retype_password(self):
         data = {"first_name": "Johnny","last_name":"Test","username": "jt", "password": "5ecret@$123", "re_password": "5ecret@$123", "email": "john@test.com"}
@@ -95,7 +95,6 @@ class UserCreateViewTest(
     #         [default_settings.CONSTANTS.messages.CANNOT_CREATE_USER_ERROR],
     #     )
     
-    # Abacus
 
     # # @mock.patch("users.serializers.UserSerializer", User)
     # # @mock.patch("users.serializers.UserCreatePasswordRetypeSerializer.Meta.model", User)
