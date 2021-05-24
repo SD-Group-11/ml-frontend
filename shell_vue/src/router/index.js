@@ -3,8 +3,11 @@ import { createRouter, createWebHistory } from 'vue-router'
 import store from '../store'
 
 import Home from '../views/Home.vue'
+import FAQ from '../views/FAQ.vue'
+import GettingStarted from '../views/GettingStarted.vue'
 import Register from '../views/Register.vue'
 import LogIn from '../views/LogIn.vue'
+
 
 import ForgotPassword from '../views/ForgotPassword.vue'
 import ResetPassword from '../views/ResetPassword.vue'
@@ -19,6 +22,16 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/faq',
+    name: 'FAQ',
+    component: FAQ
+  },
+  {
+    path: '/getting-started',
+    name: 'GettingStarted',
+    component: GettingStarted
   },
   {
     path: '/register',

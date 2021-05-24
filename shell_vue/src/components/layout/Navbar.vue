@@ -28,10 +28,10 @@
 
                     <div class="navbar-dropdown ">
                         <a class="navbar-item is-danger">
-                            Getting Started
+                             <router-link to="/getting-started" class="navbar-item">Getting Started</router-link> 
                         </a>
                         <a class="navbar-item">
-                            FAQ
+                             <router-link to="/faq" class="navbar-item">FAQ</router-link> 
                         </a>
                     </div>
                 </div>
