@@ -5,10 +5,6 @@
                 <img src="@/assets/images/confused-icon-6.png" alt="Logo">
             </a>
             
-
-            
-            
-            
         </div>
 
         <div class="navbar-menu">
