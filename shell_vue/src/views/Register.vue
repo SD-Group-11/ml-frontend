@@ -102,9 +102,6 @@
                                 {{field_errors.password}}
                             </p>
 
-                            <p class="help is-danger" v-if="password_errors.length">
-                                {{field_errors.password}}
-                            </p>
                             
                         </div>
 
@@ -122,7 +119,9 @@
                             <p class="help is-danger" v-if="field_errors.password_confirm">
                                 {{field_errors.password_confirm}}
                             </p>
+
                             <p class="help is-danger" v-for="password_error in password_errors" v-bind:key="password_error">{{ password_error }}</p>
+                        
                         </div>
                         
 
@@ -228,7 +227,7 @@
                     else{
                         if (this.password1 !== this.password2) {
                             //this.errors.push('The entered passwords do not match.')
-                            this.field_errors['password_mismatch']='The entered passwords do not match.'
+                            this.field_errors['password_confirm']='The entered passwords do not match.'
                         }
                     }
                 }
@@ -255,7 +254,7 @@
                                 type: 'is-warning',
                                 dismissible: true,
                                 pauseOnHover: true,
-                                duration: 2000,
+                                duration: 3000,
                                 position: 'bottom-right',
                             })
 

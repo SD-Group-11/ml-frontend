@@ -21,6 +21,12 @@
                                 v-model="password1"
                                 >
                             </div>
+
+                            <p class="help is-danger" v-if="field_errors.password">
+                                {{field_errors.password}}
+                            </p>
+
+
                         </div>
 
                         <div class="field">
@@ -34,6 +40,13 @@
                                 v-model="password2"
                                 >
                             </div>
+                            
+                            <p class="help is-danger" v-if="field_errors.password_confirm">
+                                {{field_errors.password_confirm}}
+                            </p>
+
+                            <p class="help is-danger" v-for="password_error in password_errors" v-bind:key="password_error">{{ password_error }}</p>
+                        
                         </div>
 
 
@@ -90,32 +103,38 @@
             return{
                 password1:'',
                 password2:'',
-                errors:[]
+                errors:[],
+                field_errors:{},
+                password_errors:[],
 
             }
         },
         methods: {
             async submitForm(){ 
                 
-
                 this.errors=[]
+                this.field_errors={}
+                this.password_errors=[]
 
                 if (this.password1 === '') {
-                    this.errors.push('Please enter a password.')
+                    //this.errors.push('Please enter a password.')
+                    this.field_errors['password']='Please enter a new password.'
                 }
                 else{
                     if (this.password2 === '') {
-                        this.errors.push('Please confirm the password.')
+                        //this.errors.push('Please confirm the password.')
+                        this.field_errors['password_confirm']='Please confirm the new password.'
                     }
                     else{
                         if (this.password1 !== this.password2) {
-                            this.errors.push('The entered passwords do not match.')
+                            //this.errors.push('The entered passwords do not match.')
+                            this.field_errors['password_confirm']='The entered passwords do not match.'
                         }
                     }
                 }
 
 
-                if (!this.errors.length) {
+                if (!this.errors.length && !Object.keys(this.field_errors).length) {
                     this.$store.commit('setIsLoading',true)
 
                     const formData = {
@@ -137,7 +156,7 @@
                                 type: 'is-warning',
                                 dismissible: true,
                                 pauseOnHover: true,
-                                duration: 2000,
+                                duration: 3000,
                                 position: 'bottom-right',
                             })
 
@@ -145,7 +164,18 @@
                         .catch(error => {
                                 if (error.response) {
                                     for (const property in error.response.data) {
-                                        this.errors.push(`${property}: ${error.response.data[property]}`)
+                                        
+                                        
+                                        if(property==='new_password'){
+                                        
+                                            for (var i = 0; i < error.response.data[property].length; i++){
+                                                this.password_errors.push(error.response.data[property][i])   
+                                            }
+                                        }
+                                        else{
+                                            this.errors.push(`${property}: ${error.response.data[property]}`)
+                                        }
+                                           
                                     }
                                 } else if (error.message) {
                                     this.errors.push('Something went wrong. Please try again!')

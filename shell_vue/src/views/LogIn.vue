@@ -12,8 +12,12 @@
                     <div class="field">
                         <label>Email</label>
                         <div class="control">
-                            <input type="email" name="email" placeholder="enter your email address..." class="input" v-model="email">
+                            <input type="text" name="email" placeholder="please enter your email address..." class="input" v-model="email">
                         </div>
+                        <p class="help is-danger" v-if="field_errors.email">
+                                {{field_errors.email}}
+                        </p>
+
                         
 
                     </div>
@@ -21,8 +25,12 @@
                     <div class="field">
                         <label>Password</label>
                         <div class="control">
-                            <input type="password" name="password" placeholder="enter your password..." class="input" v-model="password">
+                            <input type="password" name="password" placeholder="please enter your account password..." class="input" v-model="password">
                         </div>
+                        <p class="help is-danger" v-if="field_errors.password">
+                            {{field_errors.password}}
+                        </p>
+
                     </div>
 
 
@@ -100,24 +108,29 @@
             return{
                 email:'',
                 password:'',
-                errors:[]
+                errors:[],
+                field_errors:{},
+
 
             }
         },
         methods: {
             async submitForm(){ 
-                
-
                 this.errors=[]
+                this.field_errors={}
+
                 if (this.email === '') {
-                    this.errors.push('Please your email address.')
+                    //this.errors.push('Please enter your account email.')
+                    this.field_errors['email']='Please enter your account email.'
                 }
+                    
                 if (this.password === '') {
-                    this.errors.push('Please enter your password.')
+                    //this.errors.push('Please enter your password.')
+                    this.field_errors['password']='Please enter your account password.'
                 }
 
 
-                if (!this.errors.length) {
+                if (!this.errors.length && !Object.keys(this.field_errors).length) {
                     this.$store.commit('setIsLoading',true)
 
                     
@@ -149,15 +162,25 @@
                                 type: 'is-warning',
                                 dismissible: true,
                                 pauseOnHover: true,
-                                duration: 2000,
+                                duration: 3000,
                                 position: 'bottom-right',
                             })
 
                         })
                         .catch(error => {
                                 if (error.response) {
+                                    
                                     for (const property in error.response.data) {
-                                        this.errors.push(`${property}: ${error.response.data[property]}`)
+                                        //
+                                        //non_field_errors: Unable to log in with provided credentials.
+                                        if(property==='non_field_errors' && error.response.data[property][0]=='Unable to log in with provided credentials.'){
+                                            this.errors.push(error.response.data[property][0])
+                                        }
+
+                                        else{
+                                            this.errors.push(`${property}: ${error.response.data[property]}`)
+                                        }
+                                           
                                     }
                                     
                                 } else if (error.message) {
