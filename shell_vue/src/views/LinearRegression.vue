@@ -62,6 +62,15 @@
                     .then(response => {
                         this.details=response.data
                         console.log(response)
+
+                        toast({
+                                message: 'Upload a CSV file where the first column is No (this indicates the row number) and the last column must be the targets/categories.',
+                                type: 'is-warning',
+                                dismissible: true,
+                                pauseOnHover: true,
+                                duration: 2000000,
+                                position: 'bottom-right',
+                            })
                     })
                     .catch(error => {
                         console.log(error)
