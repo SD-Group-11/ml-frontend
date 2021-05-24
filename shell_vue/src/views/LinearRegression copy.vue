@@ -12,33 +12,20 @@
 
             <div class="column is-multiline">
 
-            
-
                 <!-- <div class="column">
                     <div class="control" >
         
                         <h1 class="title is-1 has-text-centered" style=" background-color:lightblue; border-radius:200px"><strong>Linear Regression</strong></h1>
                     </div>
                 </div> -->
-            <div class="column"> 
-            
-
-            </div>
 
             <div class="column">    
 
             <div class="columns is-multiline is-mobile">
                 <div class="column is-half">
                     <div class="box" style="background-color:lightyellow;" >
-                        <div class="control">
+        
                         <h2 class="title is-3"> Upload Your CSV file here!</h2>
-                        
-                        <h3> 1) Click on "Choose File" <br>
-                        2) Select a .csv file from your local device.<br>
-                        3) Click on "Submit" when it appears<br>
-                        4) Wait and let the magic happen!<br>
-                        </h3>
-                    </div>
                         <!-- <form @submit.prevent="submitForm" style="background-color:lightgrey; border-radius:50px"> -->
                         <form @submit.prevent="submitForm" >
 
@@ -82,27 +69,6 @@
                     </div>
                 </div>
 
-                <div class="column is-full is-warning has-text-centered" v-if="uploaded">
-                    <h2 class="title is-3 has-text-centered">Enter Hyperparameters</h2>
-                    <div class="box" style="background-color:lightyellow;">
-                     <div class="field">
-                            <label class="label">Learning Rate</label>
-                            <div class="control">
-                                <input class="input" type="text" placeholder="0.01">
-                            </div>
-                            </div>
-
-                            <div class="field">
-                            <label class="label">Tolerance</label>
-                            <div class="control">
-                                <input class="input" type="email" placeholder="0.5">
-                            </div>
-                            </div>
-                            
-                         
-                    </div>
-                </div>
-
             </div>
             </div>
         </div>
@@ -124,7 +90,6 @@
                 SummaryData: [],
                 uploadedName: '',
                 uploadable: false,
-                uploaded: false,
             }
         },
         mounted(){
@@ -145,8 +110,8 @@
                                 type: 'is-warning',
                                 dismissible: true,
                                 pauseOnHover: true,
-                                duration: 50000,
-                                position: 'bottom-center',
+                                duration: 2000,
+                                position: 'bottom-right',
                             })
                     })
                     .catch(error => {
@@ -175,7 +140,6 @@
                         var Type;
                         if (resp == 'Data Uploaded Successfully'){
                             Type = 'is-warning';
-                            this.uploaded=true;
                             var filename = file.name;
                             var id=  this.details.id;
                             var data ={"id":id,"filename":filename}
@@ -185,9 +149,7 @@
                                 this.$refs.para.innerText="File Name:"+ this.SummaryData.filename +"\nNumber of data points:"+this.SummaryData.datapoints+" \nNumber of Columns:"+this.SummaryData.columns;
                             });
                         }
-                        
                         else{
-                            this.uploaded=false;
                             Type = 'is-danger';
                         }
                         toast({

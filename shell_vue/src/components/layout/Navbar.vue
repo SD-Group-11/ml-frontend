@@ -69,21 +69,24 @@
                         </a>
 
                         <div class="navbar-dropdown">
+                            <!--
                             <a class="navbar-item">
                                 <router-link to="/decision-trees" class="navbar-item">Decision Trees</router-link>
                             </a>
+                            -->
+                            <router-link to="/linear-regression" class="navbar-item">Linear Regression</router-link>
                             <a class="navbar-item">
                                 Naive Bayes
                             </a>
-                            <a class="navbar-item">
-                                <router-link to="/linear-regression" class="navbar-item">Linear Regression</router-link>
-                            </a>
+                                
+                            <!--
                             <a class="navbar-item">
                                 Logistic Regression
                             </a>
                             <a class="navbar-item">
                                 Neural Networks
                             </a>
+                            -->
                         </div>
                     </div>
 
