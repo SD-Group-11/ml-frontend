@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     # any app you  make needs to be added here so that django actually uses it and all it's files
     'users',
     'datasets',
+    'LinearRegression',
     
 ]
 
