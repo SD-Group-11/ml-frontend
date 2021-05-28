@@ -28,6 +28,7 @@ urlpatterns = [
     path('api/v1/', include('djoser.urls')),
     path('api/v1/', include('djoser.urls.authtoken')),
     path('datasets/',include('datasets.urls')),
+    path('LinearRegression/', include('LinearRegression.urls')),
 
 ]
 
