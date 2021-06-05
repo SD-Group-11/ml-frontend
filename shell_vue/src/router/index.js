@@ -16,7 +16,9 @@ import Dashboard from '../views/dashboard/Dashboard.vue'
 import MyAccount from '../views/dashboard/MyAccount.vue'
 
 import DecisionTrees from '../views/DecisionTrees.vue'
-import LinearRegression from '../views/LinearRegression.vue'
+import LinearRegression from '../views/mlModels/LinearRegression.vue'
+import LinearRegressionDatasets from '../views/mlModels/LinearRegressionDatasets.vue'
+
 const routes = [
   {
     path: '/',
@@ -80,13 +82,26 @@ const routes = [
   {
     path: '/decision-trees',
     name: 'DecisionTrees',
-    component: DecisionTrees
-
+    component: DecisionTrees,
+    meta: {
+      requireLogin: true
+    }
   },
   {
     path: '/linear-regression',
     name: 'LinearRegression',
-    component: LinearRegression
+    component: LinearRegression,
+    meta: {
+      requireLogin: true
+    }
+  },
+  {
+    path: '/linear-regression-datasets',
+    name: 'LinearRegressionDatasets',
+    component: LinearRegressionDatasets,
+    meta: {
+      requireLogin: true
+    }
   }
 ]
 
