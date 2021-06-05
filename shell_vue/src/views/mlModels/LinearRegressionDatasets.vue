@@ -1,12 +1,9 @@
 <template>   
-    
-
-    
     <div class="container">
 
             <section class="hero" style=" background-color:lightblue">
                 <div class="hero-body">
-                    <h1 class="title is-1 has-text-centered" style=" background-color:lightblue; border-radius:200px"><strong>Linear Regression</strong></h1>
+                    <h1 class="title is-1 has-text-centered" style=" background-color:lightblue; border-radius:200px"><strong>Linear Regression Datasets</strong></h1>
                 </div>
             </section>
 
@@ -145,7 +142,7 @@
                                 type: 'is-warning',
                                 dismissible: true,
                                 pauseOnHover: true,
-                                duration: 50000,
+                                duration: 5000,
                                 position: 'bottom-center',
                             })
                     })

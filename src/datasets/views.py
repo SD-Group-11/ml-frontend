@@ -50,7 +50,6 @@ def receiveData(request):
     
     resp['response'] ='Failed to upload data'
     
-        
 
     return Response(resp)
 

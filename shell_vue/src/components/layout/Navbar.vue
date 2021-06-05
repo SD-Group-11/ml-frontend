@@ -19,7 +19,7 @@
 
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
-                        Info
+                        Guide
                     </a>
 
                     <div class="navbar-dropdown ">
@@ -45,6 +45,34 @@
                     </div>
                 </div>
 
+
+                <template v-if="$store.state.isAuthenticated">
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                            Linear Regression
+                        </a>
+
+                        <div class="navbar-dropdown">
+                            <router-link to="/linear-regression" class="navbar-item">Train Model</router-link>
+                            <router-link to="/linear-regression-datasets" class="navbar-item">Manage Datasets</router-link>
+
+                        </div>
+                    </div>
+
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                            Naive Bayes
+                        </a> 
+                        <div class="navbar-dropdown">
+                            <a class="navbar-item">
+                                Coming Soon...
+                            </a>    
+                        </div>  
+                    </div>
+
+
+                </template>
+
             </div>
 
             <div class="navbar-end">
@@ -59,33 +87,7 @@
                 </template>
 
                 <template v-else>
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link">
-                            Models
-                        </a>
-
-                        <div class="navbar-dropdown">
-                            <!--
-                            <a class="navbar-item">
-                                <router-link to="/decision-trees" class="navbar-item">Decision Trees</router-link>
-                            </a>
-                            -->
-                            <router-link to="/linear-regression" class="navbar-item">Linear Regression</router-link>
-                            <a class="navbar-item">
-                                Naive Bayes
-                            </a>
-                                
-                            <!--
-                            <a class="navbar-item">
-                                Logistic Regression
-                            </a>
-                            <a class="navbar-item">
-                                Neural Networks
-                            </a>
-                            -->
-                        </div>
-                    </div>
-
+                    
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
                             My Account

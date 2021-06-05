@@ -22,7 +22,7 @@ class User(AbstractUser):
     # notice the absence of a "Password field", that is built in.
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username','first_name','last_name','date_joined'] # Email & Password are required by default.
+    REQUIRED_FIELDS = ['username','first_name','last_name'] # Email & Password are required by default.
 
     def __str__(self):
         return self.email
