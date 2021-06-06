@@ -10,6 +10,7 @@ import re
 import numpy as np
 import pandas as pd
 import io
+import time
 # Create your views here.
 
 def filterData(dataset):
@@ -143,18 +144,27 @@ def doLinearRegression(request):
         dataset.split = split
         dataset.save()
 
-        ## fill in the code that uses LR model coded by Ballim and return response provided by it 
+            ## fill in the code that uses LR model coded by Ballim and return response provided by it 
 
-        ## I need to send in the dataset, learning rate, tol and split
-        
+            ## I need to send in the dataset, learning rate, tol and split
+        print("My view working")
         results  = linearRegression(dataset.UserId,dataset.filename,dataset.learningRate,dataset.tol,pd.read_json(dataset.data),int(dataset.split)/100)
-
-        resp['results'] = results
+        resp['jsonFeatures'] = results[0]
+        resp['coefficients'] = results[1]
+        resp['TrainX'] = results[2]
+        resp['TrainY'] = results[3]
+        resp['TestX'] = results[4]
+        resp['TestY'] = results[5]
+        resp['Train_PredictY'] = results[6]
+        resp['Test_PredictY'] = results[7]
+        resp['Test_accuracy'] = results[8]
+        resp['Train_accuracy'] = results[9]
+        resp['meansquared'] = results[10]
         return Response(resp)
 
     except:
 
-        resp['error'] = 'Failed to find dataset associated with your account. Please try again'
+        resp['error'] = 'Failed to perform Training.'
 
         return Response(resp)
 
