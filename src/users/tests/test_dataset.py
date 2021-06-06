@@ -1,6 +1,6 @@
 from django.test import TestCase
-from .models import Dataset
-from .views import  filterData
+from datasets.models import Dataset
+from datasets.views import  filterData
 import pandas as pd
 # Create your tests here.
 class DatasetModelTests(TestCase):
