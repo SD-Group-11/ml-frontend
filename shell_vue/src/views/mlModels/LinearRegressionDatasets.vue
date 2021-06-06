@@ -54,7 +54,6 @@
                             </div>
                         
                             <div class="column is-half">
-                                
                                 <div class="box" style="background-color:lightyellow;" >
                                     <h2 class="title is-3">Uploaded data</h2>
                                     <p id="data" ref="para"> Metadata will appear here
@@ -85,41 +84,39 @@
                 <div class="table-wrapper has-mobile-cards">
                     <table class="table is-fullwidth is-hoverable is-fullwidth">
                     <thead>
-                    <tr>
-                        <th class="is-chevron-cell"></th>
-                        <th></th>
-                        <th>Name</th>
-                        <th>Created</th>
-                        <th></th>
-                    </tr>
+                        <tr>
+                            <th class="is-chevron-cell"></th>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Created</th>
+                            <th></th>
+                        </tr>
                     </thead>
                     <tbody>
                     <tr>
                         <td class="is-chevron-cell">
-                        <a role="button">
-                            <span class="icon is-expanded"><i class="fas fa-angle-right"></i></span>
-                            <!-- <font-awesome-icon :icon="['fas', 'angle-down']" /> -->
-
-                        </a>
+                            <a role="button">
+                                <span class="icon is-expanded"><i class="fas fa-angle-right"></i></span>
+                            </a>
                         </td>
                         <td class="is-image-cell">
-                        <div class="image">
-                            <img src="https://avatars.dicebear.com/v2/initials/rebecca-bauch.svg" class="is-rounded">
-                        </div>
+                            <div class="image">
+                                <img src="@/assets/images/confused-icon-6-yellow.png">
+                            </div>
                         </td>
                         <td data-label="Name">Rebecca Bauch</td>
                         <td data-label="Created">
-                        <small class="has-text-grey is-abbr-like" title="Oct 25, 2020">Oct 25, 2020</small>
+                            <small class="has-text-grey is-abbr-like" title="Oct 25, 2020">Oct 25, 2020</small>
                         </td>
                         <td class="is-actions-cell">
-                        <div class="buttons is-right">
-                            <button class="button is-small is-primary" type="button">
-                            <span class="icon"><i class="mdi mdi-eye"></i></span>
-                            </button>
-                            <button class="button is-small is-danger jb-modal" data-target="sample-modal" type="button">
-                            <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                            </button>
-                        </div>
+                            <div class="buttons is-right">
+                                <button class="button is-small is-primary" type="button">
+                                    <span class="icon"><i class="mdi mdi-eye"></i></span>
+                                </button>
+                                <button class="button is-small is-danger jb-modal" data-target="sample-modal" type="button">
+                                    <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     <tr class="detail">
@@ -128,7 +125,7 @@
                             <article class="media">
                             <figure class="media-left">
                                 <div class="image is-64x64">
-                                <img src="https://avatars.dicebear.com/v2/initials/rebecca-bauch.svg">
+                                    <img src="@/assets/images/csv-icon/128x128.png">
                                 </div>
                             </figure>
                             <div class="media-content">
@@ -141,32 +138,6 @@
                                 </div>
                             </div>
                             </article>
-                        </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="is-chevron-cell">
-                        <a role="button">
-                            <span class="icon"><i class="mdi mdi-chevron-right mdi-24px"></i></span>
-                        </a>
-                        </td>
-                        <td class="is-image-cell">
-                        <div class="image">
-                            <img src="https://avatars.dicebear.com/v2/initials/felicita-yundt.svg" class="is-rounded">
-                        </div>
-                        </td>
-                        <td data-label="Name">Felicita Yundt</td>
-                        <td data-label="Created">
-                        <small class="has-text-grey is-abbr-like" title="Jan 8, 2019">Jan 8, 2019</small>
-                        </td>
-                        <td class="is-actions-cell">
-                        <div class="buttons is-right">
-                            <button class="button is-small is-primary" type="button">
-                            <span class="icon"><i class="mdi mdi-eye"></i></span>
-                            </button>
-                            <button class="button is-small is-danger jb-modal" data-target="sample-modal" type="button">
-                            <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                            </button>
                         </div>
                         </td>
                     </tr>
@@ -194,6 +165,10 @@
                 SummaryData: [],
                 uploadedName: '',
                 uploadable: false,
+                datasetDetails: [],
+                uploadedFilename: '',
+                hasDatasets: false,
+                userFiles: [],
             }
         },
         mounted(){
@@ -208,7 +183,7 @@
 
                     .then(response => {
                         this.userDetails=response.data
-                        console.log(response)
+                        this.getUserDatasets()
                     })
 
                     .catch(error => {
@@ -218,13 +193,53 @@
                 this.$store.commit('setIsLoading',false)
 
             },
+            async getUserDatasets(){
+                this.$store.commit('setIsLoading',true)
+                
+                var data ={"UserId":this.userDetails.id}
+                await axios
+                .post('/datasets/getDatasetsInfo',data)
+                
+                .then(response =>{
+                              
+                    if(response.data['error']=="No datasets have been uploaded."){
+                        console.log(response.data)
+                        this.hasDatasets = false        
+                    }
+                    else{
+                        this.hasDatasets = true
+                        //idk why but accessing UserFiles out of this scope returns empty. Please check what im doing wrong
+                        // response.data though holds all the datasets of a user and their respective summary details
+                        this.userFiles = response.data;
+                        // Tell us how many datasets are associated with the user 
+                        // you can loop from 1 to number_of_datasets+1 and use that to index response.data[i] to get a dataset and its summary
+                
+                        var number_of_datasets = Object.keys(this.userFiles).length
+                        for(var i=1;i<number_of_datasets+1;i++){
+                            console.log(this.userFiles[i])
+                            //Do whatever with each dataset
+                            //reponse.data[i].anything below will give you it's value
+                            //filename gives filename
+                            //datapoints gives number of datapoints
+                            //columns give number of columns
+                            //featureNames gives an array of all the features 
+                            //nullValues gives how many nulls in the dataset
+                        }
+                    }
+                    
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+
+                this.$store.commit('setIsLoading',false)
+            },
             async Upload(){
                 this.$store.commit('setIsLoading',true)
                 var file = document.getElementById("myFile").files[0];
                 var formData = new FormData();
                 formData.append("dataset",file);
-                formData.append("id",this.details.id);
-                console.log(this.details.id);
+                formData.append("id",this.userDetails.id);
                 await axios
                     .post('/datasets/uploadData',formData)
 
@@ -234,17 +249,19 @@
                         if (resp == 'Data Uploaded Successfully'){
                             Type = 'is-warning';
                             this.uploaded=true;
-                            var filename = file.name;
-                            var id=  this.details.id;
-                            var data ={"id":id,"filename":filename}
-
-                            axios
-                            .post('/datasets/dataSummary',data)
+                            this.getUserDatasets()
                             
-                            .then(response =>{
-                                this.SummaryData = response.data;
-                                this.$refs.para.innerText="File Name:"+ this.SummaryData.filename +"\nNumber of data points:"+this.SummaryData.datapoints+" \nNumber of Columns:"+this.SummaryData.columns;
-                            });
+                            // this.uploadedFilename = `"${file.name}"`;
+                            // var data = {'UserId':this.userDetails.id,"filename":this.uploadedFilename}
+                            // axios
+                            // .post("/datasets/getDatasetData",data)
+                            // .then(response => {
+                            //     //Store the response and use it to get converted into a csv file for download
+                            //     // First implement a check that the response is not "error: Failed to load dataset. Please try again"
+                            //     // That will happen if the backend fails to load the data of the selected file. 
+                            //     console.log(response.data)
+                            // })  
+                              
                         }
                         else{
                             this.uploaded=false;
@@ -262,25 +279,24 @@
 
                  this.$store.commit('setIsLoading',false)
             },
-
-            async Summary(){
-                this.$store.commit('setIsLoading',true)
-                
-                var file = document.getElementById("myFile").files[0];
-                var filename = file.name;
-                var id=  this.details.id;
-                var data ={"id":id,"filename":filename}
+            //This method will get the actual data of a dataset once it's selected from the dropdown list
+            async GetDatasetData(){
+                console.log(this.userDetails.id)
+                var id =  this.userDetails.id;
+                //Please fill in the file name that will be sent once they have selected in from the dropdown
+                var filename ;
+                var data = {'UserId':id,"filename":filename}
                 await axios
-                .post('/datasets/dataSummary',data)
-                
-                .then(response =>{
-                    this.SummaryData = response.data;
+                .post("/datasets/getDatasetData",data)
 
-                });
-                console.log(this.SummaryData);
-                this.$store.commit('setIsLoading',false)
+                .then(response => {
+                    //Store the response and use it to get converted into a csv file for download
+                    // First implement a check that the response is not "error: Failed to load dataset. Please try again"
+                    // That will happen if the backend fails to load the data of the selected file. 
+                    console.log(response.data)
+                })
+
             },
-
             async fileValidation(){
                 this.$store.commit('setIsLoading',true)
                 
@@ -323,7 +339,25 @@
                     this.$store.commit('setIsLoading',false)
                     return true;
                 }         
-            }
+            },
+            // async Summary(){
+            //     this.$store.commit('setIsLoading',true)
+                
+            //     var file = document.getElementById("myFile").files[0];
+            //     var filename = file.name;
+            //     var id=  this.details.id;
+            //     var data ={"id":id,"filename":filename}
+            //     await axios
+            //     .post('/datasets/dataSummary',data)
+                
+            //     .then(response =>{
+            //         this.SummaryData = response.data;
+
+            //     });
+            //     console.log(this.SummaryData);
+            //     this.$store.commit('setIsLoading',false)
+            // },
+
         }
     }
 </script>
