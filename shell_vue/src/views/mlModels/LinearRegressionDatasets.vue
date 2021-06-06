@@ -12,9 +12,8 @@
             <div class="column">    
 
                 <div class="columns is-multiline is-mobile">
-                    
-                    <div class="column is-half">
-                        
+
+                    <div class="column is-half is-multiline">
                         <div class="box" style="background-color:lightyellow;" >
                             <form @submit.prevent="submitForm" >
                                 
@@ -39,6 +38,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                
 
                                 <div class="field">
                                     <div class="control">
@@ -47,6 +47,11 @@
                                 </div>
 
                             </form>
+                            <div class="column">
+                                <button class="button is-primary has-tooltip-left has-tooltip-multiline" style="background-color: #ADD8E6;color: #363636" data-tooltip="Tooltip with a long Text. So we use has-tooltip-multiline modifier to force multiline display.">?</button>
+                            </div>    
+
+  
                         </div>
 
                     </div>
@@ -72,9 +77,15 @@
     import axios from 'axios'
 
     import {toast} from 'bulma-toast'
+    import {tooltip} from 'bulma-tooltip'
+
+    
 
     export default {
         name: "LinearRegressionDatasets",
+        components: {
+            tooltip
+        },
         data() {
             return{
                 userDetails: [],
