@@ -243,12 +243,11 @@
                         email: this.email,
                         password: this.password1,
                         re_password: this.password2
-
                     }
 
                     await axios
                         .post('/api/v1/users/',formData)
-                        .then(respone => {
+                        .then(response => {
                             toast({
                                 message: 'Your account has been created, please log in.',
                                 type: 'is-warning',
