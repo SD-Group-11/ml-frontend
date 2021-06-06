@@ -35,6 +35,9 @@
 
 <style lang="scss">
 @import '../node_modules/bulma';
+@import "../node_modules/bulma-responsive-tables/bulma-responsive-tables";
+@import '../node_modules/@fortawesome/fontawesome-free';
+
 
 
 .lds-dual-ring {
