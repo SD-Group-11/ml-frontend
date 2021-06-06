@@ -9,40 +9,104 @@ import json
 #ml imports
 import numpy as np
 import pandas as pd
+from scipy.sparse import data
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import SGDRegressor
 from sklearn.metrics import r2_score
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import mean_squared_error
+#from sklearn.model_selection import train_test_split
 
 # Create your views here.
 
-def linearRegression(id, data, testdata):
+def linearRegression(userid, filename, learningrate, tolerance, datafr, datasplit,y_column_name):
     TrainX=np.array([])
     TrainY=np.array([])
     TestX=np.array([])
     TestY=np.array([])
+    x=np.array([])
+    y=np.array([])
 
-    for x in len(data):
-        TrainX[x]=data[x][0]
-        TrainY[x]=data[x][1]
+    #populating x and y
+    y = datafr[:][y_column_name].to_numpy()
+    datafr_x = datafr.drop([y_column_name],axis=1)
+    x = datafr_x.to_numpy()
+
+
+    #splitting data into testing and training 
+    TrainX, TestX, TrainY, TestY=train_test_split(x,y,test_size=(1-datasplit))
+
     
-    for x in len(testdata):
-        TestX[x]=data[x][0]
-        TestY[x]=data[x][1]
+    #Train the data
+    if(learningrate=='auto' and tolerance=='auto'):
+        sgdr=SGDRegressor()
+    else:
+        sgdr=SGDRegressor(learning_rate=learningrate,tol=tolerance)
+    sgdr.fit(TrainX,TrainY)
+    #Lr=LinearRegression().fit(TrainX,TrainY)
+
+    #UploadResults(id,coefficients)
+
+
+    #coefficient of determination
+    #accuracy= sgdr.score(TrainX,TrainY)
+
+    #intercept
+    intercept=sgdr.intercept_
+    print(intercept)
+
+    #coefficients
+    coefficients=sgdr.coef_
+
+    #Prediction
+    PredictY = sgdr.predict(TestX)
+    # print(PredictY)
+
+    #Confusion Matrix
+    #confusionMatrix = confusion_matrix(TrainY, TestY)
     
-    Lr = LinearRegression()
-    coefficients=Lr.fit(TrainX,TrainY)
-    UploadResults(id,coefficients)
-    PredictY = Lr.predict(TestX)
-    confusionMatrix = metrics.confusion_matrix(TestY,PredictY)
-    accuracy = metrics.accuracy_score(TestY,PredictY)
+    #Mean Squared Error
+    meansquared=mean_squared_error(TestY,PredictY)
 
-    return coefficients, confusionMatrix, accuracy
+    #accuracy
+    #accuracy=accuracy_score(TestY, PredictY)
+
+    #accuracy
+    #accuracy = sgdr.score(TestY, PredictY)
+    accuracy= r2_score(TestY, PredictY)
+
+    #parse coefficients to json
+
+    coef_json = ArrToJson(coefficients)
+    #uploading
+    uploadResults(userid,filename,coef_json)
+
+    jsonFeatures=FeatToJson(datafr)
+    PredictY_json = ArrToJson(PredictY)
+    return jsonFeatures, coef_json, accuracy, meansquared, x, y, PredictY_json
 
 
-def uploadResults(id,filename,coefficients):
-    DataInstance = TrainedModel(UserId=id,filename=filename,Trained_Coefficients=coefficients)
+def uploadResults(id, filename,coef):
+    DataInstance = TrainedModel(UserId=id,filename=filename,Trained_coefficients=coef)
     DataInstance.save()
 
+def FeatToJson(x):
+    column_names = list(x.columns)
+    JSON = {}
+    JSON['0'] = column_names
+    for k in range(1,len(column_names)+1):
+        # JSON[str(column_names)]=x[k]
+        JSON[str(k)] = x[:][column_names[k-1]]
+
+    
+    return JSON
+def ArrToJson(x):
+    JSON = {}
+    for k in range(len(x)):
+        JSON[str(k)] = x[k]
+    return JSON
 
 @api_view(['POST',]) 
 @csrf_exempt
@@ -55,29 +119,27 @@ def runLR(request):
     if request.method == "POST":
         #get request variables
         filename = request.data["filename"]
-        userId = request.data["id"]
-        y_column_name = request.data["y_column"]
+        userid = request.data["id"]
+        datasplit = float(request.data["datasplit"])
+        if(request.data.get("learningrate")!= None):#get learning rate if specified
+            learningrate = request.data["learningrate"]
+        else:
+            learningrate = 'auto'
+        if(request.data.get("tolerance")!= None):#get tolerance if specified
+            tolerance = request.data["tolerance"]
+        else:
+            tolerance ='auto'
         #get
-
-        datasetObj = Dataset.objects.get(UserId=userId, filename=filename)
-        data_df= LinearRegression2(datasetObj.data,y_column_name)
-
-        resp['response'] ="Hello World"
-        resp['data'] = data_df
-        resp['dataset'] = datasetObj.data
-        return Response(resp["dataset"])
-
-def LinearRegression2(dataset, y_column_name):#this function assumes that all columns(other then taget columns) are used for multivariable LR
-    df_json = json.dumps(dataset)#convert the dataset dict to a json object
-    data_df = pd.read_json(df_json)#load the dataset using pandas
-    data_df = data_df.T
-    data_df = data_df.select_dtypes(['number']) #use only the columns with numeric values
-    #data_df = data_df.drop(["No"],axis=1) #drop the column numbers column
-
-  # x_values =data_df
-    # y_values = data_df[:][""]
-    # x_values =data_df
-    # y_values = data_df[:][""]
+        datasetObj = Dataset.objects.get(UserId=userid, filename=filename)
+        data_df= pd.read_json(datasetObj.data)#convert the json to a dataframe
+        data_df = data_df.select_dtypes("number")#drop any non numeric values from the dataset
+        data_df = data_df.drop(["car_ID"],axis=1)
+        jsonFeatures, coefficients, accuracy, meansquared, x, y, PredictY = linearRegression(userid, filename, learningrate, tolerance, data_df, datasplit,"price")
+        resp['jsonFeatures'] = jsonFeatures
+        resp['coefficients'] = coefficients
+        resp['accuracy'] = accuracy
+        resp['meansquared'] =meansquared
+        resp['PredictY'] = PredictY
+        return Response(resp)
 
 
-    return data_df

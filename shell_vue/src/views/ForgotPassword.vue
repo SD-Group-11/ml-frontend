@@ -41,7 +41,7 @@
 
                 </form>
 
-                <div class="closer">
+                <!-- <div class="closer">
                     <div class="animation">
                         <div class="animationContainer">
                         <span></span>
@@ -52,7 +52,7 @@
                         <span></span>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 
             </div>
         </div>
@@ -62,7 +62,7 @@
 
 
 <style scoped>
-    @import '../assets/styles/rotatingSquares.css';  
+    /* @import '../assets/styles/rotatingSquares.css';   */
       
 </style>
 
