@@ -49,6 +49,11 @@ def linearRegression(userid, filename, learningrate, tolerance, datafr, dataspli
 
     #UploadResults(id,coefficients)
 
+    #Predict y values from training data
+    Train_PredictY = sgdr.predict(TrainX)
+
+    #Train accuracy
+    Train_accuracy = r2_score(TrainY, Train_PredictY)
 
     #coefficient of determination
     #accuracy= sgdr.score(TrainX,TrainY)
@@ -61,32 +66,39 @@ def linearRegression(userid, filename, learningrate, tolerance, datafr, dataspli
     coefficients=sgdr.coef_
 
     #Prediction
-    PredictY = sgdr.predict(TestX)
+    Test_PredictY = sgdr.predict(TestX)
     # print(PredictY)
 
     #Confusion Matrix
     #confusionMatrix = confusion_matrix(TrainY, TestY)
     
     #Mean Squared Error
-    meansquared=mean_squared_error(TestY,PredictY)
+    meansquared=mean_squared_error(TestY,Test_PredictY)
 
     #accuracy
     #accuracy=accuracy_score(TestY, PredictY)
 
-    #accuracy
+    #Test accuracy
     #accuracy = sgdr.score(TestY, PredictY)
-    accuracy= r2_score(TestY, PredictY)
+    Test_accuracy= r2_score(TestY, Test_PredictY)
 
     #parse coefficients to json
-
     coef_json = ArrToJson(coefficients)
     #uploading
     uploadResults(userid,filename,coef_json)
-
+    #parse all arrats to json
     jsonFeatures=FeatToJson(datafr)
-    PredictY_json = ArrToJson(PredictY)
-    return jsonFeatures, coef_json, accuracy, meansquared, x, y, PredictY_json
+    Test_PredictY_json = ArrToJson(Test_PredictY)
+    Train_PredictY_json = ArrToJson(Train_PredictY)
+    TrainX_json = ArrToJson(TrainX)
+    TrainY_json = ArrToJson(TrainY)
+    TestX_json = ArrToJson(TestX)
+    TestY_json=ArrToJson(TestY)
 
+
+
+
+    return jsonFeatures, coef_json,TrainX_json,TrainY_json,TestX_json,TestY_json,Train_PredictY_json,Test_PredictY_json,Train_accuracy,Test_accuracy, meansquared
 
 def uploadResults(id, filename,coef):
     DataInstance = TrainedModel(UserId=id,filename=filename,Trained_coefficients=coef)
@@ -121,6 +133,12 @@ def runLR(request):
         filename = request.data["filename"]
         userid = request.data["id"]
         datasplit = float(request.data["datasplit"])
+       
+        if (request.data.get("y_column_name")!= None):
+             y_column_name = request.data["y_column_name"] #let the user choose a y column if no value is given we assume that the y column is called target
+        else:
+            y_column_name = 'target'
+
         if(request.data.get("learningrate")!= None):#get learning rate if specified
             learningrate = request.data["learningrate"]
         else:
@@ -133,13 +151,19 @@ def runLR(request):
         datasetObj = Dataset.objects.get(UserId=userid, filename=filename)
         data_df= pd.read_json(datasetObj.data)#convert the json to a dataframe
         data_df = data_df.select_dtypes("number")#drop any non numeric values from the dataset
-        data_df = data_df.drop(["car_ID"],axis=1)
-        jsonFeatures, coefficients, accuracy, meansquared, x, y, PredictY = linearRegression(userid, filename, learningrate, tolerance, data_df, datasplit,"price")
+    
+        jsonFeatures, coef_json,TrainX_json,TrainY_json,TestX_json,TestY_json,Train_PredictY_json,Test_PredictY_json,Train_accuracy,Test_accuracy, meansquared = linearRegression(userid, filename, learningrate, tolerance, data_df, datasplit,y_column_name)
         resp['jsonFeatures'] = jsonFeatures
-        resp['coefficients'] = coefficients
-        resp['accuracy'] = accuracy
-        resp['meansquared'] =meansquared
-        resp['PredictY'] = PredictY
+        resp['coefficients'] = coef_json
+        resp['TrainX'] = TrainX_json
+        resp['TrainY'] = TrainY_json
+        resp['TestX'] =TestX_json
+        resp['TestY'] = TestY_json
+        resp['Train_PredictY'] = Train_PredictY_json
+        resp['Test_PredictY'] = Test_PredictY_json
+        resp['Test_accuracy'] = Test_accuracy
+        resp['Train_accuracy'] = Train_accuracy
+        resp['meansquared'] = meansquared
         return Response(resp)
 
 
