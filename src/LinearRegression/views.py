@@ -17,6 +17,8 @@ from sklearn.metrics import r2_score
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import mean_squared_error
+from sklearn.preprocessing import StandardScaler
+
 #from sklearn.model_selection import train_test_split
 
 # Create your views here.
@@ -37,8 +39,12 @@ def linearRegression(userid, filename, learningrate, tolerance, datafr, dataspli
 
     #splitting data into testing and training 
     TrainX, TestX, TrainY, TestY=train_test_split(x,y,test_size=(1-datasplit))
-
-    
+    #scale the data so that SDG perfoms properly
+    scaler = StandardScaler()
+    scaler.fit(TrainX) # (from sklearn: Don't cheat - fit only on training data)
+    TrainX = scaler.transform(TrainX)
+    TestX = scaler.transform(TestX)  
+        
     #Train the data
     if(learningrate=='auto' and tolerance=='auto'):
         sgdr=SGDRegressor()
@@ -79,7 +85,8 @@ def linearRegression(userid, filename, learningrate, tolerance, datafr, dataspli
     #accuracy=accuracy_score(TestY, PredictY)
 
     #Test accuracy
-    #accuracy = sgdr.score(TestY, PredictY)
+    accuracy = sgdr.score(TestX, TestY)
+    print("accuracy",accuracy)
     Test_accuracy= r2_score(TestY, Test_PredictY)
 
     #parse coefficients to json
@@ -151,7 +158,6 @@ def runLR(request):
         datasetObj = Dataset.objects.get(UserId=userid, filename=filename)
         data_df= pd.read_json(datasetObj.data)#convert the json to a dataframe
         data_df = data_df.select_dtypes("number")#drop any non numeric values from the dataset
-    
         jsonFeatures, coef_json,TrainX_json,TrainY_json,TestX_json,TestY_json,Train_PredictY_json,Test_PredictY_json,Train_accuracy,Test_accuracy, meansquared = linearRegression(userid, filename, learningrate, tolerance, data_df, datasplit,y_column_name)
         resp['jsonFeatures'] = jsonFeatures
         resp['coefficients'] = coef_json
