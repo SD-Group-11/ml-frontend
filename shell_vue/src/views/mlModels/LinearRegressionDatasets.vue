@@ -21,7 +21,7 @@
                             <form @submit.prevent="submitForm" >
                                 
                                 <div class="column">
-                                    <div class="control">
+                                    <div class="field">
                                         <div class="file has-name is-medium is-warning" >
                                             <label class="file-label">
                                                 
