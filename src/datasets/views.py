@@ -39,7 +39,6 @@ def receiveData(request):
     if request.method == "POST":
         
         dataset = str(request.body)
-        print(dataset)
         if(dataset != ''):
             id,filename,dataset,nullValues = filterData(dataset)
             obj = None
@@ -73,30 +72,32 @@ def getDatasetsInfo(request):
     response ={}
     UserId = request.data['UserId']
     try:
-
-        userObj = Dataset.objects.get(UserId=UserId)
-        if(userObj):
-            i =0 
-            for Obj in Dataset.objects.all():
+        i =0 
+        for Obj in Dataset.objects.all():
                 
-                dataAttributes = {}
-                if(Obj.UserId ==UserId):
-                    dataset = pd.read_json(Obj.data)
-                    i+=1
-                    dataAttributes['id'] = Obj.id
-                    dataAttributes['filename'] = Obj.filename
-                    dataAttributes['datapoints'] = dataset.shape[0]
-                    dataAttributes['columns'] = dataset.shape[1]
-                    dataAttributes['featureNames'] = list(dataset.columns)
-                    dataAttributes['null'] = Obj.nullValues
-                    response[i] = dataAttributes
+            dataAttributes = {}
+            if(Obj.UserId ==UserId):
+                dataset = pd.read_json(Obj.data)
+                i+=1
+                dataAttributes['id'] = Obj.id
+                dataAttributes['filename'] = json.loads(Obj.filename)
+                dataAttributes['datapoints'] = dataset.shape[0]
+                dataAttributes['columns'] = dataset.shape[1]
+                dataAttributes['featureNames'] = list(dataset.columns)
+                dataAttributes['nullValues'] = Obj.nullValues
+                response[i] = dataAttributes
             
-            return Response(response)
+        if( not response):
+             response['error'] = "No datasets have been uploaded."
+             return Response(response)
+
+        return Response(response)
 
 
     except:
 
         response['error'] = "No datasets have been uploaded."
+        return Response(response)
 
 
 @api_view(['POST',])   ## ensures only POST requests can be made to the api
@@ -126,24 +127,27 @@ def doLinearRegression(request):
     resp ={}
     UserId = request.data['UserId']
     filename = request.data['filename']
-    fileid = request.data['id']
     learningRate = request.data['learningRate']
     tol = request.data['tol']
     split = request.data['split']
 
     try:
         dataset = Dataset.objects.get(UserId = UserId,filename=json.dumps(filename))
+        if(tol ==''):
+            tol = "auto"
+        if(learningRate ==''):
+            learningRate = "auto"
 
+        dataset.tol = json.dumps(tol)
+        dataset.learningRate = json.dumps(learningRate)
         dataset.split = split
-        dataset.learningRate = learningRate
-        dataset.tol = tol
         dataset.save()
 
         ## fill in the code that uses LR model coded by Ballim and return response provided by it 
 
         ## I need to send in the dataset, learning rate, tol and split
-
-        results  = linearRegression(dataset.UserId,dataset.filename,dataset.learningRate,dataset.tol,pd.read_json(dataset.data),dataset.split/100)
+        
+        results  = linearRegression(dataset.UserId,dataset.filename,dataset.learningRate,dataset.tol,pd.read_json(dataset.data),int(dataset.split)/100)
 
         resp['results'] = results
         return Response(resp)
