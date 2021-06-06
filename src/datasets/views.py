@@ -3,6 +3,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from rest_framework.response import Response 
 from .models import Dataset
+import pandas as pd
+import io
 import json
 # Create your views here.
 
@@ -23,7 +25,16 @@ def toJSON(data):
 def filterData(dataset):
     newd = dataset.split(r'\n')
     data = newd[4:-7]
-    dataset = toJSON(data)
+    data_str = "\n".join(data)
+    data_str = data_str.replace(r'\r', '')
+    data_io = io.StringIO(data_str)
+    df = pd.read_csv(data_io, sep=",")
+    dataset = pd.DataFrame.to_json(df)
+
+    print(dataset)
+    print(df.head())
+ #   dataset = toJSON(data)
+    result = df.to_json(orient="split")
     num = newd[len(newd)-3]
     id = int(num[:len(num)-2])
     filename = newd[1][newd[1].find('filename=')+9:len(newd[1])-2]
@@ -37,7 +48,6 @@ def receiveData(request):
 
     resp = {}
     if request.method == "POST":
-        
         dataset = str(request.body)
         if(dataset != ''):
             id,filename,dataset = filterData(dataset)
@@ -50,6 +60,7 @@ def receiveData(request):
     
     resp['response'] ='Failed to upload data'
     
+        
 
     return Response(resp)
 
@@ -64,8 +75,9 @@ def dataSummary(request):
         filename = request.data['filename']
         id = request.data['id']
         obj = Dataset.objects.get(UserId=id, filename=json.dumps(filename))
-        datapoints = len(obj.data)
-        columns  = len(obj.data['1'])
+        df = pd.read_json(obj.data)
+        datapoints = len(df)
+        columns  = len(df.columns)
         resp['datapoints'] = datapoints
         resp['columns'] = columns
         resp['filename'] = filename
