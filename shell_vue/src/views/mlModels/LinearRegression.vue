@@ -16,9 +16,9 @@
                     <h2 class="title is-3 has-text-centered">Enter Hyperparameters</h2>
                     
                     <div class="field">
-                        <label class="label">Learning Rate</label>
+                        <label class="label">Learning Rate hello</label>
                         <div class="control">
-                            <input class="input" type="text" placeholder="0.01">
+                            <input class="input" type="text" placeholder="hello">
                         </div>
                     </div>
 
