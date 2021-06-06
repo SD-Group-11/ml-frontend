@@ -1,14 +1,20 @@
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "python.pythonPath": "C:\\Program Files\\Python37\\python.exe",
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true
 =======
+=======
+>>>>>>> ad44e4240a17fb3928ba25cc7e886d46d0a8674c
     "python.pythonPath": "C:\\Users\\talio\\Envs\\mfli\\Scripts\\python.exe",
     "python.linting.pylintEnabled": false,
     "python.linting.enabled": false,
     "python.linting.pylintArgs": [
         "--load-plugins=pylint_django"
    ]
+<<<<<<< HEAD
 >>>>>>> 48a44c4de5b5a6cec8bdcde9e2d47f0aa6f8e32d
+=======
+>>>>>>> ad44e4240a17fb3928ba25cc7e886d46d0a8674c
 }

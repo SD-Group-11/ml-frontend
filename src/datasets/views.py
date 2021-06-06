@@ -4,6 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from rest_framework.response import Response 
 from .models import Dataset
+import pandas as pd
+import io
 import json
 from LinearRegression.views import linearRegression
 import re
@@ -21,8 +23,14 @@ def filterData(dataset):
     df = pd.read_csv(data_io, sep=",")
     dataset = pd.DataFrame.to_json(df)
 
+<<<<<<< HEAD
     # print(dataset)
     # print(df.head())
+=======
+    print(dataset)
+    print(df.head())
+ #   dataset = toJSON(data)
+>>>>>>> ad44e4240a17fb3928ba25cc7e886d46d0a8674c
     result = df.to_json(orient="split")
     num = newd[len(newd)-3]
     id = int(num[:len(num)-2])
@@ -37,7 +45,6 @@ def receiveData(request):
 
     resp = {}
     if request.method == "POST":
-        
         dataset = str(request.body)
         print(dataset)
         if(dataset != ''):
@@ -107,6 +114,7 @@ def getDatasetData(request):
     UserId = request.data.get('UserId')
     filename = request.data.get('filename')
     resp = {}
+<<<<<<< HEAD
     try:
         data = Dataset.objects.get(UserId=UserId, filename=filename)
         resp['data'] = data.data
@@ -154,3 +162,19 @@ def doLinearRegression(request):
 
         return Response(resp)
 
+=======
+    if request.method == "POST":
+        filename = request.data['filename']
+        id = request.data['id']
+        obj = Dataset.objects.get(UserId=id, filename=json.dumps(filename))
+        df = pd.read_json(obj.data)
+        datapoints = len(df)
+        columns  = len(df.columns)
+        resp['datapoints'] = datapoints
+        resp['columns'] = columns
+        resp['filename'] = filename
+    else:
+        resp['error'] = "Failed to summarise data"
+
+    return Response(resp)
+>>>>>>> ad44e4240a17fb3928ba25cc7e886d46d0a8674c

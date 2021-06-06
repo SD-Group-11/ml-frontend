@@ -1,12 +1,9 @@
 <template>   
-    
-
-    
     <div class="container">
 
             <section class="hero" style=" background-color:lightblue">
                 <div class="hero-body">
-                    <h1 class="title is-1 has-text-centered" style=" background-color:lightblue; border-radius:200px"><strong>Linear Regression</strong></h1>
+                    <h1 class="title is-1 has-text-centered" style=" background-color:lightblue; border-radius:200px"><strong>Linear Regression Datasets</strong></h1>
                 </div>
             </section>
 
@@ -117,10 +114,10 @@
     import {toast} from 'bulma-toast'
 
     export default {
-        name: "LinearRegression",
+        name: "LinearRegressionDatasets",
         data() {
             return{
-                details: [],
+                userDetails: [],
                 SummaryData: [],
                 uploadedName: '',
                 uploadable: false,
@@ -137,17 +134,9 @@
                 await axios
                     .get('/api/v1/users/me')
                     .then(response => {
-                        this.details=response.data
+                        this.userDetails=response.data
                         console.log(response)
 
-                        toast({
-                                message: 'Upload a CSV file where the first column is No (this indicates the row number) and the last column must be the targets/categories.',
-                                type: 'is-warning',
-                                dismissible: true,
-                                pauseOnHover: true,
-                                duration: 50000,
-                                position: 'bottom-center',
-                            })
                     })
                     .catch(error => {
                         console.log(error)
