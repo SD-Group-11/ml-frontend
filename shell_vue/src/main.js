@@ -9,10 +9,11 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
 import { dom } from '@fortawesome/fontawesome-svg-core'
-//import {VueSelect} from '../node_modules/vue-next-select/dist/vue-next-select.es.js'
-//import VueSelect from './vue-next-select'
-
-//Vue.component('v-select', vSelect)
+// import VueJsonToCsv from 'vue-json-to-csv'
+// import JsonCSV from 'vue-json-csv'
+// import JsonExcel from "vue-json-excel";
+// import Vue from "vue";
+// import VueBlobJsonCsv from 'vue-blob-json-csv';
 
 
 library.add(fas);

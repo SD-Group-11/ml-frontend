@@ -104,6 +104,20 @@ def getDatasetsInfo(request):
 @api_view(['POST',])   ## ensures only POST requests can be made to the api
 @csrf_exempt
 
+# def getDatasetData(request):
+
+#     UserId = request.data.get('UserId')
+#     filename = request.data.get('filename')
+#     resp = {}
+#     try:
+#         data = Dataset.objects.get(UserId=UserId, filename=filename)
+#         resp['data'] = data.data
+#         return Response(resp)
+
+#     except:
+#         resp['error'] = "Failed to load dataset. Please try again"
+#         return Response(resp)
+
 def getDatasetData(request):
 
     UserId = request.data.get('UserId')
@@ -123,6 +137,8 @@ def getDatasetData(request):
     except:
         resp['error'] = "Failed to load dataset. Please try again"
         return Response(resp)
+
+
 
 
 
@@ -150,9 +166,9 @@ def doLinearRegression(request):
         dataset.split = split
         dataset.save()
 
-                ## fill in the code that uses LR model coded by Ballim and return response provided by it 
+            ## fill in the code that uses LR model coded by Ballim and return response provided by it 
 
-                ## I need to send in the dataset, learning rate, tol and split
+            ## I need to send in the dataset, learning rate, tol and split
         print("My view working")
         results  = linearRegression(dataset.UserId,dataset.filename,dataset.learningRate,dataset.tol,pd.read_json(dataset.data),int(dataset.split)/100)
         resp['jsonFeatures'] = results[0]
@@ -166,7 +182,6 @@ def doLinearRegression(request):
         resp['Test_accuracy'] = results[8]
         resp['Train_accuracy'] = results[9]
         resp['meansquared'] = results[10]
-        resp["Intercept"] = results[11]
         return Response(resp)
 
     except:
@@ -174,3 +189,4 @@ def doLinearRegression(request):
         resp['error'] = 'Failed to perform Training.'
 
         return Response(resp)
+

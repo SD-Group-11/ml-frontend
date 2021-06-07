@@ -3,7 +3,7 @@
 
         <section class="hero" style=" background-color:lightblue">
             <div class="hero-body">
-                <h1 class="title is-1 has-text-centered" style=" background-color:lightblue; border-radius:200px"><strong>Linear Regression Datasets</strong></h1>
+                <h1 class="title is-1 has-text-centered" style=" background-color:lightblue; border-radius:200px"><strong>Upload New Dataset</strong></h1>
             </div>
         </section>
 
@@ -69,12 +69,9 @@
         </section>
 
 
-        <section class="hero is-light">
+        <section class="hero" style=" background-color:lightblue">
             <div class="hero-body">
-                <div class="container">
-                    <h1 class="title">Expandable Bulma table rows CSS & HTML</h1>
-                    <h3 class="subtitle">Check desktop & mobile layout</h3>
-                </div>
+                <h1 class="title is-1 has-text-centered" style=" background-color:lightblue; border-radius:200px"><strong>Uploaded Datasets</strong></h1>
             </div>
         </section>
 
@@ -222,7 +219,6 @@
                 uploadedFilename: '',
                 hasDatasets: false,
                 userFiles: [],
-                showFileDetails: [],
                 csvDownload: [],
             }
         },
@@ -285,7 +281,9 @@
                             //featureNames gives an array of all the features 
                             //nullValues gives how many nulls in the dataset
                             this.userFiles.push(response.data[i])
+                            
                         }
+                        console.log(this.userFiles[0].filename)
                         console.log(this.userFiles)
                     }
                     
@@ -346,16 +344,22 @@
                 console.log(this.userDetails.id)
                 var id =  this.userDetails.id;
                 //Please fill in the file name that will be sent once they have selected in from the dropdown
-                var data = {'UserId':id,"filename":`"${filename}"`}
+                var data = {'UserId':id,"filename":filename}
                 await axios
                 .post("/datasets/getDatasetData",data)
 
                 .then(response => {
                     if(response.data['error']=="Failed to load dataset. Please try again"){
+                        console.log(response.data)
+                    }
+                    else{
+                        //var keys = Object.keys(response.data["data"])
+                        console.log(response.data)
+                        //console.log(keys)
+                    }
                     //Store the response and use it to get converted into a csv file for download
                     // First implement a check that the response is not "error: Failed to load dataset. Please try again"
                     // That will happen if the backend fails to load the data of the selected file. 
-                    console.log(response.data)
                 })
 
             },
