@@ -114,7 +114,7 @@
 
                             <td class="is-image-cell">
                                 <div class="image">
-                                    <img src="@/assets/images/confused-icon-6-yellow.png">
+                                    <!-- <img src="@/assets/images/confused-icon-6-yellow.png"> -->
                                 </div>
                             </td>
 
@@ -218,18 +218,13 @@
 
     import {toast} from 'bulma-toast'
     import {tooltip} from 'bulma-tooltip'
-
     
-
     export default {
         name: "LinearRegressionDatasets",
-        components: {
-            tooltip
-        },
         data() {
             return{
                 userDetails: [],
-                UserFiles: [],
+                SummaryData: [],
                 uploadedName: '',
                 uploadable: false,
                 datasetDetails: [],
@@ -267,22 +262,29 @@
                 var data ={"UserId":this.userDetails.id}
                 await axios
                 .post('/datasets/getDatasetsInfo',data)
+                
                 .then(response =>{
-
+                              
                     if(response.data['error']=="No datasets have been uploaded."){
+                        console.log("has no datasets")
                         console.log(response.data)
-                        this.hasDatasets = false
+                        this.hasDatasets = false        
                     }
                     else{
+                        console.log("has datasets")
+                        //console.log(response.data[0])
                         this.hasDatasets = true
                         //idk why but accessing UserFiles out of this scope returns empty. Please check what im doing wrong
                         // response.data though holds all the datasets of a user and their respective summary details
+                        //this.userFiles = response.data;
                         // Tell us how many datasets are associated with the user 
                         // you can loop from 1 to number_of_datasets+1 and use that to index response.data[i] to get a dataset and its summary
 
-                        var number_of_datasets = Object.keys(this.userFiles).length
+                        var number_of_datasets = Object.keys(response.data).length
+                        console.log(number_of_datasets)
                         for(var i=1;i<number_of_datasets+1;i++){
-                            this.userFiles.push(response.data[i])
+                            
+                            //console.log(this.userFiles[i])
                             //Do whatever with each dataset
                             //reponse.data[i].anything below will give you it's value
                             //filename gives filename
@@ -290,16 +292,19 @@
                             //columns give number of columns
                             //featureNames gives an array of all the features 
                             //nullValues gives how many nulls in the dataset
+                            this.userFiles.push(response.data[i])
+                            
                         }
                         console.log(this.userFiles[0].filename)
                         console.log(this.userFiles)
                     }
-
+                    
                 })
                 .catch(error => {
                     console.log(error)
                 })
-            this.$store.commit('setIsLoading',false)
+
+                this.$store.commit('setIsLoading',false)
             },
             async Upload(){
                 this.$store.commit('setIsLoading',true)
@@ -351,9 +356,7 @@
                 console.log(this.userDetails.id)
                 var id =  this.userDetails.id;
                 //Please fill in the file name that will be sent once they have selected in from the dropdown
-                var filename ;
-                // var data = {'UserId':id,"filename":filename}
-                var data = {'UserId':id,"filename":this.uploadedFilename}
+                var data = {'UserId':id,"filename":filename}
                 await axios
                 .post("/datasets/getDatasetData",data)
 
