@@ -62,6 +62,7 @@
                     </div>
                 </div>
                 
+                
             </div>
         </div>
     </div>
@@ -78,7 +79,7 @@
         data() {
             return{
                 userDetails: [],
-                SummaryData: [],
+                UserFiles: [],
                 uploadedName: '',
                 uploadable: false,
             }
@@ -96,7 +97,35 @@
                     .then(response => {
                         this.userDetails=response.data
                         console.log(response)
-                    })
+                        var id=  this.userDetails.id;
+                        var data ={"UserId":id}
+                         axios
+                        .post('/datasets/getDatasetsInfo',data)
+                        
+                        .then(response =>{
+                           //idk why but accessing UserFiles out of this scope returns empty. Please check what im doing wrong
+                           // response.data though holds all the datasets of a user and their respective summary details
+                            this.UserFiles = response.data;
+                            // Tell us how many datasets are associated with the user 
+                            // you can loop from 1 to number_of_datasets+1 and use that to index response.data[i] to get a dataset and its summary
+                            var number_of_datasets = Object.keys(response.data).length
+
+                            for(var i=1;i<number_of_datasets+1;i++){
+                                
+                                console.log(response.data[i])
+                                //Do whatever with each dataset
+                                //reponse.data[i].anything below will give you it's value
+                                //filename gives filename
+                                //datapoints gives number of datapoints
+                                //columns give number of columns
+                                //featureNames gives an array of all the features 
+                                //nullValues gives how many nulls in the dataset
+                                
+                            }
+                            
+                        });
+                       
+                        })
 
                     .catch(error => {
                         console.log(error)
@@ -110,8 +139,7 @@
                 var file = document.getElementById("myFile").files[0];
                 var formData = new FormData();
                 formData.append("dataset",file);
-                formData.append("id",this.details.id);
-                console.log(this.details.id);
+                formData.append("id",this.userDetails.id);
                 await axios
                     .post('/datasets/uploadData',formData)
 
@@ -122,16 +150,9 @@
                             Type = 'is-warning';
                             this.uploaded=true;
                             var filename = file.name;
-                            var id=  this.details.id;
+                            var id=  this.userDetails.id;
                             var data ={"id":id,"filename":filename}
 
-                            axios
-                            .post('/datasets/dataSummary',data)
-                            
-                            .then(response =>{
-                                this.SummaryData = response.data;
-                                this.$refs.para.innerText="File Name:"+ this.SummaryData.filename +"\nNumber of data points:"+this.SummaryData.datapoints+" \nNumber of Columns:"+this.SummaryData.columns;
-                            });
                         }
                         else{
                             this.uploaded=false;
@@ -149,25 +170,24 @@
 
                  this.$store.commit('setIsLoading',false)
             },
-
-            async Summary(){
-                this.$store.commit('setIsLoading',true)
+            //This method will get the actual data of a dataset once it's selected from the dropdown list
+            async GetDatasetData(){
                 
-                var file = document.getElementById("myFile").files[0];
-                var filename = file.name;
-                var id=  this.details.id;
-                var data ={"id":id,"filename":filename}
+                var id =  this.userDetails.id;
+                //Please fill in the file name that will be sent once they have selected in from the dropdown
+                var filename ;
+                var data = {'UserId':id,"filename":filename}
                 await axios
-                .post('/datasets/dataSummary',data)
-                
-                .then(response =>{
-                    this.SummaryData = response.data;
+                .post("/datasets/getDatasetData",data)
 
-                });
-                console.log(this.SummaryData);
-                this.$store.commit('setIsLoading',false)
+                .then(response => {
+                    //Store the response and use it to get converted into a csv file for download
+                    // First implement a check that the response is not "error: Failed to load dataset. Please try again"
+                    // That will happen if the backend fails to load the data of the selected file. 
+                    console.log(response.data)
+                })
+
             },
-
             async fileValidation(){
                 this.$store.commit('setIsLoading',true)
                 
