@@ -10,11 +10,8 @@
         <section class="section">
             <div class="container">
                 <div class="column is-multiline">
-
-                    <div class="column">    
-
+                <div class="column">    
                 <div class="columns is-multiline is-mobile">
-
                     <div class="column is-half is-multiline">
                         <div class="box" style="background-color:lightyellow;" >
                             <div class="column is-pulled-right">
@@ -57,8 +54,22 @@
                         
                             <div class="column is-half">
                                 <div class="box" style="background-color:lightyellow;" >
-                                    <h2 class="title is-3">Uploaded data</h2>
-                                    <p id="data" ref="para"> Metadata will appear here
+                                    <h2 class="title is-3">Uploaded data {{hasDatasets ? "✔️" : "🗅"}}</h2>
+                                    <p id="data" ref="para" v-if=" !userFiles ">
+                                            Metadata will appear here.
+                                    </p>
+                                    <p id="data" ref="para" v-if=" userFiles ">
+                                        <ul>
+                                            <li v-for='file in userFiles' v-bind:key=" file " >
+                                                <h3><b>{{file.filename}}</b></h3>
+                                                Datapoints: {{file.datapoints}}<br/>
+                                                Columns: {{file.columns}}<br/>
+                                                Feature Names: {{file.featureNames.join(", ")}}<br/>
+                                                Null Values: {{file.nullValues}}<br/>
+                                                <br/>
+                                                <br/>
+                                            </li>
+                                        </ul>
                                     </p>
                                 </div>
 
@@ -176,6 +187,7 @@
                 datasetDetails: [],
                 uploadedFilename: '',
                 hasDatasets: false,
+                userFiles: ''
             }
         },
         mounted(){
@@ -202,41 +214,42 @@
             },
             async getUserDatasets(){
                 this.$store.commit('setIsLoading',true)
-                
+
                 var data ={"UserId":this.userDetails.id}
                 await axios
                 .post('/datasets/getDatasetsInfo',data)
-                
                 .then(response =>{
-                    //idk why but accessing UserFiles out of this scope returns empty. Please check what im doing wrong
-                    // response.data though holds all the datasets of a user and their respective summary details
-                    this.UserFiles = response.data;
-                    // Tell us how many datasets are associated with the user 
-                    // you can loop from 1 to number_of_datasets+1 and use that to index response.data[i] to get a dataset and its summary
-                    
-                    if(!response.data['error']=="No datasets have been uploaded."){
-                        var number_of_datasets = Object.keys(response.data).length
 
+                    if(response.data['error']=="No datasets have been uploaded."){
+                        console.log(response.data)
+                        this.hasDatasets = false
+                    }
+                    else{
+                        this.hasDatasets = true
+                        //idk why but accessing UserFiles out of this scope returns empty. Please check what im doing wrong
+                        // response.data though holds all the datasets of a user and their respective summary details
+                        this.userFiles = response.data;
+                        // Tell us how many datasets are associated with the user 
+                        // you can loop from 1 to number_of_datasets+1 and use that to index response.data[i] to get a dataset and its summary
+
+                        var number_of_datasets = Object.keys(this.userFiles).length
                         for(var i=1;i<number_of_datasets+1;i++){
-                        
-                        console.log(response.data[i])
-                        //Do whatever with each dataset
-                        //reponse.data[i].anything below will give you it's value
-                        //filename gives filename
-                        //datapoints gives number of datapoints
-                        //columns give number of columns
-                        //featureNames gives an array of all the features 
-                        //nullValues gives how many nulls in the dataset
-                    
+                            console.log(this.userFiles[i])
+                            //Do whatever with each dataset
+                            //reponse.data[i].anything below will give you it's value
+                            //filename gives filename
+                            //datapoints gives number of datapoints
+                            //columns give number of columns
+                            //featureNames gives an array of all the features 
+                            //nullValues gives how many nulls in the dataset
                         }
                     }
-                    
+
                 })
                 .catch(error => {
                     console.log(error)
                 })
-
-                this.$store.commit('setIsLoading',false)
+            this.$store.commit('setIsLoading',false)
             },
             async Upload(){
                 this.$store.commit('setIsLoading',true)
@@ -254,8 +267,13 @@
                             Type = 'is-warning';
                             this.uploaded=true;
                             this.getUserDatasets()
+
+                             
+                            this.uploadedFilename = `"${file.name}"`;
+                            console.log(this.uploadedFilename);
+                            console.log(this.userFiles);
                             
-                            // this.uploadedFilename = `"${file.name}"`;
+
                             // var data = {'UserId':this.userDetails.id,"filename":this.uploadedFilename}
                             // axios
                             // .post("/datasets/getDatasetData",data)
@@ -286,6 +304,7 @@
             //This method will get the actual data of a dataset once it's selected from the dropdown list
             async GetDatasetData(){
                 console.log(this.userDetails.id)
+                console.log('poo')
                 console.log(this.uploadedFilename)
                 var id =  this.userDetails.id;
                 //Please fill in the file name that will be sent once they have selected in from the dropdown
@@ -301,6 +320,7 @@
                     // That will happen if the backend fails to load the data of the selected file. 
                     console.log(response.data)
                 })
+                console.log(this.userFiles);
 
             },
             async fileValidation(){
