@@ -54,6 +54,7 @@ def linearRegression(userid, filename, learningrate, tolerance, datafr, dataspli
     Train_accuracy = r2_score(TrainY, Train_PredictY)
   
 
+
     #intercept
     intercept=sgdr.intercept_
   
