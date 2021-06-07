@@ -72,7 +72,6 @@
                                         </ul>
                                     </p>
                                 </div>
-
                             </div>
                         </div>
                         
@@ -229,7 +228,7 @@
                 var id =  this.userDetails.id;
                 //Please fill in the file name that will be sent once they have selected in from the dropdown
                 var filename ;
-                //var data = {'UserId':id,"filename":filename}
+                // var data = {'UserId':id,"filename":filename}
                 var data = {'UserId':id,"filename":this.uploadedFilename}
                 await axios
                 .post("/datasets/getDatasetData",data)

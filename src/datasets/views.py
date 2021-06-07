@@ -109,9 +109,15 @@ def getDatasetData(request):
     UserId = request.data.get('UserId')
     filename = request.data.get('filename')
     resp = {}
+   
     try:
-        data = Dataset.objects.get(UserId=UserId, filename=filename)
-        resp['data'] = data.data
+        data = Dataset.objects.get(UserId=UserId, filename=json.dumps(filename))
+        print(data)
+        dataframe = pd.read_json(data.data)
+        dataframe =  dataframe.dropna()
+        jsonRowData = dataframe.to_dict(orient='records')
+        # print(json.dumps(jsonRowData))
+        resp['data'] = jsonRowData
         return Response(resp)
 
     except:
