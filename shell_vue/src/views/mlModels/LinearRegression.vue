@@ -29,6 +29,9 @@
                         </div>
                         
                     </div>
+
+                    
+
                     <div class="field">
                         <label class="label">Split</label>
                         <div class="control">
@@ -87,30 +90,8 @@
 
                     .then(response => {
                         this.userDetails=response.data
-                        console.log(response)
-                        var id=  this.userDetails.id;
-                        var data ={"UserId":id}
-                         axios
-                        .post('/datasets/getDatasetsInfo',data)
-                        
-                        .then(response =>{
-                           //idk why but accessing UserFiles out of this scope returns empty. Please check what im doing wrong
-                           // response.data though holds all the datasets of a user and their respective summary details
-                            this.UserFiles = response.data;
-                            // Tell us how many datasets are associated with the user 
-                            // you can loop from 1 to number_of_datasets+1 and use that to index response.data[i] to get a dataset and its summary
-                            var number_of_datasets = Object.keys(response.data).length
-                            // i've commented more in the datasets management file, check it out
-                            for(var i=1;i<number_of_datasets+1;i++){
-                                
-                                console.log(response.data[i])
-                                //Do whatever with each dataset
-                                
-                            }
-
-                        });
-                        
-                        })
+                        this.getUserDatasets()
+                    })
 
                     .catch(error => {
                         console.log(error)
