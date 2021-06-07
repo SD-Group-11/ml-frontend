@@ -15,7 +15,7 @@
                     <div class="column is-half is-multiline">
                         <div class="box" style="background-color:lightyellow;" >
                             <div class="column is-pulled-right">
-                                <button class="button is-primary has-tooltip-left" style="background-color: #ADD8E6;color: #363636;text-align:left" data-tooltip="Upload Your CSV file here!&#10;1) Click on 'Choose File'&#10;2) Select a .csv file from your local device&#10;3) Click on 'Submit'&#10;4) Wait and let the magic happen!&#10;&#10;Upload a CSV file where the first column is No (this indicates the row number)&#10;and the last column must be the targets/categories.">?</button>
+                                <button class="button is-primary has-tooltip-left" style="background-color: #ADD8E6;color: #363636;text-align:left" data-tooltip="Upload Your CSV file here!&#10;1) Click on 'Choose File'&#10;2) Select a .csv file from your local device&#10;3) Click on 'Submit'&#10;4) Wait and let the magic happen!&#10;&#10;Upload a CSV file where the first column is a number (this indicates the row number)&#10;and the last column must be the targets/categories (your 'y' value).">?</button>
                             </div>   
                             <form @submit.prevent="submitForm" >
                                 
