@@ -109,9 +109,15 @@ def getDatasetData(request):
     UserId = request.data.get('UserId')
     filename = request.data.get('filename')
     resp = {}
+   
     try:
-        data = Dataset.objects.get(UserId=UserId, filename=filename)
-        resp['data'] = data.data
+        data = Dataset.objects.get(UserId=UserId, filename=json.dumps(filename))
+        print(data)
+        dataframe = pd.read_json(data.data)
+        dataframe =  dataframe.dropna()
+        jsonRowData = dataframe.to_dict(orient='records')
+        # print(json.dumps(jsonRowData))
+        resp['data'] = jsonRowData
         return Response(resp)
 
     except:
@@ -144,9 +150,9 @@ def doLinearRegression(request):
         dataset.split = split
         dataset.save()
 
-            ## fill in the code that uses LR model coded by Ballim and return response provided by it 
+                ## fill in the code that uses LR model coded by Ballim and return response provided by it 
 
-            ## I need to send in the dataset, learning rate, tol and split
+                ## I need to send in the dataset, learning rate, tol and split
         print("My view working")
         results  = linearRegression(dataset.UserId,dataset.filename,dataset.learningRate,dataset.tol,pd.read_json(dataset.data),int(dataset.split)/100)
         resp['jsonFeatures'] = results[0]
@@ -160,6 +166,7 @@ def doLinearRegression(request):
         resp['Test_accuracy'] = results[8]
         resp['Train_accuracy'] = results[9]
         resp['meansquared'] = results[10]
+        resp["Intercept"] = results[11]
         return Response(resp)
 
     except:
