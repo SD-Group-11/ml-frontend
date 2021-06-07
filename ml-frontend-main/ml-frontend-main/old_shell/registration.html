@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <link rel="stylesheet" href="registration.css">
+    <script defer src="registration.js"></script>
+</head>
+
+
+<body>
+  <div class = "center">
+    <main>
+        <h1 id="heading">Machine Learning Frontend</h1>
+        <h2 id = "registration-header">Registration</h2>
+        
+        <div id ="registration-error-msg-holder">
+            <p id="registration-error-msg">Username already exists.<span id="registration-error-secondline">Please select a new username.</span></p>
+        </div>
+
+        <form id="registration-form">
+            <input type="text" name="username" id="register-email" class="registration-form" placeholder="Username or Email">
+            <input type="password"name="password" id="register-password" class="registration-form" placeholder="Password">
+            <input type ="submit" id="register-button">
+
+        </form>
+      
+      <input type ="back" id="back-button" placeholder= "← Go Back">
+
+
+    </main>
+</body>
