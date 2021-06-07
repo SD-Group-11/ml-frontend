@@ -29,6 +29,9 @@
                         </div>
                         
                     </div>
+
+                    
+
                     <div class="field">
                         <label class="label">Split</label>
                         <div class="control">
@@ -36,7 +39,20 @@
                         </div>
                         
                     </div>
-                    
+
+                    <div class="control">
+                    <div id="v-model-select" class="demo">
+                        <select v-model="selected" >
+                            <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
+
+                        </select>
+                    </div>
+                     </div>
+                     <button v-on:click='TrainModel'> Okay</button>
+
+            
+
+
                 </div>
 
             </div>
@@ -47,9 +63,7 @@
 
 <script>
     import axios from 'axios'
-
     import {toast} from 'bulma-toast'
-
     export default {
         name: "LinearRegressionDatasets",
         data() {
@@ -58,6 +72,8 @@
                 UserFiles: [],
                 uploadedName: '',
                 uploadable: false,
+                hasDatasets: false,
+                userFiles: [],
             }
         },
         mounted(){
@@ -66,43 +82,53 @@
         methods:{
             async getAccount(){
                 this.$store.commit('setIsLoading',true)
-
                 await axios
                     .get('/api/v1/users/me')
-
                     .then(response => {
                         this.userDetails=response.data
-                        console.log(response)
-                        var id=  this.userDetails.id;
-                        var data ={"UserId":id}
-                         axios
-                        .post('/datasets/getDatasetsInfo',data)
-                        
-                        .then(response =>{
-                           //idk why but accessing UserFiles out of this scope returns empty. Please check what im doing wrong
-                           // response.data though holds all the datasets of a user and their respective summary details
-                            this.UserFiles = response.data;
-                            // Tell us how many datasets are associated with the user 
-                            // you can loop from 1 to number_of_datasets+1 and use that to index response.data[i] to get a dataset and its summary
-                            var number_of_datasets = Object.keys(response.data).length
-                            // i've commented more in the datasets management file, check it out
-                            for(var i=1;i<number_of_datasets+1;i++){
-                                
-                                console.log(response.data[i])
-                                //Do whatever with each dataset
-                                
-                            }
-
-                        });
-                        
-                        })
-
+                        this.getUserDatasets()
+                    })
                     .catch(error => {
                         console.log(error)
                     })
-
                 this.$store.commit('setIsLoading',false)
-
+            },
+            async getUserDatasets(){
+                this.$store.commit('setIsLoading',true)
+                this.userFiles=[] 
+                var data ={"UserId":this.userDetails.id}
+                await axios
+                .post('/datasets/getDatasetsInfo',data)
+                
+                .then(response =>{
+                              
+                    if(response.data['error']=="No datasets have been uploaded."){
+                        console.log("has no datasets")
+                        console.log(response.data)
+                        this.hasDatasets = false        
+                    }
+                    else{
+                        console.log("has datasets")
+                        //console.log(response.data[0])
+                        this.hasDatasets = true
+                        //idk why but accessing UserFiles out of this scope returns empty. Please check what im doing wrong
+                        // response.data though holds all the datasets of a user and their respective summary details
+                        //this.userFiles = response.data;
+                        // Tell us how many datasets are associated with the user 
+                        // you can loop from 1 to number_of_datasets+1 and use that to index response.data[i] to get a dataset and its summary
+                        var number_of_datasets = Object.keys(response.data).length
+                        console.log(number_of_datasets)
+                        for(var i=1;i<number_of_datasets+1;i++){
+                            this.userFiles.push(response.data[i])
+                        }
+                        console.log(this.userFiles)
+                    }
+                    
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+                this.$store.commit('setIsLoading',false)
             },
             // Call this method when the user clicks Train Model 
             async TrainModel(){
@@ -115,14 +141,12 @@
                 // Must be a value between 0 and 100 representing a percentage of data that must be assigned to the training data
                 var split = document.getElementById("split").value;
                 var data ={"UserId":id,"filename":filename,"learningRate":learningRate,"tol":tol,"split":split}
-
+                console.log('data: ',data)
                 await axios
                 .post("/datasets/doLinearRegression",data)
-
                 .then(response =>{
                     //Michael will use response.data for his graphing 
                     console.log(response.data)
-
                 });
             }
         }
