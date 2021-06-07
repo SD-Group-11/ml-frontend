@@ -160,6 +160,7 @@ def doLinearRegression(request):
         resp['Test_accuracy'] = results[8]
         resp['Train_accuracy'] = results[9]
         resp['meansquared'] = results[10]
+        resp["Intercept"] = results[11]
         return Response(resp)
 
     except:

@@ -57,7 +57,8 @@ def linearRegression(userid, filename, learningrate, tolerance, datafr, dataspli
     #intercept
     intercept=sgdr.intercept_
   
-
+    Intercept = ArrToJson(intercept)
+    print(Intercept)
     #coefficients
     coefficients=sgdr.coef_
 
@@ -92,7 +93,7 @@ def linearRegression(userid, filename, learningrate, tolerance, datafr, dataspli
 
 
 
-    return jsonFeatures, coef_json,TrainX_json,TrainY_json,TestX_json,TestY_json,Train_PredictY_json,Test_PredictY_json,Train_accuracy,Test_accuracy, meansquared
+    return jsonFeatures, coef_json,TrainX_json,TrainY_json,TestX_json,TestY_json,Train_PredictY_json,Test_PredictY_json,Train_accuracy,Test_accuracy, meansquared, Intercept
 
 def uploadResults(id, filename,coef):
     DataInstance = TrainedModel(UserId=id,filename=filename,Trained_coefficients=coef)
