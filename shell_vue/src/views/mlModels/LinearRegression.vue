@@ -81,7 +81,7 @@
             {
                 this.field_errors={}
                 if (this.split === '') {
-                    //this.errors.push('Please enter your first name.')
+                    
                     this.field_errors['split']='Please enter split value.'
                 }
             },
