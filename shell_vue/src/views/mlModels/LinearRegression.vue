@@ -36,7 +36,7 @@
                         </div>
                         
                     </div>
-                     <button v-on:click='TrainModel'> Okay</button>
+                    
                 </div>
 
             </div>
@@ -108,7 +108,7 @@
             async TrainModel(){
                 var id = this.userDetails.id;
                 //Please get the filename from the dropdown and set it here 
-                var filename;
+                var filename ;
                 // tol and learningRate must be decimal values
                 var tol = document.getElementById("tol").value;
                 var learningRate = document.getElementById("learningRate").value;

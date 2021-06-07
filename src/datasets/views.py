@@ -155,6 +155,7 @@ def doLinearRegression(request):
                 ## I need to send in the dataset, learning rate, tol and split
         print("My view working")
         results  = linearRegression(dataset.UserId,dataset.filename,dataset.learningRate,dataset.tol,pd.read_json(dataset.data),int(dataset.split)/100)
+        print(results[12])
         resp['jsonFeatures'] = results[0]
         resp['coefficients'] = results[1]
         resp['TrainX'] = results[2]

@@ -10,7 +10,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import mean_squared_error
 from .models import TrainedModel
 from sklearn.preprocessing import StandardScaler
-import time
+
 #from sklearn.model_selection import train_test_split
 
 # Create your views here.
@@ -59,13 +59,13 @@ def linearRegression(userid, filename, learningrate, tolerance, datafr, dataspli
     intercept=sgdr.intercept_
   
     Intercept = ArrToJson(intercept)
-    print(Intercept)
+    # print(Intercept)
     #coefficients
     coefficients=sgdr.coef_
 
     #Prediction
     Test_PredictY = sgdr.predict(TestX)
-  
+    
    
     
     #Mean Squared Error
