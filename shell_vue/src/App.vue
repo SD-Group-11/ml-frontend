@@ -34,6 +34,7 @@
 </script>
 
 <style lang="scss">
+@import "../node_modules/bulma/sass/utilities/initial-variables";
 @import '../node_modules/bulma';
 
 
