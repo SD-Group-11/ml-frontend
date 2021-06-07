@@ -29,6 +29,9 @@
                         </div>
                         
                     </div>
+
+                    
+
                     <div class="field">
                         <label class="label">Split</label>
                         <div class="control">
@@ -36,15 +39,18 @@
                         </div>
                         
                     </div>
-                     <button v-on:click='TrainModel'> Okay</button>
 
-                    <div id="v-model-select" v-for="dataset in userFiles" v-bind:key="dataset.id" class="demo">
-                        <select v-model="selected">
-                            <option>A</option>
-                            <option>B</option>
-                            <option>C</option>
+                    <div class="control">
+                    <div id="v-model-select" class="demo">
+                        <select v-model="selected" >
+                            <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
+
                         </select>
                     </div>
+                     </div>
+                     <button v-on:click='TrainModel'> Okay</button>
+
+            
 
 
                 </div>
