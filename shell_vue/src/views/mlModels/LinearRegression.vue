@@ -42,13 +42,13 @@
 
                     <div class="control">
                     <div id="v-model-select" class="demo">
-                        <select v-model="selected" >
+                        <select v-model="selected" id = "files" >
                             <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
 
                         </select>
                     </div>
                      </div>
-                     <button v-on:click='TrainModel'> Okay</button>
+                     <button v-on:click='TrainModel'> Train Model</button>
 
             
 
@@ -134,7 +134,8 @@
             async TrainModel(){
                 var id = this.userDetails.id;
                 //Please get the filename from the dropdown and set it here 
-                var filename ;
+                var filename =  document.getElementById('files').value;
+                
                 // tol and learningRate must be decimal values
                 var tol = document.getElementById("tol").value;
                 var learningRate = document.getElementById("learningRate").value;
@@ -147,6 +148,8 @@
                 .then(response =>{
                     //Michael will use response.data for his graphing 
                     console.log(response.data)
+                     
+                    
                 });
             }
         }
