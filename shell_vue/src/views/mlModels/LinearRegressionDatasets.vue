@@ -129,16 +129,18 @@
 
                             <td class="is-actions-cell">
                                 <button class="button is-small is-info" type="button" v-on:click ="getDatasetData(dataset.filename)">
-
+                                    <a href="@assets/files/Train.csv" download>" "</a> 
                                     <span class="icon-text">
                                         <span class="icon is-medium">
                                             <i class="fas fa-lg fa-file-download"></i>
                                         </span>
+                                        
                                         <span><strong>Download</strong></span>
                                     </span>
                                 </button>
+                                
                             </td>
-                        
+                            
                             
 
                         </tr>

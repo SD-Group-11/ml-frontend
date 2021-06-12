@@ -15,6 +15,8 @@
                 <div class="box" style="background-color:lightyellow;">
                     <h2 class="title is-3 has-text-centered">Enter Hyperparameters</h2>
                     
+                    <form>
+                    
                     <div class="field">
                         <label class="label">Learning Rate</label>
                         <div class="control">
@@ -42,25 +44,28 @@
 
                     <div class="control">
                     <div id="v-model-select" class="demo">
-                        <select id="sel" v-model="selected" >
-                            <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
-
+                        <select v-model="selected" >
+                            <option v-for="dataset in userFiles" v-bind:key="dataset.id">
+                                {{dataset.filename}}
+                            </option>
                         </select>
                     </div>
                      </div>
+
+                    <div class="control">
+
                      <button v-on:click='TrainModel'> Okay</button>
-
+                    </div>
             
-
+                    </form>
 
                 </div>
 
-
-                 <template v-if="returned">
+                <template v-if="returned">
                     <section class="section">
                     <div class="container">
                         <div class="image">
-                            <img src="@/assets/images/Train.png">
+                            <img src="@/assets/images/confused-icon-6-yellow.png">
                         </div>    
                     </div>
                 </section>
@@ -68,31 +73,13 @@
                     <section class="section">
                         <div class="container">
                             <div class="image">
-                                <img src="@/assets/images/TrainError.png">
-                            </div>     
-                        </div>
-                    </section>
-                 <button v-on:click='TestModel'>Test</button>
-                </template>
-
-                <!-- <template v-if="returned">
-                    <section class="section">
-                    <div class="container">
-                        <div class="image">
-                            <img src="@/assets/images/Insurance.png">
-                        </div>    
-                    </div>
-                </section>
-
-                    <section class="section">
-                        <div class="container">
-                            <div class="image">
-                                <img src="@/assets/images/InsuranceError.png">
+                                <img src="@/assets/images/confused-icon-6-yellow.png">
                             </div>     
                         </div>
                     </section>
                 
-                </template> -->
+                </template>
+                
 
             </div>
         </div>
@@ -102,7 +89,9 @@
 
 <script>
     import axios from 'axios'
+
     import {toast} from 'bulma-toast'
+
     export default {
         name: "LinearRegressionDatasets",
         data() {
@@ -122,16 +111,21 @@
         methods:{
             async getAccount(){
                 this.$store.commit('setIsLoading',true)
+
                 await axios
                     .get('/api/v1/users/me')
+
                     .then(response => {
                         this.userDetails=response.data
                         this.getUserDatasets()
                     })
+
                     .catch(error => {
                         console.log(error)
                     })
+
                 this.$store.commit('setIsLoading',false)
+
             },
             async getUserDatasets(){
                 this.$store.commit('setIsLoading',true)
@@ -156,6 +150,7 @@
                         //this.userFiles = response.data;
                         // Tell us how many datasets are associated with the user 
                         // you can loop from 1 to number_of_datasets+1 and use that to index response.data[i] to get a dataset and its summary
+
                         var number_of_datasets = Object.keys(response.data).length
                         console.log(number_of_datasets)
                         for(var i=1;i<number_of_datasets+1;i++){
@@ -168,6 +163,7 @@
                 .catch(error => {
                     console.log(error)
                 })
+
                 this.$store.commit('setIsLoading',false)
             },
             // Call this method when the user clicks Train Model 
@@ -176,42 +172,22 @@
                 var id = this.userDetails.id;
                 //Please get the filename from the dropdown and set it here 
                 //var filename = "CP.csv";
-                var filename = "Train.csv";
-                // var filename = "Insurance.csv"
-                // var filename = document.getElementById(sel).value;
                 // tol and learningRate must be decimal values
+                var filename = this.selected
                 var tol = document.getElementById("tol").value;
                 var learningRate = document.getElementById("learningRate").value;
                 // Must be a value between 0 and 100 representing a percentage of data that must be assigned to the training data
                 var split = document.getElementById("split").value;
                 var data ={"UserId":id,"filename":filename,"learningRate":learningRate,"tol":tol,"split":split}
+
                 console.log('data: ',data)
                 await axios
                 .post("/datasets/doLinearRegression",data)
+
                 .then(response =>{
                     //Michael will use response.data for his graphing 
                     this.returned=true
                     console.log(response.data)
-                    var resp1 = "Testing Accuracy: "+response.data["Test_accuracy"]
-                    var resp2 = "Mean Squared Error: "+response.data["meansquared"]
-                    toast({
-                            message: resp1,
-                            type: 'is-warning',
-                            dismissible: true,
-                            pauseOnHover: true,
-                            duration: 2000,
-                            position: 'bottom-center',
-                        })
-
-                    toast({
-                            message: resp2,
-                            type: 'is-warning',
-                            dismissible: true,
-                            pauseOnHover: true,
-                            duration: 2000,
-                            position: 'bottom-center',
-                        })
-
                 });
             }
         }
