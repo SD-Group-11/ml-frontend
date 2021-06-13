@@ -4,11 +4,12 @@
 
   <div class="is-loading-bar has-text-centered" v-bind:class="{'is-loading': $store.state.isLoading }">
             <div class="lds-dual-ring"></div>
-    </div>
+  </div>
   
   <section class="section">
     <router-view/>
   </section>
+
 
 </div>
 </template>
@@ -38,6 +39,8 @@
 @import '../node_modules/bulma';
 @import "../node_modules/bulma-responsive-tables/bulma-responsive-tables";
 @import '../node_modules/@fortawesome/fontawesome-free';
+@import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
+@import "../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
 
 
 

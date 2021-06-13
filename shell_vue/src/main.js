@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -9,12 +10,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
 import { dom } from '@fortawesome/fontawesome-svg-core'
-// import VueJsonToCsv from 'vue-json-to-csv'
-// import JsonCSV from 'vue-json-csv'
-// import JsonExcel from "vue-json-excel";
-// import Vue from "vue";
-// import VueBlobJsonCsv from 'vue-blob-json-csv';
-
+import VueFinalModal  from 'vue-final-modal'
 
 library.add(fas);
 library.add(fab);
@@ -23,4 +19,4 @@ dom.watch();
 
 axios.defaults.baseURL='http://127.0.0.1:8000'
 
-createApp(App).component('font-awesome-icon', FontAwesomeIcon).use(store).use(router, axios).mount('#app')
+createApp(App).component('font-awesome-icon', FontAwesomeIcon).use(VueFinalModal()).use(store).use(router, axios).mount('#app')
