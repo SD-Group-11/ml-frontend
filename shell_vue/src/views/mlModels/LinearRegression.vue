@@ -55,9 +55,7 @@
                     </div>
                     </div>
 
-                    <br>
-
-                    <button class="button is-warning is-medium mt-3" v-on:click='TrainModel'><strong>Train Model</strong></button>
+                    <button class="button is-warning is-medium mt-4" v-on:click='TrainModel'><strong>Train Model</strong></button>
 
                     </form>
                 </div> 
@@ -73,7 +71,6 @@
 
 <script>
     import axios from 'axios'
-
     import {toast} from 'bulma-toast'
 
     export default {
@@ -87,12 +84,12 @@
                 field_errors:{},
                 split: '',
                 userFiles: [],
-                selected: false, //idk how to properly define this
+                selected: '', //idk how to properly define this - checked 
             }
         },
         mounted(){
             this.getAccount()
-            this.getUserDatasets()
+            
         },
         methods:{
             async submitForm()
@@ -106,43 +103,16 @@
 
             async getAccount(){
                 this.$store.commit('setIsLoading',true)
-
                 await axios
                     .get('/api/v1/users/me')
-
                     .then(response => {
                         this.userDetails=response.data
-                        console.log(response)
-                        var id=  this.userDetails.id;
-                        var data ={"UserId":id}
-                         axios
-                        .post('/datasets/getDatasetsInfo',data)
-                        
-                        .then(response =>{
-                           //idk why but accessing UserFiles out of this scope returns empty. Please check what im doing wrong
-                           // response.data though holds all the datasets of a user and their respective summary details
-                            this.UserFiles = response.data;
-                            // Tell us how many datasets are associated with the user 
-                            // you can loop from 1 to number_of_datasets+1 and use that to index response.data[i] to get a dataset and its summary
-                            var number_of_datasets = Object.keys(response.data).length
-                            // i've commented more in the datasets management file, check it out
-                            for(var i=1;i<number_of_datasets+1;i++){
-                                
-                                console.log(response.data[i])
-                                //Do whatever with each dataset
-                                
-                            }
-
-                        });
-                        
-                        })
-
+                        this.getUserDatasets()
+                    })
                     .catch(error => {
                         console.log(error)
                     })
-
                 this.$store.commit('setIsLoading',false)
-
             },
             async getUserDatasets(){
                 this.$store.commit('setIsLoading',true)
@@ -150,13 +120,13 @@
                 var data ={"UserId":this.userDetails.id}
                 await axios
                 .post('/datasets/getDatasetsInfo',data)
-                
+
                 .then(response =>{
-                              
+
                     if(response.data['error']=="No datasets have been uploaded."){
                         console.log("has no datasets")
                         console.log(response.data)
-                        this.hasDatasets = false        
+                        this.hasDatasets = false
                     }
                     else{
                         console.log("has datasets")
@@ -174,14 +144,13 @@
                         }
                         console.log(this.userFiles)
                     }
-                    
+
                 })
                 .catch(error => {
                     console.log(error)
                 })
                 this.$store.commit('setIsLoading',false)
             },
-
             // Call this method when the user clicks Train Model 
             async TrainModel(){
                 var id = this.userDetails.id;
