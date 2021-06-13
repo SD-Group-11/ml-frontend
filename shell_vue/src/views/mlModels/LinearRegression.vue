@@ -42,7 +42,22 @@
                         </p>
                         
                     </div>
-                     <button v-on:click='TrainModel'>Next</button>
+
+                    <!-- minor facelift -->
+                    <div class="control">
+                    <div id="v-model-select" class="demo">
+                        <select v-model="selected" id = "files" >
+                            <option disabled value="">Please select one</option>
+                            <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
+                        </select>
+                        <br>
+                        <span>Selected: {{ selected }}</span>
+                    </div>
+                    </div>
+
+                    <br>
+
+                    <button class="button is-warning is-medium mt-3" v-on:click='TrainModel'><strong>Train Model</strong></button>
 
                     </form>
                 </div> 
@@ -75,6 +90,7 @@
         },
         mounted(){
             this.getAccount()
+            this.getUserDatasets()
         },
         methods:{
             async submitForm()
@@ -126,6 +142,44 @@
                 this.$store.commit('setIsLoading',false)
 
             },
+            async getUserDatasets(){
+                this.$store.commit('setIsLoading',true)
+                this.userFiles=[] 
+                var data ={"UserId":this.userDetails.id}
+                await axios
+                .post('/datasets/getDatasetsInfo',data)
+                
+                .then(response =>{
+                              
+                    if(response.data['error']=="No datasets have been uploaded."){
+                        console.log("has no datasets")
+                        console.log(response.data)
+                        this.hasDatasets = false        
+                    }
+                    else{
+                        console.log("has datasets")
+                        //console.log(response.data[0])
+                        this.hasDatasets = true
+                        //idk why but accessing UserFiles out of this scope returns empty. Please check what im doing wrong
+                        // response.data though holds all the datasets of a user and their respective summary details
+                        //this.userFiles = response.data;
+                        // Tell us how many datasets are associated with the user 
+                        // you can loop from 1 to number_of_datasets+1 and use that to index response.data[i] to get a dataset and its summary
+                        var number_of_datasets = Object.keys(response.data).length
+                        console.log(number_of_datasets)
+                        for(var i=1;i<number_of_datasets+1;i++){
+                            this.userFiles.push(response.data[i])
+                        }
+                        console.log(this.userFiles)
+                    }
+                    
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+                this.$store.commit('setIsLoading',false)
+            },
+
             // Call this method when the user clicks Train Model 
             async TrainModel(){
                 var id = this.userDetails.id;
