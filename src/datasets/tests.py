@@ -3,6 +3,7 @@ from .models import Dataset
 from .views import  filterData
 import pandas as pd
 from LinearRegression.views import linearRegression
+from LinearRegression.models import TrainedModel
 import json
 import numpy as np
 # Create your tests here.
@@ -236,6 +237,7 @@ class DatasetModelTests(TestCase):
         self.results  = linearRegression(o.UserId,o.filename,o.learningRate,o.tol,pd.read_json(o.data),int(o.split)/100)
         self.assertEquals(len(self.results[0]['0']),3)
         self.assertNotEquals(len(self.results[0]['0']),1)
+
 
     
     
