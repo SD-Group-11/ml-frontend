@@ -81,7 +81,7 @@ def linearRegression(userid, filename, learningrate, tolerance, datafr, dataspli
     #parse coefficients to json
     coef_json = ArrToJson(coefficients)
     #uploading
-    uploadResults(userid,filename,coef_json)
+    uploadResults(userid,filename,coef_json,Train_accuracy,Test_accuracy,meansquared)
     #parse all arrats to json
     jsonFeatures=FeatToJson(datafr)
     Test_PredictY_json = ArrToJson(Test_PredictY)
@@ -96,9 +96,17 @@ def linearRegression(userid, filename, learningrate, tolerance, datafr, dataspli
 
     return jsonFeatures, coef_json,TrainX_json,TrainY_json,TestX_json,TestY_json,Train_PredictY_json,Test_PredictY_json,Train_accuracy,Test_accuracy, meansquared, Intercept
 
-def uploadResults(id, filename,coef):
-    DataInstance = TrainedModel(UserId=id,filename=filename,Trained_coefficients=coef)
-    DataInstance.save()
+def uploadResults(id, filename,coef,TrainAcc,TestAcc,MSE):
+    try:
+        DataInstance = TrainedModel(UserId=id,filename=filename,Trained_coefficients=coef,TrainCoeffDetermination = TrainAcc,TestCoeffDetermination=TestAcc,meanSquaredError = MSE)
+        DataInstance.save()
+    except:
+        obj = TrainedModel.objects.get(UserId=id, filename=filename)
+        obj.Trained_coefficients = coef
+        obj.TrainCoeffDetermination = TrainAcc
+        obj.TestCoeffDetermination = TestAcc
+        obj.meanSquaredError = MSE
+        obj.save()
 
 def FeatToJson(x):
     column_names = list(x.columns)

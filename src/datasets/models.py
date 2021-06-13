@@ -10,6 +10,7 @@ class Dataset(models.Model):
     tol = models.CharField(max_length=300,null=True)
     data = JSONField(default=dict)
     nullValues = models.IntegerField(null=True)
+    created = models.DateTimeField(auto_now_add=True)
     
 
     class Meta:
