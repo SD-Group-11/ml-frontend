@@ -6,6 +6,10 @@ shell_vue/dist/
 # local env files
 .env.local
 .env.*.local
+.venv
+ venv/
+ bin/
+ lib/python3.7/site-packages
 
 
 # Log files
