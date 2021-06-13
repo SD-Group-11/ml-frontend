@@ -7,6 +7,7 @@ shell_vue/dist/
 .env.local
 .env.*.local
 
+
 # Log files
 npm-debug.log*
 yarn-debug.log*
