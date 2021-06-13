@@ -136,7 +136,7 @@
           </header> -->
           </template>
           <template v-else>
-<div class="columns is-multiline"> 
+          <div class="columns is-multiline"> 
            <div class="column  is-half"> 
             <div class="card">
               <header class="card-header">

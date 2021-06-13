@@ -1,33 +1,56 @@
 <template>
-    <section class="hero is-light">
+    <div class="container">  
+    <section class="hero is-light" style=" background-color:lightyellow">
       <div class="get-head"></div>
       <div class="get-body">
-          <header id="gettingstarted" >
-            <h1><strong>Getting Started</strong></h1>
-            <p><strong>1. </strong>Select the model you would like to use.</p>
-            <p><strong>2. </strong>Upload your data.</p>
-            <p><strong>3. </strong>Apply the model.</p>
-            <p><strong>4. </strong>Interpret the results.</p>
-            <p><strong>5. </strong>Download your results.</p>
-          </header>
+          <div class="card" style="max-width:800px">
+         <header class="card-header">
+                <p class="card-header-title is-centered" style="font-size:40px">
+             Getting Started
+                </p>
+         </header>    
+         <div class="card-content">
+           <div class="content is-medium">
+             <ol type="1">
+               <li>Select the model you would like to use.</li>
+               <li>Upload your data.</li>
+               <li>Apply the model.</li>
+               <li>Interpret the results.</li>
+               <li>Download your results.</li>
+
+             </ol>
+           </div>
+           <div class="github-card" data-github="SD-Group-11/ml-frontend" data-width="400" data-height="" data-theme="default"></div>
+          
+         </div>    
+         <div class="card">
+          <footer class="card-footer">
+            <router-link to="/faq" class="card-footer-item">FAQ</router-link>
+            <router-link to="/dashboard" class="card-footer-item is-link">Account</router-link>
+          </footer>
+        </div>
+        </div>
       </div>
       <div class="get-foot"></div>
     </section>
+  </div>  
 </template>
 
 <style scoped>
   @import '../assets/styles/homepage.css';
+
+  .card {
+    /* max-width: 500px; */
+    margin-left: auto;
+    margin-right: auto;
+  }
 </style>
 
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
-  name: 'GettingStarted',
-  components: {
-    HelloWorld
-  }
+  name: 'GettingStarted'
 }
 </script>
