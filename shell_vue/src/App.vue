@@ -7,7 +7,10 @@
     </div>
   
   <section class="section">
-    <router-view/>
+   <transition name="router-anim" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutUp">
+   <router-view/>
+   </transition> 
+   <!-- ADDED HERE -->
   </section>
 </div>
 </template>
@@ -15,6 +18,7 @@
 <script>
   import axios from 'axios'
   import Navbar from '@/components/layout/Navbar'
+  
 
   export default {
     name: "App",
@@ -36,7 +40,7 @@
 <style lang="scss">
 @import "../node_modules/bulma/sass/utilities/initial-variables";
 @import '../node_modules/bulma';
-
+@import "https://cdn.jsdelivr.net/npm/animate.css@3.5.1"; //animation lib
 
 .lds-dual-ring {
     display: inline-block;
@@ -75,3 +79,4 @@
 
 
 </style>
+
