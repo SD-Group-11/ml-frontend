@@ -86,6 +86,8 @@
                 uploadable: false,
                 field_errors:{},
                 split: '',
+                userFiles: [],
+                selected: false, //idk how to properly define this
             }
         },
         mounted(){
