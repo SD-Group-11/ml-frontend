@@ -10,7 +10,7 @@
    <transition name="router-anim" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutUp">
    <router-view/>
    </transition> 
-   <!-- ADDED HERE -->
+   <!--PAGE ANIMATIONS ADDED HERE -->
   </section>
 </div>
 </template>
