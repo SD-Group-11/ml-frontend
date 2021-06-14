@@ -47,7 +47,7 @@
                     <div class="control">
                     <div id="v-model-select" class="demo">
                         <select v-model="selected" id = "files" >
-                            <option disabled value="">Please select one</option>
+                            <option disabled value="">Select dataset</option>
                             <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
                         </select>
                         <br>
