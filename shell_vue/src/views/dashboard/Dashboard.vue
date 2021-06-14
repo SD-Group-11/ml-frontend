@@ -1,24 +1,19 @@
 <template>
 <div class = "container">
     <section class="hero is-medium" style=" background-color:lightblue">
-      <div class="hero-head "></div>
-
       <div class="hero-body">
           <header id="showcase" >
             <img src="@/assets/images/confused-icon-6.png" alt="Logo">
-            <h1 class = "title is-1 has-text-centered has-text-black mt-5"><strong>Machine Learning Front-End Framework</strong></h1>
+            <h1 class = "title is-1 has-text-centered has-text-black mt-5"><strong><i>Machine Learning Front-End Framework</i></strong></h1>
           </header>
-      </div>
-      <div class="hero-foot is-center">
-        <!-- Brought to you by IllegalSkillsException  -->
       </div>
     </section>
 
     <br>
 
     <div>
-    <h1 class = "title is-1 has-text-centered has-text-black mt-5 pt-6"><strong>Introduction</strong></h1>
-     <p class="info has-text-centered mt-5">Recently machine learning models have become popular at performing automatic 
+    <h1 class = "title is-1 has-text-centered has-text-black mt-5 pt-6"><strong><i>Introduction</i></strong></h1>
+     <p class="info has-text-centered pb-6 ">Recently machine learning models have become popular at performing automatic 
        classification. However, researchers have to constantly code up the training procedure 
        of common networks such as Resnet or Alexnet which can be tedious.
        We can streamline this process by providing a frontend application where the user

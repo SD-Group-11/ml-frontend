@@ -11,6 +11,17 @@
    <router-view/>
    </transition> 
    <!--PAGE ANIMATIONS ADDED HERE -->
+   <!-- FOOTER why is it so THICK?!! -->
+   <footer class = "footer has-background-info-light mt-6">
+     <div class = "container pt-6">
+       <div class = "columns">
+         <div class = "column has-text-grey-light has-text-centered">
+           <p><i>Brought to you by <strong>IllegalSkillsException</strong>.</i></p>
+         </div>
+       </div>
+     </div>
+   </footer>
+
   </section>
 </div>
 </template>
@@ -76,6 +87,7 @@
         height: 80px;
     }
 }
+
 
 
 </style>
