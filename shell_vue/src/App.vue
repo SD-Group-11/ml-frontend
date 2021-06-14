@@ -7,20 +7,22 @@
     </div>
   
   <section class="section">
-   <transition name="router-anim" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutUp">
-   <router-view/>
-   </transition> 
+   
+  <transition name="router-anim" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutUp">
+    <router-view/>
+  </transition> 
+
    <!--PAGE ANIMATIONS ADDED HERE -->
    <!-- FOOTER why is it so THICK?!! -->
-   <footer class = "footer has-background-info-light mt-6">
-     <div class = "container pt-6">
-       <div class = "columns">
-         <div class = "column has-text-grey-light has-text-centered">
-           <p><i>Brought to you by <strong>IllegalSkillsException</strong>.</i></p>
-         </div>
-       </div>
-     </div>
-   </footer>
+  <footer class = "footer has-background-info-light mt-6">
+    <div class = "container pt-6">
+      <div class = "columns">
+        <div class = "column has-text-grey-light has-text-centered">
+          <p><i>Brought to you by <strong>IllegalSkillsException</strong>.</i></p>
+        </div>
+      </div>
+    </div>
+  </footer>
 
   </section>
 </div>
@@ -87,8 +89,6 @@
         height: 80px;
     }
 }
-
-
 
 </style>
 

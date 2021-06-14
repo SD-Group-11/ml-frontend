@@ -1,6 +1,6 @@
 <template>
 <div class = "container">
-    <section class="hero is-medium" style=" background-color:lightblue">
+    <section class="hero is-small" style=" background-color:lightblue">
       <div class="hero-body">
           <header id="showcase" >
             <img src="@/assets/images/confused-icon-6.png" alt="Logo">
