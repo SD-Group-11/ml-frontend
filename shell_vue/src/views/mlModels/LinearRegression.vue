@@ -85,6 +85,8 @@
                 split: '',
                 userFiles: [],
                 selected: '', //idk how to properly define this - checked 
+                hasDatasets: false,
+                userFiles: [],
             }
         },
         mounted(){
@@ -120,13 +122,13 @@
                 var data ={"UserId":this.userDetails.id}
                 await axios
                 .post('/datasets/getDatasetsInfo',data)
-
+                
                 .then(response =>{
-
+                              
                     if(response.data['error']=="No datasets have been uploaded."){
                         console.log("has no datasets")
                         console.log(response.data)
-                        this.hasDatasets = false
+                        this.hasDatasets = false        
                     }
                     else{
                         console.log("has datasets")
@@ -144,7 +146,6 @@
                         }
                         console.log(this.userFiles)
                     }
-
                 })
                 .catch(error => {
                     console.log(error)
@@ -169,7 +170,6 @@
                 .then(response =>{
                     //Michael will use response.data for his graphing 
                     console.log(response.data)
-
                 });
             }
         }
