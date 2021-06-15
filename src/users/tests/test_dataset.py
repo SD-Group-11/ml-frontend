@@ -92,7 +92,7 @@ class DatasetModelTests(TestCase):
         results  = linearRegression(o.UserId,o.filename,o.learningRate,o.tol,pd.read_json(o.data),int(o.split)/100)
         
         ## check that the ml was performed and not empty
-        self.assertEquals(len(results),11)
+        self.assertEquals(len(results),12)
         self.assertAlmostEquals(round(results[8],2),0.99)
         self.assertEquals(len(results[0]['0']),3)
 
