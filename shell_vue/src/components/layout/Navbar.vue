@@ -10,24 +10,25 @@
         <div class="navbar-menu">
             <div class="navbar-start">
                 <template v-if="!$store.state.isAuthenticated">
-                    <router-link to="/" class="navbar-item">Home</router-link>
+                    <router-link to="/" class="navbar-item"><strong>Home</strong></router-link>
+                    
                 </template>
 
                 <template v-else>
-                    <router-link to="/dashboard" class="navbar-item">Home</router-link>    
+                    <router-link to="/dashboard" class="navbar-item"><strong>Home</strong></router-link>    
                 </template>
 
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
-                        Guide
+                        <strong>Guide</strong>
                     </a>
 
                     <div class="navbar-dropdown ">
                         <a class="navbar-item is-danger">
-                             <router-link to="/getting-started" class="navbar-item">Getting Started</router-link> 
+                             <router-link to="/getting-started" class="navbar-item"><strong>Getting Started</strong></router-link> 
                         </a>
                         <a class="navbar-item">
-                             <router-link to="/faq" class="navbar-item">FAQ</router-link> 
+                             <router-link to="/faq" class="navbar-item"><strong>FAQ</strong></router-link> 
                         </a>
                     </div>
                 </div>
@@ -35,12 +36,13 @@
 
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
-                        About Us
+                        <strong>About Us</strong>
                     </a>
 
                     <div class="navbar-dropdown">
                         <a class="navbar-item">
-                            Team
+                            
+                            <strong>Team</strong>
                         </a>
                     </div>
                 </div>
@@ -49,23 +51,25 @@
                 <template v-if="$store.state.isAuthenticated">
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
-                            Linear Regression
+                            <strong>Linear Regression</strong> 
                         </a>
 
                         <div class="navbar-dropdown">
-                            <router-link to="/linear-regression" class="navbar-item">Train Model</router-link>
-                            <router-link to="/linear-regression-datasets" class="navbar-item">Manage Datasets</router-link>
+                            <router-link to="/linear-regression" class="navbar-item"><strong>Train Model</strong></router-link>
+                            <router-link to="/linear-regression-datasets" class="navbar-item"><strong>Manage Datasets</strong></router-link>
 
                         </div>
                     </div>
 
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
-                            Naive Bayes
+                            
+                            <strong>Naive Bayes</strong>
                         </a> 
                         <div class="navbar-dropdown">
                             <a class="navbar-item">
-                                Coming Soon...
+                                
+                                <strong>Coming Soon...</strong>
                             </a>    
                         </div>  
                     </div>
@@ -90,12 +94,13 @@
                     
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
-                            My Account
+                            <strong>My Account</strong>
+                            
                         </a>
 
                         <div class="navbar-dropdown">
-                            <router-link to="/dashboard/my-account" class="navbar-item">Account Page</router-link>
-                            <a @click="logout()" class="navbar-item">Sign Out?</a>
+                            <router-link to="/dashboard/my-account" class="navbar-item"><strong>Account Page</strong></router-link>
+                            <a @click="logout()" class="navbar-item"><strong>Sign Out?</strong></a>
                         </div>
                     </div>
 

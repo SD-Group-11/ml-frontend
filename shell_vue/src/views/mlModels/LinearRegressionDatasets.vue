@@ -1,107 +1,61 @@
 <template>   
     <div class="container">
 
-        <!-- <section class="hero" style=" background-color:lightblue">
-            <div class="hero-body">
-                <h1 class="title is-1 has-text-centered" style=" background-color:lightblue; border-radius:200px"><strong>Upload New Dataset</strong></h1>
+        <div class="container">
+            <div class="notification is-info has-text-centered" >
+                <strong><h3 class="title is-3">Linear Regression Datasets</h3></strong>
             </div>
-        </section> -->
-
-        <section class="section">
-            <div class="container">
-                <div class="column is-multiline">
-
-                    <div class="column">    
-
-                        <div class="columns is-multiline is-mobile">
-                            
-                            <div class="column is-half">
-                                
-                                <div class="box" style="background-color:lightyellow;" >
-                                    <form @submit.prevent="submitForm" >
+            <form @submit.prevent="submitForm"> <!-- style="background-color:lightyellow;" -->
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <div class="control">
+                                <div class="file has-name is-medium is-warning" >
+                                    <label class="file-label">
                                         
-                                        <div class="field">
-                                            <div class="control">
-                                                <div class="file has-name is-medium is-warning" >
-                                                    <label class="file-label">
-                                                        
-                                                        <input class="file-input" id="myFile" type="file" accept=".csv"  v-on:input="fileValidation">
-                                                            
-                                                            <div class="file-cta">
-                                                                <div class="file-label" >
-                                                                    Choose a file…
-                                                                </div>
-                                                            </div>
-
-                                                        <div class="file-name">  
-                                                            {{uploadedName}}    
-                                                        </div>
-
-                                                    </label>
+                                        <input class="file-input" id="myFile" type="file" accept=".csv"  v-on:input="fileValidation">
+                                            
+                                            <div class="file-cta">
+                                                <div class="file-label" >
+                                                    <strong>Choose a file…</strong>
                                                 </div>
                                             </div>
+
+                                        <div class="file-name">  
+                                            {{uploadedName}}    
                                         </div>
 
-                                        <div class="field">
-                                            <div class="control">
-                                                <button id = 'uploadFile' v-if="uploadable" type="submit" v-on:click = 'Upload' class="button is-info has-text-black"><strong>Submit</strong></button>
-                                            </div>
-                                        </div>
-
-                                    </form>
+                                    </label>
                                 </div>
-
                             </div>
-                        
-                            <div class="column is-half">
-                                 <div class="box" style="background-color:lightyellow;" >
-                                    <h2 class="title is-3">Uploaded data {{hasDatasets ? "✔️" : "🗅"}}</h2>
-                                    <p id="data" ref="para" v-if=" !userFiles ">
-                                            Metadata will appear here.
-                                    </p>
-                                    <p id="data" ref="para" v-if=" userFiles ">
-                                        <ul>
-                                            <li v-for='file in userFiles' v-bind:key=" file " >
-                                                <h3><b>{{file.filename}}</b></h3>
-                                                Datapoints: {{file.datapoints}}<br/>
-                                                Columns: {{file.columns}}<br/>
-                                                Feature Names: {{file.featureNames.join(", ")}}<br/>
-                                                Null Values: {{file.nullValues}}<br/>
-                                                <br/>
-                                                <br/>
-                                            </li>
-                                        </ul>
-                                    </p>
-                                </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            <div class="control is-pulled-right  ml-3">
+                                <!-- <button id = 'uploadFile' v-if="uploadable" type="submit" v-on:click = 'Upload' class="button is-info has-text-black"><strong>Submit</strong></button> -->
+                                <button  class="button is-medium  is-info is-outlined " id = 'uploadFile' type="submit" v-if="uploadable" v-on:click = 'Upload'><strong>Upload</strong></button>
 
                             </div>
                         </div>
-                        
                     </div>
-                </div>
-            </div>
-        </section>
+                </div>                    
 
+            </form>
+        </div>
 
-        <!-- <section class="hero" style=" background-color:lightblue">
-            <div class="hero-body">
-                <h1 class="title is-1 has-text-centered" style=" background-color:lightblue; border-radius:200px"><strong>Uploaded Datasets</strong></h1>
-            </div>
-        </section> -->
+            <div class="block" > </div>
 
-        <section class="section">
             <div class="container">
                 <div class="b-table">
                 <div class="table-wrapper has-mobile-cards">
                     <table class="table is-fullwidth is-hoverable is-fullwidth">
                     <thead>
                         <tr>
-                            <!-- <th class="is-chevron-cell"></th> -->
                             <th></th>
                             <th>Name</th>
-                            <th>No. Datapoints</th>
-                            <!-- <th>Features</th> -->
-                            <th>No. Features</th>
+                            <th>Datapoints</th>
+                            <th>Features</th>
                             <th>Null Values</th>
                             <th>Date Created</th>
                             <th></th>
@@ -132,22 +86,38 @@
                                 <div class="field has-addons">
                                     
                                     <p class="control">
-                                        <button class="button is-normal is-primary" type="button" @click="showReportModal = true">
-                                    
+                                        <template v-if="dataset.Info">
+                
+                                            <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" @click="showNoReportModal = true">
                                         
-                                            <span class="icon is-normal">
-                                                <!-- <i class="fas fa-brain"></i> -->
-                                                <i class="fas fa-lg fa-file-medical-alt"></i>
-                                            </span>
+                                            
+                                                <span class="icon is-normal">
+                                                    <!-- <i class="fas fa-brain"></i> -->
+                                                    <i class="fas fa-lg fa-file-medical-alt"></i>
+                                                </span>
 
-                                            <!-- <span><strong>View Model Report</strong></span> -->
-                                            <!-- <span>Model</span> -->
+                                                <!-- <span><strong>View Model Report</strong></span> -->
+                                                <!-- <span>Model</span> -->
 
-                                        </button>
+                                            </button>
+                                        </template>
+                                        <template v-else>
+                                            <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" v-on:click ="getReport(dataset.MSE, dataset.TrainAccuracy, dataset.TestAccuracy)">
+                                        
+                                                <span class="icon is-normal">
+                                                    <!-- <i class="fas fa-brain"></i> -->
+                                                    <i class="fas fa-lg fa-file-medical-alt"></i>
+                                                </span>
+
+                                                <!-- <span><strong>View Model Report</strong></span> -->
+                                                <!-- <span>Model</span> -->
+
+                                            </button>
+                                        </template>
                                     </p>
 
                                     <p class="control">
-                                        <button class="button is-normal is-info is-inverted" type="button" v-on:click ="getData(dataset.filename)">
+                                        <button class="button is-normal is-info is-inverted has-tooltip-arrow has-tooltip-info" data-tooltip="View dataset" type="button" v-on:click ="getData(dataset.filename)">
                                     
                                         
                                             <span class="icon is-normal">
@@ -161,11 +131,12 @@
                                     </p>
 
                                     <p class="control">
-                                        <button class="button is-normal is-link" type="button" v-on:click ="getDatasetData(dataset.filename)">
-                                        
+                                        <button class="button is-normal is-link has-tooltip-arrow has-tooltip-info" data-tooltip="Download dataset" type="button" v-on:click ="getDatasetData(dataset.filename)">
+                                            
                                             <span class="icon is-normal">
                                                 <i class="fas fa-lg fa-file-download"></i>
                                             </span>
+                                            
 
                                             <!-- <span><strong>Download</strong></span> -->
                                             <!-- <span>Download</span> -->
@@ -174,11 +145,8 @@
                                     </p>
 
                                 </div>
-                                    
-                                
-                            </td>
-
-                            
+     
+                            </td>  
                         </tr>
                     
                     </tbody>
@@ -190,12 +158,28 @@
                 <vue-final-modal v-model="showUploadedModal" classes="modal-container" content-class="modal-content">
                     
                     <span class="modal__title">
-                        Dataset Uploaded
+                        Dataset Uploaded Successfully 
+                        {{uploaded ? "✔️" : "🗅"}}
                         <button class="delete is-pulled-right" @click="showUploadedModal = false"></button>
                     </span>
 
-
-
+                    <div class="modal__content">
+                        <div class="box" style="background-color:lightyellow;" >
+                            <p id="data" ref="para" v-if=" uploadedSummary ">
+                                <ul>
+                                    <li v-for='file in uploadedSummary' v-bind:key=" file " >
+                                        <h3><b>{{file.filename}}</b></h3>
+                                        Datapoints: {{file.datapoints}}<br/>
+                                        Columns: {{file.columns}}<br/>
+                                        Feature Names: {{file.featureNames.join(", ")}}<br/>
+                                        Null Values: {{file.nullValues}}<br/>
+                                        <br/>
+                                        <br/>
+                                    </li>
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
 
                 </vue-final-modal>
                 
@@ -207,10 +191,34 @@
                     </span>
 
                     <div class="modal__content">
+                        <div class="container mt-3">
+                            <div class="notification is-info">
+                                <strong>Mean Squared Error: </strong> {{datasetReport.MSE}}
+                            </div>
+                            <div class="notification is-info">
+                                <strong>Training Accuracy: </strong> {{datasetReport.TrainAccuracy}}
+                            </div>
+                            <div class="notification is-info">
+                                <strong>Testing Accuracy: </strong> {{datasetReport.TestAccuracy}}
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                </vue-final-modal>
+
+                <vue-final-modal v-model="showNoReportModal" classes="modal-container" content-class="modal-content">
+
+                    <span class="modal__title">
+                        No model trained for dataset 
+                        <button class="delete is-pulled-right" @click="showNoReportModal = false"></button>
+                    </span>
+
+                    <!-- <div class="modal__content">
                         <p>
                             {{}}
                         </p>
-                    </div>
+                    </div> -->
 
                 </vue-final-modal>
   
@@ -241,7 +249,7 @@
                 </vue-final-modal>
 
             </div>
-        </section>
+        <!-- </section> -->
 
     </div>
 </template>
@@ -297,19 +305,26 @@
         data() {
             return{
                 userDetails: [],
-                SummaryData: [],
-                uploadedName: '',
-                uploadable: false,
-                datasetDetails: [],
+
                 uploadedFilename: '',
+                uploadedSummary: [],
+                uploadable: false,
+                uploaded: false,
+                showUploadedModal: false,
+                
                 hasDatasets: false,
                 userFiles: [],
-                showUploadedModal: false,
                 showReportModal: false,
-                showDatasetModal: false,
-                showModal: false,
+                showNoReportModal: false,
+                datasetReport: {
+                    MSE: "",
+                    TrainAccuracy: "",
+                    TestAccuracy: ""
+                },
+
                 columnDefs: [],
                 rowData: [],
+                showDatasetModal: false,
             }
         },
         components: {
@@ -321,6 +336,7 @@
         methods:{
             async getAccount(){
                 this.$store.commit('setIsLoading',true)
+                this.userDetails=[]
 
                 await axios
                     .get('/api/v1/users/me')
@@ -339,45 +355,40 @@
             },
             async getUserDatasets(){
                 this.$store.commit('setIsLoading',true)
-                this.userFiles=[] 
+                this.userFiles=[]
                 var data ={"UserId":this.userDetails.id}
+
                 await axios
                 .post('/datasets/getDatasetsInfo',data)
-                
                 .then(response =>{
                               
                     if(response.data['error']=="No datasets have been uploaded."){
-                        console.log("has no datasets")
-                        console.log(response.data)
-                        this.hasDatasets = false        
+                        this.hasDatasets = false 
+                        console.log(response.data)       
                     }
                     else{
-                        console.log("has datasets")
                         this.hasDatasets = true
                         var number_of_datasets = Object.keys(response.data).length
                         for(var i=1;i<number_of_datasets+1;i++){
-                            //Do whatever with each dataset
-                            //reponse.data[i].anything below will give you it's value
                             //filename gives filename
                             //datapoints gives number of datapoints
                             //columns give number of columns
                             //featureNames gives an array of all the features 
                             //nullValues gives how many nulls in the dataset
-                            this.userFiles.push(response.data[i])
+                            var dateTime = response.data[i].created.replace("T"," ").split(".")[0].slice(0,-3)
+                            response.data[i].created=dateTime
                             
+                            this.userFiles.push(response.data[i])                  
                         }
-                        console.log(this.userFiles[0].filename)
-                        console.log(this.userFiles)
-                    }
-                    
+                    }  
                 })
                 .catch(error => {
                     console.log(error)
                 })
-
                 this.$store.commit('setIsLoading',false)
             },
             async Upload(){
+                this.uploaded=false;
                 this.$store.commit('setIsLoading',true)
                 var file = document.getElementById("myFile").files[0];
                 var formData = new FormData();
@@ -385,35 +396,56 @@
                 formData.append("id",this.userDetails.id);
                 await axios
                     .post('/datasets/uploadData',formData)
-
                     .then(response => {
                         var resp =  response.data['response'];
                         var Type;
                         if (resp == 'Data Uploaded Successfully'){
                             Type = 'is-warning';
                             this.uploaded=true;
-                            this.getUserDatasets()
-                            this.uploadedFilename = `"${file.name}"`
-                              
+                            this.uploadedFilename = `${file.name}`
+                            this.getUploaded(this.uploadedFilename) 
+                            this.getUserDatasets() 
                         }
                         else{
                             this.uploaded=false;
                             Type = 'is-danger';
+                            toast({
+                                message: resp,
+                                type: Type,
+                                dismissible: true,
+                                pauseOnHover: true,
+                                duration: 1000,
+                                position: 'bottom-center',
+                            })  
                         }
-                        toast({
-                            message: resp,
-                            type: Type,
-                            dismissible: true,
-                            pauseOnHover: true,
-                            duration: 2000,
-                            position: 'bottom-center',
-                        })
                     });
 
                 this.$store.commit('setIsLoading',false)
             },
+            async getUploaded(filename){
+                this.showUploadedModal=false
+                this.$store.commit('setIsLoading',true)
+                this.uploadedSummary = []
+                var id ={"UserId":this.userDetails.id}
+                await axios
+                .post('/datasets/getDatasetsInfo',id)
+                .then(response =>{
+                    var number_of_datasets = Object.keys(response.data).length
+                    for(var i=1;i<number_of_datasets+1;i++){
+                        if(response.data[i].filename==filename){
+                            this.uploadedSummary.push(response.data[i])
+                            this.showUploadedModal=true
+                        }
+                    }                    
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+                this.$store.commit('setIsLoading',false)
+            },
             //This method will get the actual data of a dataset once it's selected from the dropdown list
             async getDatasetData(filename){
+                this.$store.commit('setIsLoading',true)
                 console.log(filename)
                 console.log(this.userDetails.id)
                 const id =  this.userDetails.id
@@ -436,14 +468,13 @@
                         
                         const MLFEF = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
                         
-                        if (navigator.msSaveBlob) { // IE 10+
+                        if (navigator.msSaveBlob) {a
                             navigator.msSaveBlob(MLFEF, filename)
                         }
                         else {
                             const link = document.createElement("a")
                             
-                            if (link.download !== undefined) { // feature detection
-                                // Browsers that support HTML5 download attribute
+                            if (link.download !== undefined) {
                                 const url = URL.createObjectURL(MLFEF)
                                 link.setAttribute("href", url)
                                 link.setAttribute("download", filename)
@@ -453,13 +484,13 @@
                                 document.body.removeChild(link)
                             }
                         }
-
-                        //console.log(keys)
                     } 
                 })
+                this.$store.commit('setIsLoading',false)
 
             },
             async getData(filename){
+                this.$store.commit('setIsLoading',true)
                 const id =  this.userDetails.id
                 const data = {'UserId':id,"filename":filename}
                 await axios
@@ -483,7 +514,17 @@
                         this.showDatasetModal = true
                     } 
                 })
+                this.$store.commit('setIsLoading',false)
 
+            },
+            async getReport(mse,trainAccuracy,testAccuracy){
+                this.$store.commit('setIsLoading',true)
+                
+                this.datasetReport.MSE = mse
+                this.datasetReport.TrainAccuracy = trainAccuracy
+                this.datasetReport.TestAccuracy = testAccuracy
+                this.showReportModal = true
+                this.$store.commit('setIsLoading',false)
             },
             async fileValidation(){
                 this.$store.commit('setIsLoading',true)
@@ -527,24 +568,7 @@
                     this.$store.commit('setIsLoading',false)
                     return true;
                 }         
-            },
-            // async Summary(){
-            //     this.$store.commit('setIsLoading',true)
-                
-            //     var file = document.getElementById("myFile").files[0];
-            //     var filename = file.name;
-            //     var id=  this.details.id;
-            //     var data ={"id":id,"filename":filename}
-            //     await axios
-            //     .post('/datasets/dataSummary',data)
-                
-            //     .then(response =>{
-            //         this.SummaryData = response.data;
-
-            //     });
-            //     console.log(this.SummaryData);
-            //     this.$store.commit('setIsLoading',false)
-            // },
+            }
 
         }
     }
