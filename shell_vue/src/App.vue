@@ -7,7 +7,23 @@
   </div>
   
   <section class="section">
+   
+  <transition name="router-anim" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutUp">
     <router-view/>
+  </transition> 
+
+   <!--PAGE ANIMATIONS ADDED HERE -->
+   <!-- FOOTER why is it so THICK?!! -->
+  <footer class = "footer has-background-info-light mt-6">
+    <div class = "container pt-6">
+      <div class = "columns">
+        <div class = "column has-text-grey-light has-text-centered">
+          <p><i>Brought to you by <strong>IllegalSkillsException</strong>.</i></p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
   </section>
 
 
@@ -17,6 +33,7 @@
 <script>
   import axios from 'axios'
   import Navbar from '@/components/layout/Navbar'
+  
 
   export default {
     name: "App",
@@ -36,14 +53,14 @@
 </script>
 
 <style lang="scss">
+@import "../node_modules/bulma/sass/utilities/initial-variables";
 @import '../node_modules/bulma';
 @import "../node_modules/bulma-responsive-tables/bulma-responsive-tables";
 @import '../node_modules/@fortawesome/fontawesome-free';
 @import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
 @import "../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
 @import "../node_modules/@creativebulma/bulma-tooltip/dist/bulma-tooltip.css";
-
-
+@import "https://cdn.jsdelivr.net/npm/animate.css@3.5.1"; //animation lib
 
 .lds-dual-ring {
     display: inline-block;
@@ -80,5 +97,5 @@
     }
 }
 
-
 </style>
+

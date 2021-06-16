@@ -99,8 +99,20 @@
                         </a>
 
                         <div class="navbar-dropdown">
-                            <router-link to="/dashboard/my-account" class="navbar-item"><strong>Account Page</strong></router-link>
-                            <a @click="logout()" class="navbar-item"><strong>Sign Out?</strong></a>
+                            <router-link to="/dashboard/my-account" class="navbar-item">Account Page</router-link>
+                            <a @click="showModal=true" class="navbar-item">Sign Out?</a>
+                            <vue-final-modal v-model="showModal" classes="modal-container" content-class="modal-content"> 
+                            <button class="modal__close" @click="showModal=false">
+                                <mdi-close></mdi-close>
+                            </button>
+                            <span class="modal__title">Are you sure you'd like to SIGN OUT?</span>
+                            <div class="modal__action">
+                                <button @click="logout(); showModal=false;" class="action_confirm">CONFRIM</button>
+                                <button @click="showModal=false;" class="action_cancel">CANCEL</button>
+                            </div>
+                            </vue-final-modal>
+
+                            
                         </div>
                     </div>
 
@@ -111,13 +123,18 @@
 </template>
 
 <script>
+    
 
     import axios from 'axios'
 
     import {toast} from 'bulma-toast'
 
     export default {
+
         name: "Navbar",
+        data: () => ({
+            showModal: false
+        }),
         methods:{
             async logout(){
                 await axios
@@ -144,3 +161,82 @@
         }
     }
 </script>
+
+<style scoped>
+::v-deep .modal-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+::v-deep .modal-content{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-height: 90%;
+    margin: 0 1rem;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.25rem;
+    background: #fff;
+}
+
+.modal__title{
+    margin: 0 2rem 0 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    align-items: center;
+    text-align: center;
+}
+
+.modal__content{
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.modal__action{
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    /* flex-shrink: 0; */
+}
+
+.modal__close{
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+}
+
+.action_confirm{
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+
+}
+
+.action_cancel{
+  background-color: #ee1414; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+
+}
+
+
+</style>
+
+<style scoped>
+.dark-mode div::v-deep .modal-content{
+    border-color: #2d3748;
+    background-color: #1a202c;
+}
+</style>

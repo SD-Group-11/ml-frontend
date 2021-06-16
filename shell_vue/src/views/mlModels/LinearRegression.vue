@@ -4,6 +4,7 @@
         <section class="hero" style=" background-color:lightblue">
             <div class="hero-body">
                 <h1 class="title is-1 has-text-centered" style=" background-color:lightblue; border-radius:200px"><strong>Linear Regression</strong></h1>
+               
             </div>
         </section>    
 
@@ -13,47 +14,51 @@
                 
                 
                 <div class="box" style="background-color:lightyellow;">
-                    <h2 class="title is-3 has-text-centered">Enter Hyperparameters</h2>
+                    <h2 class="title is-3 has-text-centerd">Enter Hyperparameters</h2>
+                     <form @submit.prevent="submitForm">
                     
                     <div class="field">
-                        <label class="label">Learning Rate</label>
+                        <label class="label ">Learning Rate</label>
                         <div class="control">
-                            <input class="input" id="learningRate" type="text" placeholder="0.1">
+                            <input class="input" id="learningRate" type="text" placeholder="Eg. 0.1">
                         </div>
                     </div>
 
                     <div class="field">
                         <label class="label">Tolerance</label>
                         <div class="control">
-                            <input class="input" id = "tol" type="email" placeholder="0.5">
+                            <input class="input" id = "tol" type="text" placeholder="Eg. 0.5">
                         </div>
                         
                     </div>
-
-                    
-
                     <div class="field">
-                        <label class="label">Split</label>
+                        <label class="label">Test-Train Split</label>
                         <div class="control">
-                            <input class="input" id="split" type="email" placeholder="Training Split">
+                            <input class="input" type="text" placeholder="Please enter a value between 0 and 100" v-model = "split" >
                         </div>
+
+                        <p class="help is-danger" v-if="field_errors.split">
+                            {{field_errors.split}}
+                        </p>
                         
                     </div>
 
+                    <!-- minor facelift -->
                     <div class="control">
                     <div id="v-model-select" class="demo">
-                        <select id="sel" v-model="selected" >
+                        <select v-model="selected" id = "files" >
+                            <option disabled value="">Select dataset</option>
                             <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
-
                         </select>
+                        <br>
+                        <span>Selected: {{ selected }}</span>
                     </div>
-                     </div>
-                     <button v-on:click='TrainModel'> Okay</button>
+                    </div>
 
-            
+                    <button class="button is-warning is-medium mt-4" v-on:click='TrainModel'><strong>Train Model</strong></button>
 
-
-                </div>
+                    </form>
+                </div> 
 
 
                  <template v-if="returned">
@@ -95,8 +100,11 @@
                 </template> -->
 
             </div>
+            
         </div>
+        
     </div>
+    
 </template>
 
 
@@ -111,15 +119,28 @@
                 UserFiles: [],
                 uploadedName: '',
                 uploadable: false,
+                field_errors:{},
+                split: '',
+                userFiles: [],
+                selected: '', //idk how to properly define this - checked 
                 hasDatasets: false,
                 userFiles: [],
-                returned: false,
             }
         },
         mounted(){
             this.getAccount()
+            
         },
         methods:{
+            async submitForm()
+            {
+                this.field_errors={}
+                if (this.split === '') {
+                    
+                    this.field_errors['split']='Please enter split value.'
+                }
+            },
+
             async getAccount(){
                 this.$store.commit('setIsLoading',true)
                 await axios
@@ -163,7 +184,6 @@
                         }
                         console.log(this.userFiles)
                     }
-                    
                 })
                 .catch(error => {
                     console.log(error)
@@ -172,46 +192,22 @@
             },
             // Call this method when the user clicks Train Model 
             async TrainModel(){
-                this.returned=false
                 var id = this.userDetails.id;
                 //Please get the filename from the dropdown and set it here 
-                //var filename = "CP.csv";
-                // var filename = "Train.csv";
-                var filename = "insurance (2).csv"
-                // var filename = document.getElementById(sel).value;
+                var filename;
                 // tol and learningRate must be decimal values
                 var tol = document.getElementById("tol").value;
                 var learningRate = document.getElementById("learningRate").value;
                 // Must be a value between 0 and 100 representing a percentage of data that must be assigned to the training data
                 var split = document.getElementById("split").value;
                 var data ={"UserId":id,"filename":filename,"learningRate":learningRate,"tol":tol,"split":split}
-                console.log('data: ',data)
+
                 await axios
                 .post("/datasets/doLinearRegression",data)
+
                 .then(response =>{
                     //Michael will use response.data for his graphing 
-                    this.returned=true
                     console.log(response.data)
-                    var resp1 = "Testing Accuracy: "+response.data["Test_accuracy"]
-                    var resp2 = "Mean Squared Error: "+response.data["meansquared"]
-                    toast({
-                            message: resp1,
-                            type: 'is-warning',
-                            dismissible: true,
-                            pauseOnHover: true,
-                            duration: 2000,
-                            position: 'bottom-center',
-                        })
-
-                    toast({
-                            message: resp2,
-                            type: 'is-warning',
-                            dismissible: true,
-                            pauseOnHover: true,
-                            duration: 2000,
-                            position: 'bottom-center',
-                        })
-
                 });
             }
         }

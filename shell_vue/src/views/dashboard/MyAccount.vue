@@ -2,17 +2,18 @@
     <div class="container">
         <div class="column is-multiline">
             <div class="column is-12">
-                <h1 class="title">{{ details.username }}</h1>
+                <h1 class="title">Hi {{ details.first_name }}!</h1>
             </div>
 
-            <div class="column is-6">
+            <div class="column is-12">
                 <div class="box">
-                    <h2 class="subtitle">My Deetz</h2>
+                    <h2 class="subtitle"><u>My Account Info</u></h2>
 
+                    <p><strong>Username: </strong>{{ details.username }}</p>
                     <p><strong>First Name: </strong>{{ details.first_name }}</p>
                     <p><strong>Last Name: </strong>{{ details.last_name }}</p>
                     <p><strong>Email: </strong>{{ details.email }}</p>
-                    <p><strong>Member Since: </strong>{{ details.date_joined }}</p>
+                    <p id="Get Date"><strong>Member Since: </strong>{{ details.date_joined }}</p>
                     
                 </div>
             </div>
@@ -52,6 +53,36 @@
                 this.$store.commit('setIsLoading',false)
                     
             }
+
+            
         }
     }
 </script>
+
+<style scoped>
+.container{
+    align-items: center;
+    width: 50%;
+    background-color: #a8dcec;
+    margin: auto;
+}
+
+.title{
+    text-align: center;
+
+    background-color: #a8dcec;
+    margin: auto;
+}
+
+.box{
+    
+    background-color:#fffcdc;
+    font-size: 20px;
+}
+
+.subtitle{
+    font-size: 25px;
+    text-align: center;
+
+}
+</style>
