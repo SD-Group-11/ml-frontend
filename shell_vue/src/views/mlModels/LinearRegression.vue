@@ -201,13 +201,13 @@
                 // Must be a value between 0 and 100 representing a percentage of data that must be assigned to the training data
                 var split = document.getElementById("split").value;
                 var data ={"UserId":id,"filename":filename,"learningRate":learningRate,"tol":tol,"split":split}
-
                 await axios
                 .post("/datasets/doLinearRegression",data)
-
                 .then(response =>{
                     //Michael will use response.data for his graphing 
                     console.log(response.data)
+                     
+                    
                 });
             }
         }

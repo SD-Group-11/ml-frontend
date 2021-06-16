@@ -18,3 +18,4 @@ class TrainedModel(models.Model):
 
     class Meta:
         unique_together = (('UserId', 'filename'),)
+
