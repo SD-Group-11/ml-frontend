@@ -103,6 +103,7 @@
                             <!-- <th>Features</th> -->
                             <th>No. Features</th>
                             <th>Null Values</th>
+                            <th>Date Created</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -128,6 +129,8 @@
                             <td data-label="No. Features">{{dataset.columns-1}}</td>
 
                             <td data-label="Null Values">{{dataset.nullValues}}</td>
+
+                            <td data-label="Null Values">{{dataset.created}}</td>
 
                             <td class="is-actions-cell">                       
                                 <!-- <div class="buttons"> -->
@@ -197,7 +200,7 @@
 
                     <div class="modal__content">
                         <p>
-                            Report
+                            {{}}
                         </p>
                     </div>
 
