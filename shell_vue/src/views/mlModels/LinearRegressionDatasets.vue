@@ -1,11 +1,11 @@
 <template>   
     <div class="container">
 
-        <section class="hero" style=" background-color:lightblue">
+        <!-- <section class="hero" style=" background-color:lightblue">
             <div class="hero-body">
                 <h1 class="title is-1 has-text-centered" style=" background-color:lightblue; border-radius:200px"><strong>Upload New Dataset</strong></h1>
             </div>
-        </section>
+        </section> -->
 
         <section class="section">
             <div class="container">
@@ -83,11 +83,11 @@
         </section>
 
 
-        <section class="hero" style=" background-color:lightblue">
+        <!-- <section class="hero" style=" background-color:lightblue">
             <div class="hero-body">
                 <h1 class="title is-1 has-text-centered" style=" background-color:lightblue; border-radius:200px"><strong>Uploaded Datasets</strong></h1>
             </div>
-        </section>
+        </section> -->
 
         <section class="section">
             <div class="container">
@@ -110,11 +110,6 @@
                     <tbody>
                         
                         <tr v-for="dataset in userFiles" v-bind:key="dataset.id">
-                            <!-- <td class="is-chevron-cell">
-                                <a role="button">
-                                    <span class="icon is-expanded"><i class="fas fa-angle-right"></i></span>
-                                </a>
-                            </td> -->
 
                             <td class="is-image-cell">
                                 <div class="image">
@@ -191,11 +186,24 @@
                 </div>
                 </div>
 
+                
+                <vue-final-modal v-model="showUploadedModal" classes="modal-container" content-class="modal-content">
+                    
+                    <span class="modal__title">
+                        Dataset Uploaded
+                        <button class="delete is-pulled-right" @click="showUploadedModal = false"></button>
+                    </span>
+
+
+
+
+                </vue-final-modal>
+                
                 <vue-final-modal v-model="showReportModal" classes="modal-container" content-class="modal-content">
 
                     <span class="modal__title">
                         Model Report
-                         <button class="delete is-pulled-right" @click="showReportModal = false"></button>
+                        <button class="delete is-pulled-right" @click="showReportModal = false"></button>
                     </span>
 
                     <div class="modal__content">
@@ -205,7 +213,6 @@
                     </div>
 
                 </vue-final-modal>
-              
   
                 <vue-final-modal
                     v-model="showDatasetModal"
@@ -218,10 +225,9 @@
                     <div class="modal__title">
                         Dataset
                         <button class="delete is-pulled-right" @click="showDatasetModal = false"></button>
-
                     </div>
-                    <div class="modal__content">
 
+                    <div class="modal__content">
                         <ag-grid-vue
                             style="width: 600px; height: 400px;"
                             class="ag-theme-alpine"
@@ -298,6 +304,7 @@
                 uploadedFilename: '',
                 hasDatasets: false,
                 userFiles: [],
+                showUploadedModal: false,
                 showReportModal: false,
                 showDatasetModal: false,
                 showModal: false,
@@ -347,11 +354,6 @@
                     else{
                         console.log("has datasets")
                         this.hasDatasets = true
-                        //idk why but accessing UserFiles out of this scope returns empty. Please check what im doing wrong
-                        // response.data though holds all the datasets of a user and their respective summary details
-                        // Tell us how many datasets are associated with the user 
-                        // you can loop from 1 to number_of_datasets+1 and use that to index response.data[i] to get a dataset and its summary
-
                         var number_of_datasets = Object.keys(response.data).length
                         for(var i=1;i<number_of_datasets+1;i++){
                             //Do whatever with each dataset
