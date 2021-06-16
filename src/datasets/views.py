@@ -85,6 +85,7 @@ def getDatasetsInfo(request):
                 dataAttributes['columns'] = dataset.shape[1]
                 dataAttributes['featureNames'] = list(dataset.columns)
                 dataAttributes['nullValues'] = Obj.nullValues
+                dataAttributes['created'] = Obj.created
                 try:
                     ModelData = TrainedModel.objects.get(UserId=Obj.UserId, filename=Obj.filename)
                     dataAttributes['MSE'] = ModelData.meanSquaredError

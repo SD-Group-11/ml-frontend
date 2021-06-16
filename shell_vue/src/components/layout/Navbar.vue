@@ -99,8 +99,8 @@
                         </a>
 
                         <div class="navbar-dropdown">
-                            <router-link to="/dashboard/my-account" class="navbar-item">Account Page</router-link>
-                            <a @click="showModal=true" class="navbar-item">Sign Out?</a>
+                            <router-link to="/dashboard/my-account" class="navbar-item"><strong>Account Page</strong></router-link>
+                            <a @click="showModal=true" class="navbar-item"><strong>Sign Out?</strong></a>
                             <vue-final-modal v-model="showModal" classes="modal-container" content-class="modal-content"> 
                             <button class="modal__close" @click="showModal=false">
                                 <mdi-close></mdi-close>
