@@ -176,8 +176,8 @@
                 var id = this.userDetails.id;
                 //Please get the filename from the dropdown and set it here 
                 //var filename = "CP.csv";
-                var filename = "Train.csv";
-                // var filename = "Insurance.csv"
+                // var filename = "Train.csv";
+                var filename = "insurance.csv"
                 // var filename = document.getElementById(sel).value;
                 // tol and learningRate must be decimal values
                 var tol = document.getElementById("tol").value;
