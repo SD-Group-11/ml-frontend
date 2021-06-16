@@ -29,16 +29,6 @@
                         </div>
                         
                     </div>
-
-                    
-
-                    <!-- <div class="field">
-                        <label class="label">Split</label>
-                        <div class="control">
-                            <input class="input" id="split" type="email" placeholder="Training Split">
-                        </div>
-                        
-                    </div> -->
                     
                     <!-- Trying a slider for the user to pick the data split -->
                     <div class="field">
@@ -47,24 +37,44 @@
                         <div class="output">Training and test data split: {{ initialSplit }}/{{ 100-initialSplit }}</div>
                     </div>
 
+                     <!-- Selecting a dataset -->
                     <div class="control">
                     <div id="v-model-select" class="demo">
-                        <select v-model="selected" >
+                        <select v-model="selected" id = "files" >
+                            <option disabled value="">Select dataset</option>
                             <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
-
                         </select>
+                        <br>
+                        <span>Selected: {{ selected }}</span>
                     </div>
-                     </div>
-                     <button class="button"  v-on:click='TrainModel'> Train Model</button>
-                    
-                    <!-- Line of best fit -->
-                    <apexchart v-if="showTrainPlots && numberFeatures==1" type="line" :options="chartOptions" height=400 :series="series"></apexchart>
+                    </div>
 
+                   
 
                 </div>
 
             </div>
         </div>
+
+        <!-- Train model button -->
+        <button class="button"  v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false;'> Train Model</button>
+                    
+        <!-- Training Graphs -->
+        <span><h2 v-if="showTrainingGraphs">Training results: <span class="accuracy">{{ (trainAccuracy*100).toFixed(2) }}% </span></h2></span>
+                    
+        <!-- Predicted VS actual for Training Data-->
+        <apexchart v-if="showTrainingGraphs" type="line" :options="trainingOptionsPredictedVSActual" height=400 :series="trainingSeriesPredictedVSActual"></apexchart>
+
+        <!-- Test Model Button -->
+        <button class="button" id="testModelButton" v-if="showTrainingGraphs" v-on:click='showTestGraphs'> Test Model</button>
+        <!-- Testing Graphs -->
+        <span><h2 v-if="showTestingGraphs">Testing results: <span class="accuracy">{{ (testAccuracy*100).toFixed(2) }}% </span></h2></span>
+        <!-- Line of best fit for Training Data-->
+        <apexchart v-if="showTestingGraphs && numberFeatures==1" type="line" :options="optionsLOBF" height=400 :series="seriesLOBF"></apexchart>
+        <br>
+        <!-- Predicted VS actual for Testing-->
+        <apexchart v-if="showTestingGraphs" type="line" :options="testingOptionsPredictedVSActual" height=400 :series="testingSeriesPredictedVSActual"></apexchart>
+                    
     </div>
 </template>
 
@@ -81,6 +91,18 @@
     }
     .button:hover {
         background-position: 0;
+    }
+
+    h2 {
+        color: black;
+        font-size: 40px;
+        margin: 20px;
+        font-family: Georgia, serif;
+    }
+
+    .accuracy {
+        color: blue;
+        font-size: 40px;
     }
 </style>
 
@@ -100,10 +122,11 @@
             return{
                 // Variables involving the files and user details
                 userDetails: [],
-                UserFiles: [],
+                userFiles: [],
                 uploadedName: '',
                 uploadable: false,
                 hasDatasets: false,
+                selected: '',
 
                 initialSplit: 70,
 
@@ -121,11 +144,25 @@
                 intercept: 0,
                 numberFeatures: -1,
 
-                // Chart data
-                showTrainPlots: false,
+                // Line of best fit chart data
                 bestFitYValues: {},   
-                series: [],
-                chartOptions: {},
+                seriesLOBF: [],
+                optionsLOBF: [],
+                
+                // Actual VS Predicted chart data
+                trainingSeriesPredictedVSActual: [],
+                testingSeriesPredictedVSActual: [],
+                trainingOptionsPredictedVSActual: [],
+                testingOptionsPredictedVSActual: [],
+
+                // If the graphs should be displayed and if so, which ones, training or testing?
+                showTestButton: false,
+                isTraining: false,
+                isTesting: false,
+                showTrainingGraphs: false,
+                showTestingGraphs: false,
+                
+
             }
         },
         mounted(){
@@ -156,13 +193,11 @@
                 var data ={"UserId":this.userDetails.id}
                 await axios
                 .post('/datasets/getDatasetsInfo',data)
-                
                 .then(response =>{
-                              
                     if(response.data['error']=="No datasets have been uploaded."){
                         console.log("has no datasets")
                         console.log(response.data)
-                        this.hasDatasets = false        
+                        this.hasDatasets = false
                     }
                     else{
                         console.log("has datasets")
@@ -173,7 +208,6 @@
                         //this.userFiles = response.data;
                         // Tell us how many datasets are associated with the user 
                         // you can loop from 1 to number_of_datasets+1 and use that to index response.data[i] to get a dataset and its summary
-
                         var number_of_datasets = Object.keys(response.data).length
                         console.log(number_of_datasets)
                         for(var i=1;i<number_of_datasets+1;i++){
@@ -181,19 +215,18 @@
                         }
                         console.log(this.userFiles)
                     }
-                    
                 })
                 .catch(error => {
                     console.log(error)
                 })
-
                 this.$store.commit('setIsLoading',false)
             },
+
             // Call this method when the user clicks Train Model 
             async TrainModel(){
                 var id = this.userDetails.id;
                 //Please get the filename from the dropdown and set it here 
-                var filename = "train.csv";
+                var filename = this.selected;
                 // tol and learningRate must be decimal values
                 var tol = document.getElementById("tol").value;
                 var learningRate = document.getElementById("learningRate").value;
@@ -209,29 +242,50 @@
                     //Michael will use response.data for his graphing 
                     console.log(response.data)
                     this.extractData(response.data);
+
+                    this.isTraining = true
+                    
+                    this.plotPredictedVSActual(this.trainX.length, this.trainY, this.trainPredictedY)
+
+                    this.showTrainingGraphs = true
+                    this.isTraining = false
+
+                    // Create graphs for Test dataset
+                    this.isTesting = true
+
+                    console.log('test Y', this.testY)
+                    console.log('test Y Predicted', this.testPredictedY)
+
                     //If there is only one feature we can plot the line of best fit
                     if (this.numberFeatures == 1) {
-                        // Since trainX and testX is received and stored as a 2D array, even if there is only one feature
+                        // Since testX is received and stored as a 2D array, even if there is only one feature
                         // we need to reshape it into a 1D array to plot the line of best fit
 
-                        // Reshape Train X data
-                        var tempTrainX = []
-                        for (let i = 0; i < this.trainX.length; i++) {
-                            tempTrainX.push(this.trainX[i][0])
-                        }
-                        this.trainX = tempTrainX
-
-                        // Reshape Testing X data
+                        // Reshape Test X data
                         var tempTestX = []
                         for (let i = 0; i < this.testX.length; i++) {
                             tempTestX.push(this.testX[i][0])
                         }
-                        this.testX = tempTrainX
+                        this.testX = tempTestX
 
-                        this.plotLineOfBestFit(this.trainX, this.trainY, this.coefficients, this.intercept);
+                        this.plotLineOfBestFit(this.testX, this.testY, this.coefficients, this.intercept);
                     }
-                    
+
+                    this.plotPredictedVSActual(this.testX.length, this.testY, this.testPredictedY)
+
+                    // this.showTestingGraphs = true
+
                 });
+            },
+
+            // Used in order to show Test data charts on button click
+            showTestGraphs() {
+                this.showTestingGraphs = true
+                var btn = document.getElementById('testModelButton')
+                // btn.remove()
+                if (btn.style.display === "none") {
+                    btn.style.display = "block";
+                } 
             },
 
             //Extract http response into accessible javascript data
@@ -245,7 +299,7 @@
                 // Test data
                 this.testX = Object.values(responseData['TestX'])
                 this.testY = Object.values(responseData['TestY'])
-                this.testPredictedY = Object.values(responseData['Train_PredictY'])
+                this.testPredictedY = Object.values(responseData['Test_PredictY'])
 
                 // Train and Test accuracy
                 this.trainAccuracy = responseData['Train_accuracy']
@@ -259,8 +313,6 @@
             },
 
             plotLineOfBestFit(xValues, yValues, m, c) {
-                this.showTrainPlots = false
-
                 //Pair together each X-value with its corresponding Y-value, thus creating a 2D array being a list of pairs.
                 var actualXYPairs = []
                 //var predictedXYPairs =[]
@@ -282,7 +334,7 @@
                 }
 
                 // Series is used to plot different types of graphs on the same chart. e.g Scatter and line
-                this.series = [{
+                this.seriesLOBF = [{
                     name: "Actual Values",
                     type: 'scatter',
                     data: actualXYPairs
@@ -297,7 +349,7 @@
                 }]
 
                 // Options and settings to customise the chart
-                this.chartOptions = {
+                this.optionsLOBF = {
                     chart: {
                         height: 300,
                         type: 'line',
@@ -305,6 +357,10 @@
                             enabled: true,
                             type: 'xy'
                         },
+                    },
+                    title: {
+                        text: 'Line of best fit',
+                        align: 'center',
                     },
                     fill: {
                         type:'solid',
@@ -334,11 +390,79 @@
                         decimalsInFloat: 2,
                     }
                 }
-                this.showTrainPlots = true
+
             },
 
-            plotPredictedVSActual() {
-                
+            plotPredictedVSActual(xSize, yValues, yPredicated) {
+                var xyPairs = []
+                var xyPredicted = []
+                for (let i = 0; i < xSize; i++) {
+                    xyPairs.push({x: i, y: yValues[i]})
+                    xyPredicted.push({x: i, y: yPredicated[i]})
+                }
+
+                // Series is used to plot different types of graphs on the same chart. e.g Scatter and line
+                var seriesPredictedVSActual = [{
+                    name: "Actual Values",
+                    type: 'line',
+                    data: xyPairs
+                },{
+                    name: "Predicted values",
+                    type: 'line',
+                    color: '#Ff5e5e',
+                    data: xyPredicted
+                }]
+
+                // Options and settings to customise the chart
+                var optionsPredictedVSActual = {
+                    chart: {
+                        type: 'line',
+                        zoom: {
+                            enabled: true,
+                            type: 'xy'
+                        },
+                    },
+                    title: {
+                        text: 'Predicted Y VS Actual Y',
+                        align: 'center',
+                    },
+                    fill: {
+                        type:'solid',
+                    },
+                    markers: {
+                        size: [4, 4], //Size of markers of different types of chart, in this case [scatter, line]
+                    },
+                    tooltip: {
+                        shared: false,
+                        intersect: true,
+                    },
+                    xaxis: {
+                        tickPlacement: 'on',
+                        min: 0,
+                        max: xSize,
+                        tickAmount: 12,
+                        decimalsInFloat: 2,
+                        title: {
+                            text: 'X index'
+                        },
+                    },
+                    yaxis: {
+                        title: {
+                            text: 'Y value'
+                        },
+                        decimalsInFloat: 2,
+                    }
+                }
+
+                // Since we cannot use the same variables for training and testing we allocate them separately
+                if (this.isTraining) {
+                    this.trainingSeriesPredictedVSActual = seriesPredictedVSActual
+                    this.trainingOptionsPredictedVSActual = optionsPredictedVSActual
+                }
+                if (this.isTesting){
+                    this.testingSeriesPredictedVSActual = seriesPredictedVSActual
+                    this.testingOptionsPredictedVSActual = optionsPredictedVSActual
+                }
             }
         }
     }
