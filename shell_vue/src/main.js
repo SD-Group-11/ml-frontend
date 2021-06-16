@@ -4,7 +4,6 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import axios from 'axios'
-<<<<<<< HEAD
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { fas } from '@fortawesome/free-solid-svg-icons'
@@ -21,12 +20,3 @@ dom.watch();
 axios.defaults.baseURL='http://127.0.0.1:8000'
 
 createApp(App).component('font-awesome-icon', FontAwesomeIcon).use(VueFinalModal()).use(store).use(router, axios).mount('#app')
-=======
-import VueFinalModal from 'vue-final-modal'
-
-
-
-axios.defaults.baseURL='http://127.0.0.1:8000'
-
-createApp(App).use(VueFinalModal()).use(store).use(router, axios).mount('#app')
->>>>>>> fdf01c02abc1ef942f524492c003ca2d3c8e99c7
