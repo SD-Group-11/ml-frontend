@@ -40,7 +40,7 @@
 
                     <div class="navbar-dropdown">
                         <a class="navbar-item">
-                             <router-link to="/about" class="navbar-item">Team</router-link> 
+                            Team
                         </a>
                     </div>
                 </div>
