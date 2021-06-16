@@ -5,7 +5,7 @@
                 <h1 class="title">Hi {{ details.first_name }}!</h1>
             </div>
 
-            <div class="columnis-6">
+            <div class="column is-12">
                 <div class="box">
                     <h2 class="subtitle"><u>My Account Info</u></h2>
 
