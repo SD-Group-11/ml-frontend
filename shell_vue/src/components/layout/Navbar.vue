@@ -118,7 +118,11 @@
 
                                 <div  class="control">
                                     <div class="modal__action">
+<<<<<<< HEAD
                                     <button class="button is-medium is-info" @click="logout(); showModal=false;"><strong>I want to break free!</strong></button>
+=======
+                                    <button class="button is-info has-text-black" @click="logout(); showModal=false;"><strong>I want to break free!</strong></button>
+>>>>>>> 328158713253e651a8151c6cca601c3a881840d2
                                     <!-- <button @click="showModal=false;" class="action_cancel">CANCEL</button> -->
                                 </div>
                                 </div>
