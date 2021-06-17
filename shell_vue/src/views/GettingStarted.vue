@@ -163,7 +163,7 @@
 
       <div class="control">
         <div class="notification is-info is-light">
-          Fill in hyperparameters and click Train Model.
+          Fill in hyper-parameters and click Train Model.
         </div>
       </div>
     </div>
