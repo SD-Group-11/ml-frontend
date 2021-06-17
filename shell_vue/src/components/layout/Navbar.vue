@@ -41,8 +41,7 @@
 
                     <div class="navbar-dropdown">
                         <a class="navbar-item">
-                            
-                            <strong>Team</strong>
+                            <router-link to="/about" class="navbar-item"><strong>Team</strong></router-link>
                         </a>
                     </div>
                 </div>
