@@ -4,7 +4,7 @@
 
     <div class="container is-fluid p-2">
         <div class="notification is-info" >
-            <strong><h3 class="title is-1">Frequetly Asked Questions</h3></strong>
+            <strong><h3 class="title is-1">Frequently Asked Questions</h3></strong>
         </div>
 
     </div>
