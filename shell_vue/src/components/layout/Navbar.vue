@@ -1,8 +1,9 @@
 <template>
     <nav class="navbar is-warning " role="navigation" aria-label="dropdown navigation">
         <div class="navbar-brand">
-            <a class="navbar-item" href="http://getdrawings.com/confused-icon">
-                <img src="@/assets/images/confused-icon-6.png" alt="Logo">
+            <!-- <a class="navbar-item" href="http://getdrawings.com/confused-icon"> -->
+            <a class="navbar-item" href="">
+                <img src="@/assets/images/confused-icon-6-yellow.png" alt="Logo">
             </a>
             
         </div>
@@ -117,7 +118,7 @@
 
                                 <div  class="control">
                                     <div class="modal__action">
-                                    <button class="button is-info has-text-black" @click="logout(); showModal=false;"><strong>I want to break free!</strong></button>
+                                    <button class="button is-medium is-info" @click="logout(); showModal=false;"><strong>I want to break free!</strong></button>
                                     <!-- <button @click="showModal=false;" class="action_cancel">CANCEL</button> -->
                                 </div>
                                 </div>

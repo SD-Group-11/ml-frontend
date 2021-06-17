@@ -25,7 +25,7 @@
 
                             <div class="control ml-6">
                                 <label class="label">Split</label>
-                                <input type="range" id="split" min="1" max="99" step="1" v-model="initialSplit" style="width: 220%;"/>
+                                <input type="range" id="split" min="1" max="99" step="1" v-model="initialSplit" style="width: 200%;"/>
                                 <div class="output">Training and test data split: {{ initialSplit }}/{{ 100-initialSplit }}</div>
                             </div>
                             
@@ -85,7 +85,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
     .button {
         /* #fd0b0b */
         /* #fd1201 

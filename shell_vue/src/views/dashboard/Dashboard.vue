@@ -3,7 +3,7 @@
     <section class="hero is-small" style=" background-color:lightblue">
       <div class="hero-body">
           <header id="showcase" >
-            <img src="@/assets/images/confused-icon-6.png" alt="Logo">
+            <img src="@/assets/images/confused-icon-6-yellow.png" alt="Logo">
             <h1 class = "title is-1 has-text-centered has-text-black mt-5"><strong><i>Machine Learning Front-End Framework</i></strong></h1>
           </header>
       </div>
