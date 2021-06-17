@@ -60,7 +60,9 @@
 @import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
 @import "../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
 @import "../node_modules/@creativebulma/bulma-tooltip/dist/bulma-tooltip.css";
+@import "../node_modules/bulma-o-steps/bulma-steps.css";
 @import "https://cdn.jsdelivr.net/npm/animate.css@3.5.1"; //animation lib
+
 
 .lds-dual-ring {
     display: inline-block;

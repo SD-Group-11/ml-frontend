@@ -1,40 +1,290 @@
 <template>
-    <div class="container">  
-    <section class="hero is-light" style=" background-color:lightyellow">
-      <div class="get-head"></div>
-      <div class="get-body">
-          <div class="card" style="max-width:800px">
-         <header class="card-header">
-                <p class="card-header-title is-centered" style="font-size:40px">
-             Getting Started
-                </p>
-         </header>    
-         <div class="card-content">
-           <div class="content is-medium">
-             <ol type="1">
-               <li>Select the model you would like to use.</li>
-               <li>Upload your data.</li>
-               <li>Apply the model.</li>
-               <li>Interpret the results.</li>
-               <li>Download your results.</li>
+    <div class="container is-fluid"> 
 
-             </ol>
-           </div>
-           <div class="github-card" data-github="SD-Group-11/ml-frontend" data-width="400" data-height="" data-theme="default"></div>
-          
-         </div>    
-         <div class="card">
-          <footer class="card-footer">
-            <router-link to="/faq" class="card-footer-item">FAQ</router-link>
-            <router-link to="/dashboard" class="card-footer-item is-link">Account</router-link>
-          </footer>
+    <div class="container is-fluid p-2">
+        <div class="notification is-info has-text-centered" >
+            <strong><h3 class="title is-1">Getting Started</h3></strong>
         </div>
+
+    </div>
+
+    <div class="block" > </div>
+
+
+    <div class="container p-5">
+      <div class="control">
+        <ul class="steps has-content-centered">
+          <li class="steps-segment is-active is-dashed">
+            <span class="steps-marker is-warning">1</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 1</p> -->
+              <p class="is-size-5">Select an algorithm</p>
+            </div>
+          </li>
+          <li class="steps-segment is-dashed">
+            <span class="steps-marker">2</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 2</p> -->
+              <p>Upload a dataset</p>
+            </div>
+          </li>
+          <li class="steps-segment is-dashed">
+            <span class="steps-marker ">3</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 3</p> -->
+              <p>Train the model</p>
+            </div>
+          </li>
+          <li class="steps-segment is-dashed">
+            <span class="steps-marker">4</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 4</p> -->
+              <p>Interpret the results</p>
+            </div>
+          </li>
+          <li class="steps-segment is-dashed">
+            <span class="steps-marker">5</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 5</p> -->
+              <p> Download your results</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="block" > </div>
+
+      <div class="control">
+        <div class="notification is-info is-light">
+          Primar lorem ipsum dolor sit amet, consectetur
+          adipiscing elit lorem ipsum dolor.
         </div>
       </div>
-      <div class="get-foot"></div>
-    </section>
+    </div>
+
+    <div class="block" > </div>
+
+
+    <div class="container p-5">
+      <div class="control">
+        <ul class="steps has-content-centered">
+          <li class="steps-segment">
+            <span class="steps-marker is-warning">1</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 1</p> -->
+              <p class="is-size-5">Select an algorithm</p>
+            </div>
+          </li>
+          <li class="steps-segment is-active is-dashed">
+            <span class="steps-marker is-warning">2</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 2</p> -->
+              <p class="is-size-5">Upload a dataset</p>
+            </div>
+          </li>
+          <li class="steps-segment is-dashed">
+            <span class="steps-marker ">3</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 3</p> -->
+              <p>Apply the model</p>
+            </div>
+          </li>
+          <li class="steps-segment is-dashed">
+            <span class="steps-marker">4</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 4</p> -->
+              <p>Interpret the results</p>
+            </div>
+          </li>
+          <li class="steps-segment is-dashed">
+            <span class="steps-marker">5</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 5</p> -->
+              <p>Download your results</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="block" > </div>
+
+      <div class="control">
+        <div class="notification is-info is-light">
+          Primar lorem ipsum dolor sit amet, consectetur
+          adipiscing elit lorem ipsum dolor.
+        </div>
+      </div>
+    </div>
+
+
+    <div class="block" > </div>
+
+
+    <div class="container p-5">
+      <div class="control">
+        <ul class="steps has-content-centered">
+          <li class="steps-segment">
+            <span class="steps-marker is-warning">1</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 1</p> -->
+              <p class="is-size-5">Select an algorithm</p>
+            </div>
+          </li>
+          <li class="steps-segment">
+            <span class="steps-marker is-warning">2</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 2</p> -->
+              <p class="is-size-5">Upload a dataset</p>
+            </div>
+          </li>
+          <li class="steps-segment is-active is-dashed">
+            <span class="steps-marker is-warning">3</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 3</p> -->
+              <p class="is-size-5">Apply the model</p>
+            </div>
+          </li>
+          <li class="steps-segment is-dashed">
+            <span class="steps-marker">4</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 4</p> -->
+              <p>Interpret the results</p>
+            </div>
+          </li>
+          <li class="steps-segment is-dashed">
+            <span class="steps-marker">5</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 5</p> -->
+              <p>Download your results</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="block" > </div>
+
+      <div class="control">
+        <div class="notification is-info is-light">
+          Primar lorem ipsum dolor sit amet, consectetur
+          adipiscing elit lorem ipsum dolor.
+        </div>
+      </div>
+    </div>
+
+
+    <div class="block" > </div>
+
+
+    <div class="container p-5">
+      <div class="control">
+        <ul class="steps has-content-centered">
+          <li class="steps-segment">
+            <span class="steps-marker is-warning">1</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 1</p> -->
+              <p class="is-size-5">Select an algorithm</p>
+            </div>
+          </li>
+          <li class="steps-segment">
+            <span class="steps-marker is-warning">2</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 2</p> -->
+              <p class="is-size-5">Upload a dataset</p>
+            </div>
+          </li>
+          <li class="steps-segment">
+            <span class="steps-marker is-warning">3</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 3</p> -->
+              <p class="is-size-5">Apply the model</p>
+            </div>
+          </li>
+          <li class="steps-segment is-dashed is-active">
+            <span class="steps-marker is-warning">4</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 4</p> -->
+              <p class="is-size-5">Interpret the results</p>
+            </div>
+          </li>
+          <li class="steps-segment is-dashed">
+            <span class="steps-marker">5</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 5</p> -->
+              <p>Download your results</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="block" > </div>
+
+      <div class="control">
+        <div class="notification is-info is-light">
+          Primar lorem ipsum dolor sit amet, consectetur
+          adipiscing elit lorem ipsum dolor.
+        </div>
+      </div>
+    </div>
+
+    <div class="block" > </div>
+
+
+    <div class="container p-5">
+      <div class="control">
+        <ul class="steps has-content-centered">
+          <li class="steps-segment">
+            <span class="steps-marker is-warning">1</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 1</p> -->
+              <p class="is-size-5">Select an algorithm</p>
+            </div>
+          </li>
+          <li class="steps-segment">
+            <span class="steps-marker is-warning">2</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 2</p> -->
+              <p class="is-size-5">Upload a dataset</p>
+            </div>
+          </li>
+          <li class="steps-segment">
+            <span class="steps-marker is-warning">3</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 3</p> -->
+              <p class="is-size-5">Apply the model</p>
+            </div>
+          </li>
+          <li class="steps-segment">
+            <span class="steps-marker is-warning">4</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 4</p> -->
+              <p class="is-size-5">Interpret the results</p>
+            </div>
+          </li>
+          <li class="steps-segment">
+            <span class="steps-marker is-warning">5</span>
+            <div class="steps-content">
+              <!-- <p class="is-size-4">Step 5</p> -->
+              <p class="is-size-5">Download your results</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="block" > </div>
+
+      <div class="control">
+        <div class="notification is-info is-light">
+          Primar lorem ipsum dolor sit amet, consectetur
+          adipiscing elit lorem ipsum dolor.
+        </div>
+      </div>
+    </div>
+
   </div>  
 </template>
+
+<!-- <div class="github-card" data-github="SD-Group-11/ml-frontend" data-width="400" data-height="" data-theme="default"></div> -->
+
 
 <style scoped>
   @import '../assets/styles/homepage.css';
@@ -44,6 +294,8 @@
     margin-left: auto;
     margin-right: auto;
   }
+
+  
 </style>
 
 

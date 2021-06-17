@@ -100,18 +100,30 @@
 
                         <div class="navbar-dropdown">
                             <router-link to="/dashboard/my-account" class="navbar-item"><strong>Account Page</strong></router-link>
-                            <a @click="showModal=true" class="navbar-item"><strong>Sign Out?</strong></a>
-                            <vue-final-modal v-model="showModal" classes="modal-container" content-class="modal-content"> 
-                            <button class="modal__close" @click="showModal=false">
-                                <mdi-close></mdi-close>
-                            </button>
-                            <span class="modal__title">Are you sure you'd like to SIGN OUT?</span>
-                            <div class="modal__action">
-                                <button @click="logout(); showModal=false;" class="action_confirm">CONFRIM</button>
-                                <button @click="showModal=false;" class="action_cancel">CANCEL</button>
-                            </div>
-                            </vue-final-modal>
+                            
+                            <a @click="showLogoutModal=true" class="navbar-item"><strong>Sign Out?</strong></a>
+                            
+                            <vue-final-modal v-model="showLogoutModal" classes="modal-container" content-class="modal-content"> 
+                                
+                                
+                                <span class="modal__title">
+                                    Are you sure you want to sign out?
+                                    <button class="delete is-pulled-right" @click="showLogoutModal = false"></button>
+                                </span>
 
+                                <div class="modal__content">
+                                    <div class="box">
+                                    </div>    
+                                </div>
+
+                                <div  class="control">
+                                    <div class="modal__action">
+                                    <button class="button is-info has-text-black" @click="logout(); showModal=false;"><strong>I want to break free!</strong></button>
+                                    <!-- <button @click="showModal=false;" class="action_cancel">CANCEL</button> -->
+                                </div>
+                                </div>
+                                
+                            </vue-final-modal>
                             
                         </div>
                     </div>
@@ -133,7 +145,7 @@
 
         name: "Navbar",
         data: () => ({
-            showModal: false
+            showLogoutModal: false
         }),
         methods:{
             async logout(){
