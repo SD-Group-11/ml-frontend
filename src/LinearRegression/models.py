@@ -9,7 +9,13 @@ from django.db.models import JSONField
 # Uses a compound primary key of UserId and filename 
 class TrainedModel(models.Model): 
     UserId = models.IntegerField(unique=False,null=False)
-    filename = models.CharField(max_length=300,default="defualt")
-    Trained_coefficients = JSONField(default=dict)
+    filename = models.CharField(max_length=300)
+    Trained_coefficients = JSONField(default=dict,null=True)
+    meanSquaredError = models.DecimalField(max_digits=19,decimal_places=10,null=True)
+    TrainCoeffDetermination = models.DecimalField(max_digits=19,decimal_places=10,null=True)
+    TestCoeffDetermination = models.DecimalField(max_digits=19,decimal_places=10,null=True)
 
+
+    class Meta:
+        unique_together = (('UserId', 'filename'),)
 

@@ -6,11 +6,10 @@ from rest_framework.response import Response
 from .models import Dataset
 import json
 from LinearRegression.views import linearRegression
-import re
+from LinearRegression.models import TrainedModel
 import numpy as np
 import pandas as pd
 import io
-import time
 # Create your views here.
 
 def filterData(dataset):
@@ -86,6 +85,14 @@ def getDatasetsInfo(request):
                 dataAttributes['columns'] = dataset.shape[1]
                 dataAttributes['featureNames'] = list(dataset.columns)
                 dataAttributes['nullValues'] = Obj.nullValues
+                dataAttributes['created'] = Obj.created
+                try:
+                    ModelData = TrainedModel.objects.get(UserId=Obj.UserId, filename=Obj.filename)
+                    dataAttributes['MSE'] = ModelData.meanSquaredError
+                    dataAttributes['TrainAccuracy'] = ModelData.TrainCoeffDetermination
+                    dataAttributes['TestAccuracy'] = ModelData.TestCoeffDetermination
+                except:
+                    dataAttributes['Info'] = "Model not trained yet."
                 response[i] = dataAttributes
             
         if( not response):
@@ -112,7 +119,6 @@ def getDatasetData(request):
    
     try:
         data = Dataset.objects.get(UserId=UserId, filename=json.dumps(filename))
-        print(data)
         dataframe = pd.read_json(data.data)
         dataframe =  dataframe.dropna()
         jsonRowData = dataframe.to_dict(orient='records')
@@ -137,7 +143,7 @@ def doLinearRegression(request):
     learningRate = request.data['learningRate']
     tol = request.data['tol']
     split = request.data['split']
-
+    
     try:
         dataset = Dataset.objects.get(UserId = UserId,filename=json.dumps(filename))
         if(tol ==''):
@@ -150,9 +156,9 @@ def doLinearRegression(request):
         dataset.split = split
         dataset.save()
 
-                ## fill in the code that uses LR model coded by Ballim and return response provided by it 
+                    ## fill in the code that uses LR model coded by Ballim and return response provided by it 
 
-                ## I need to send in the dataset, learning rate, tol and split
+                    ## I need to send in the dataset, learning rate, tol and split
         print("My view working")
         results  = linearRegression(dataset.UserId,dataset.filename,dataset.learningRate,dataset.tol,pd.read_json(dataset.data),int(dataset.split)/100)
         resp['jsonFeatures'] = results[0]
