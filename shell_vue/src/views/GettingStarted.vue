@@ -56,8 +56,7 @@
 
       <div class="control">
         <div class="notification is-info is-light">
-          Primar lorem ipsum dolor sit amet, consectetur
-          adipiscing elit lorem ipsum dolor.
+          Select desired model.
         </div>
       </div>
     </div>
@@ -110,8 +109,7 @@
 
       <div class="control">
         <div class="notification is-info is-light">
-          Primar lorem ipsum dolor sit amet, consectetur
-          adipiscing elit lorem ipsum dolor.
+          Upload dataset so it can be previewed, downloaded and stored for future use.
         </div>
       </div>
     </div>
@@ -165,8 +163,7 @@
 
       <div class="control">
         <div class="notification is-info is-light">
-          Primar lorem ipsum dolor sit amet, consectetur
-          adipiscing elit lorem ipsum dolor.
+          Fill in hyperparameters and click Train Model.
         </div>
       </div>
     </div>
@@ -220,8 +217,7 @@
 
       <div class="control">
         <div class="notification is-info is-light">
-          Primar lorem ipsum dolor sit amet, consectetur
-          adipiscing elit lorem ipsum dolor.
+          Results will be graphically displayed.
         </div>
       </div>
     </div>
@@ -274,8 +270,7 @@
 
       <div class="control">
         <div class="notification is-info is-light">
-          Primar lorem ipsum dolor sit amet, consectetur
-          adipiscing elit lorem ipsum dolor.
+          View and optionally download the graphical results(.PNG, .SVG)
         </div>
       </div>
     </div>
