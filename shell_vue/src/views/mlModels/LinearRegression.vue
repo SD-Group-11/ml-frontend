@@ -48,7 +48,7 @@
                         </select>
                     </div>
                      </div>
-                     <button v-on:click='TrainModel'> Train Model</button>
+                     <button v-on:click='TrainModel'> Train Model </button>
 
             
 
