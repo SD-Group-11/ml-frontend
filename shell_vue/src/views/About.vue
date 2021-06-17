@@ -67,7 +67,7 @@
 		<div class="tile is-parent">
 			<article class="tile notification is-danger is-child box">
 			<p class="title">Talion Naidoo</p>
-			<p class="subtitle">Subtitle</p>
+			<!-- <p class="subtitle">Subtitle</p> -->
 			</article>
 		</div>
 		<div class="tile is-parent">

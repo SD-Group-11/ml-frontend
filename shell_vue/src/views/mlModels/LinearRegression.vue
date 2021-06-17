@@ -37,7 +37,7 @@
                         <!-- Selecting a dataset -->
                         <div class="field ">
                             <label class="label">Dataset</label>
-                            <select v-model="selected" id = "files" class="select select is-normal is-size-6 is-info" style="width: 100%;">
+                            <select v-model="selected" id = "files" class="select is-normal is-size-6 is-info" style="width: 100%;">
                                 <option disabled value="">Select dataset</option>
                                 <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
                             </select>
