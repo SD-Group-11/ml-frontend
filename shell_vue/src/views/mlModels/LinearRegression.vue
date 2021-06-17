@@ -63,7 +63,8 @@
             <div><button style="text-align: center;" class="button"  v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false; '> Train Model</button></div>
         </div> 
 
-                    
+               
+               
         <!-- Training Graphs -->
         <span><h2 v-if="showTrainingGraphs">Training results: <span class="accuracy">{{ (trainAccuracy*100).toFixed(2) }}% </span></h2></span>
                     
@@ -79,7 +80,8 @@
         <br>
         <!-- Predicted VS actual for Testing-->
         <apexchart v-if="showTestingGraphs" type="line" :options="testingOptionsPredictedVSActual" height=600 :series="testingSeriesPredictedVSActual"></apexchart>
-                    
+          
+          
     </div>
 </template>
 
@@ -231,6 +233,8 @@
                 this.$store.commit('setIsLoading',false)
             },
 
+
+
             // Call this method when the user clicks Train Model 
             async TrainModel(){
                 var id = this.userDetails.id;
@@ -284,6 +288,7 @@
                 });
             },
 
+
             // Used in order to show Test data charts on button click
             showTestGraphs() {
                 this.showTestingGraphs = true
@@ -297,19 +302,23 @@
             //Extract http response into accessible javascript data
             extractData(responseData) {
                 console.log('responseData', responseData)
+                
                 // Train data
                 this.trainX = Object.values(responseData['TrainX'])
                 this.trainY = Object.values(responseData['TrainY'])
                 this.trainPredictedY = Object.values(responseData['Train_PredictY'])
+
 
                 // Test data
                 this.testX = Object.values(responseData['TestX'])
                 this.testY = Object.values(responseData['TestY'])
                 this.testPredictedY = Object.values(responseData['Test_PredictY'])
 
+
                 // Train and Test accuracy
                 this.trainAccuracy = responseData['Train_accuracy']
                 this.testAccuracy = responseData['Test_accuracy']
+
 
                 //Mean Squared Error, Coefficients, Intercept and number of Features
                 this.meanSquaredError = responseData['meansquared']
@@ -407,6 +416,7 @@
                     xyPairs.push({x: i, y: yValues[i]})
                     xyPredicted.push({x: i, y: yPredicated[i]})
                 }
+
 
                 // Series is used to plot different types of graphs on the same chart. e.g Scatter and line
                 var seriesPredictedVSActual = [{
