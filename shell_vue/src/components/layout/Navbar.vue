@@ -1,8 +1,9 @@
 <template>
     <nav class="navbar is-warning " role="navigation" aria-label="dropdown navigation">
         <div class="navbar-brand">
-            <a class="navbar-item" href="http://getdrawings.com/confused-icon">
-                <img src="@/assets/images/confused-icon-6.png" alt="Logo">
+            <!-- <a class="navbar-item" href="http://getdrawings.com/confused-icon"> -->
+            <a class="navbar-item" href="">
+                <img src="@/assets/images/confused-icon-6-yellow.png" alt="Logo">
             </a>
             
         </div>
@@ -41,8 +42,7 @@
 
                     <div class="navbar-dropdown">
                         <a class="navbar-item">
-                            
-                            <strong>Team</strong>
+                            <router-link to="/about" class="navbar-item"><strong>Team</strong></router-link>
                         </a>
                     </div>
                 </div>
