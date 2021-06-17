@@ -1,8 +1,0 @@
-{
-    "python.pythonPath": "C:\\Users\\talio\\Envs\\mfli\\Scripts\\python.exe",
-    "python.linting.pylintEnabled": false,
-    "python.linting.enabled": false,
-    "python.linting.pylintArgs": [
-        "--load-plugins=pylint_django"
-   ]
-}
