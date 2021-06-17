@@ -1,89 +1,87 @@
 <template>   
-    <div class="container is-fluid">
+    <div class="container" style="text-align:center;">
 
-        <div class="container is-fluid">
-            <div class="notification is-info has-text-centered" >
-                <strong><h3 class="title is-3">Linear Regression Model Trainer</h3></strong>
+        <section class="hero" style=" background-color:#000080">
+            <div class="hero-body">
+                <h1 class="title is-1 has-text-centered" style="color:#FFFFFF; background-color:#000080; border-radius:200px"><strong>Linear Regression</strong></h1>
             </div>
+        </section>    
 
-            <form @submit.prevent="submitForm"> 
-                <div class="columns">
+        <div class="columns is-multiline is-mobile">
 
-                    <div class="column is-four-fifths">
-                        <div class="field is-grouped">
-                            
-                            <div class="control">
-                                <label class="label">Learning Rate</label>
-                                <input class="input" id="learningRate" type="text" placeholder="0.1">
-                            </div>
-                        
-                            
-                            <div class="control">
-                                <label class="label">Tolerance</label>
-                                <input class="input" id = "tol" type="email" placeholder="0.5">
-                            </div>
-
-                            <div class="control ml-6">
-                                <label class="label">Split</label>
-                                <input type="range" id="split" min="1" max="99" step="1" v-model="initialSplit" style="width: 300%;"/>
-                                <div class="output">Training and test data split: {{ initialSplit }}/{{ 100-initialSplit }}</div>
-                            </div>
-                            
+            <div class="column is-full is-warning has-text-centered">
+                <div class="box hyperParametersContainer">
+                    <h2 class="title is-3 has-text-centered">Enter Hyperparameters</h2>
+                    
+                    <div class="field">
+                        <label class="label">Learning Rate</label>
+                        <div class="control">
+                            <input class="input" id="learningRate" type="text" placeholder="0.1">
                         </div>
-    
-                    </div> 
+                    </div>
 
-                    <div class="column is-one-fifth">
-                        <!-- Selecting a dataset -->
-                        <div class="field ">
-                            <label class="label">Dataset</label>
-                            <select v-model="selected" id = "files" class="select select is-normal is-size-6 is-info" style="width: 100%;">
-                                <option disabled value="">Select dataset</option>
-                                <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
-                            </select>
+                    <div class="field">
+                        <label class="label">Tolerance</label>
+                        <div class="control">
+                            <input class="input" id = "tol" type="email" placeholder="0.5">
                         </div>
                         
                     </div>
-
-                </div>
-            </form>
-
-            <div class="columns">
-
-                <div class="column is-full is-warning ">
-                    <div class="box" style="background-color:#FFD55A;">
-                        <!-- <h2 class="title is-3 has-text-centered">Enter Hyperparameters</h2> -->
-                        
+                    
+                    <!-- Trying a slider for the user to pick the data split -->
+                    <div class="field">
+                        <label class="label">Split</label>
+                        <input type="range" id="split" min="1" max="99" step="1" v-model="initialSplit" style="width: 60%;"/>
+                        <div class="output">Training and test data split: {{ initialSplit }}/{{ 100-initialSplit }}</div>
                     </div>
 
+                     <!-- Selecting a dataset -->
+                    <div class="control">
+                    <div id="v-model-select" class="demo">
+                        <select v-model="selected" id = "files" >
+                            <option disabled value="">Select dataset</option>
+                            <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
+                        </select>
+                        <br>
+                        <span>Selected: {{ selected }}</span>
+                    </div>
+                    </div>
+
+                            <!-- Train model button -->
+                    <div><button style="text-align: center;" class="button"  v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false; '> Train Model</button></div>
+                                
+                    <!-- Training Graphs -->
+                    <span><h2 v-if="showTrainingGraphs">Training results: <span class="accuracy">{{ (trainAccuracy*100).toFixed(2) }}% </span></h2></span>
+                                
+                    <!-- Predicted VS actual for Training Data-->
+                    <apexchart v-if="showTrainingGraphs" type="line" :options="trainingOptionsPredictedVSActual" height=600 :series="trainingSeriesPredictedVSActual"></apexchart>
+
+                    <!-- Test Model Button -->
+                    <button class="button" id="testModelButton" v-if="showTrainingGraphs" v-on:click='showTestGraphs'> Test Model</button>
+                    <!-- Testing Graphs -->
+                    <span><h2 v-if="showTestingGraphs">Testing results: <span class="accuracy">{{ (testAccuracy*100).toFixed(2) }}% </span></h2></span>
+                    <!-- Line of best fit for Training Data-->
+                    <apexchart v-if="showTestingGraphs && numberFeatures==1" type="line" :options="optionsLOBF" height=600 :series="seriesLOBF"></apexchart>
+                    <br>
+                    <!-- Predicted VS actual for Testing-->
+                    <apexchart v-if="showTestingGraphs" type="line" :options="testingOptionsPredictedVSActual" height=600 :series="testingSeriesPredictedVSActual"></apexchart>
+                                
+
                 </div>
+
             </div>
+        </div>
 
-            <!-- Train model button -->
-            <div><button style="text-align: center;" class="button"  v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false; '> Train Model</button></div>
-        </div> 
-
-                    
-        <!-- Training Graphs -->
-        <span><h2 v-if="showTrainingGraphs">Training results: <span class="accuracy">{{ (trainAccuracy*100).toFixed(2) }}% </span></h2></span>
-                    
-        <!-- Predicted VS actual for Training Data-->
-        <apexchart v-if="showTrainingGraphs" type="line" :options="trainingOptionsPredictedVSActual" height=600 :series="trainingSeriesPredictedVSActual"></apexchart>
-
-        <!-- Test Model Button -->
-        <button class="button" id="testModelButton" v-if="showTrainingGraphs" v-on:click='showTestGraphs'> Test Model</button>
-        <!-- Testing Graphs -->
-        <span><h2 v-if="showTestingGraphs">Testing results: <span class="accuracy">{{ (testAccuracy*100).toFixed(2) }}% </span></h2></span>
-        <!-- Line of best fit for Training Data-->
-        <apexchart v-if="showTestingGraphs && numberFeatures==1" type="line" :options="optionsLOBF" height=600 :series="seriesLOBF"></apexchart>
-        <br>
-        <!-- Predicted VS actual for Testing-->
-        <apexchart v-if="showTestingGraphs" type="line" :options="testingOptionsPredictedVSActual" height=600 :series="testingSeriesPredictedVSActual"></apexchart>
-                    
+        
     </div>
 </template>
 
 <style>
+
+    .hyperParametersContainer {
+        background-color:#FFD55A;
+    }
+
     .button {
         /* #fd0b0b */
         /* #fd1201 
@@ -105,16 +103,15 @@
 
     h2 {
         color: black;
-        font-size: 30px;
+        font-size: 40px;
         margin: 20px;
-        font-family: Tahoma, sans-serif, Georgia, serif;
-        font-weight: 500;
+        font-family: Georgia, serif;
         text-align: center;
     }
 
     .accuracy {
         color: #037BF7;
-        font-size: 30px;
+        font-size: 40px;
     }
 </style>
 
@@ -343,7 +340,7 @@
                 this.seriesLOBF = [{
                     name: "Actual Values",
                     type: 'scatter',
-                    color: '#FF9600',
+                    color: '#D02A2A',
                     data: actualXYPairs
                 },{
                     // Not drawing a line connecting every point, only the min and max, saving computation and time
@@ -412,7 +409,7 @@
                 var seriesPredictedVSActual = [{
                     name: "Actual Values",
                     type: 'line',
-                    color: '#FF9600',
+                    color: '#D02A2A',
                     
                     data: xyPairs
                 },{
