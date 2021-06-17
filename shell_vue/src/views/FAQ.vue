@@ -4,7 +4,7 @@
 
     <div class="container is-fluid p-2">
         <div class="notification is-info" >
-            <strong><h3 class="title is-1">Frequetly Asked Questions</h3></strong>
+            <strong><h3 class="title is-1">Frequently Asked Questions</h3></strong>
         </div>
 
     </div>
@@ -30,7 +30,7 @@
               </div>
               <div class="message-body" v-show='toggle'>
                 <div class="notification is-info  is-light">
-                  You can always reset your password from the sign in form.
+                  You can reset your password from the sign-in form.
                 </div>
                 
               </div>
@@ -69,7 +69,7 @@
               </div>
               <div class="message-body" v-show='toggle2'>
                 <div class="notification is-info  is-light">
-                  You are welcome to browse the site to find out what we offer but you would need an account to use the models listed.
+                  You are welcome to browse the site to find out what we offer but you do need an account to use the listed models.
 
                 </div>
               </div>
@@ -140,7 +140,7 @@
               </div>
               <div class="message-body" v-show='toggle'>
                 <div class="notification is-info  is-light">
-                  You can always reset your password from the sign in form.
+                  You can reset your password from the sign-in form.
                 </div>
                 
               </div>
@@ -179,7 +179,7 @@
               </div>
               <div class="message-body" v-show='toggle2'>
                 <div class="notification is-info  is-light">
-                  You are welcome to browse the site to find out what we offer but you would need an account to use the models listed.
+                  You are welcome to browse the site to find out what we offer but you do need an account to use the listed models.
 
                 </div>
               </div>
