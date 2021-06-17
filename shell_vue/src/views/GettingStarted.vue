@@ -56,7 +56,7 @@
 
       <div class="control">
         <div class="notification is-info is-light">
-          Select desired model.
+          Select model that best fits your data.
         </div>
       </div>
     </div>
