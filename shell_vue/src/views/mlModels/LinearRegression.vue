@@ -34,7 +34,7 @@
                     <div class="field">
                         <label class="label">Test-Train Split</label>
                         <div class="control">
-                            <input class="input" type="text" placeholder="Please enter a value between 0 and 100" v-model = "split" >
+                            <input class="input" id="split" type="text" placeholder="Please enter a value between 0 and 100" v-model = "split" >
                         </div>
 
                         <p class="help is-danger" v-if="field_errors.split">
