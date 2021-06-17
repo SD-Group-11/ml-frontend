@@ -1,182 +1,194 @@
 <template>
-  <div class="container">  
-    <section class="hero is-light" style=" background-color:lightyellow">
-      <div class="get-head"></div>
-      <div class="get-body">
+  <div class="container is-fluid">  
 
-          <template v-if="$store.state.isAuthenticated">
-          <div class="columns is-multiline"> 
-           <div class="column  is-half"> 
-            <div class="card">
-              <header class="card-header">
-                <p class="card-header-title">
-              I forgot my password, how do I reset it?
-            </p>
-          <button class="card-header-icon" aria-label="more options" @click="toggle= !toggle">
-            <span class="icon">
-              <img src="@/assets/images/arrow-down-sign-to-navigate.png" alt="Logo">
-            </span>
-          </button>
-        </header>
- 
-          <div class="card-content" v-show='toggle'>
-            <div class="content" v-show='toggle'>
-              You can always reset your password from the sign in form.
-            </div>
-          </div>
-          </div>
-          </div>
-        <br/>
-        <div class="column  is-half"> 
-          <div class="card">
-              <header class="card-header">
-                <p class="card-header-title">
-              I have not received an email to reset my password, what should I do?
-            </p>
-          <button class="card-header-icon"  aria-label="more options" @click="toggle1= !toggle1 ">
-            <span class="icon" >
-              <img src="@/assets/images/arrow-down-sign-to-navigate.png" alt="Logo">
-            </span>
-          </button>
-        </header>
-          <div class="card-content" v-show='toggle1'>
-            <div class="content" v-show='toggle1'>
-              If you have not received an email to change your password try checking your spam folder. Otherwise please contact mlfframework@gmail.com.
-            </div>
-          </div>
-          </div>
-          </div>
-          
-          
-        <div class="column  is-half"> 
-          <div class="card">
-              <header class="card-header">
-                <p class="card-header-title">
-              Do I need an account to access this platform?
-            </p>
-          <button class="card-header-icon" aria-label="more options" @click="toggle2= !toggle2">
-            <span class="icon">
-             <img src="@/assets/images/arrow-down-sign-to-navigate.png" alt="Logo">
-            </span>
-          </button>
-        </header>
-          <div class="card-content" v-show='toggle2'>
-            <div class="content" v-show='toggle2'>
-              You are welcome to browse the site to find out what we offer but you would need an account to use the models listed.
-            </div>
-          </div>
-          </div>
-        </div>  
-        <div class="column  is-half"> 
-          <div class="card">
-              <header class="card-header">
-                <p class="card-header-title">
-              My data is not being read correctly, what should I do?
-            </p>
-          <button class="card-header-icon" aria-label="more options" @click="toggle3= !toggle3">
-            <span class="icon">
-              <img src="@/assets/images/arrow-down-sign-to-navigate.png" alt="Logo">
-            </span>
-          </button>
-        </header>
-          <div class="card-content" v-show='toggle3'>
-            <div class="content" v-show='toggle3'>
-              Make sure that your data is correctly formatted according to the guidelines listed on the information page.
-            </div>
-          </div>
-          </div>
-         </div> 
-        </div>  
 
-        <div class="card" style="max-width:800px">
-         <header class="card-header">
-                <p class="card-header-title is-centered">
-              Upload a CSV file where the last column must be the targets/categories.
-                </p>
-         </header>    
-         <div class="card-content">
-           <div class="content is-medium">
-             <ol type="1">
-               <li>Click on "Choose File".</li>
-               <li>Select a .csv file from your local device.</li>
-               <li>Click on "Submit".</li>
-               <li>Wait and let the magic happen!</li>
-             </ol>  
-             <br/>
-           </div>
-         </div>    
+    <div class="container is-fluid p-2">
+        <div class="notification is-info" >
+            <strong><h3 class="title is-1">Frequetly Asked Questions</h3></strong>
         </div>
-          </template>
-          <template v-else>
-          <div class="columns is-multiline"> 
-           <div class="column  is-half"> 
-            <div class="card">
-              <header class="card-header">
-                <p class="card-header-title">
-              I forgot my password, how do I reset it?
-            </p>
-          <button class="card-header-icon" aria-label="more options" @click="toggle= !toggle">
-            <span class="icon">
-             <img src="@/assets/images/arrow-down-sign-to-navigate.png" alt="Logo">
-            </span>
-          </button>
-        </header>
+
+    </div>
+
+    <div class="block" > </div>
+
+      <template v-if="$store.state.isAuthenticated">
+        
+        <div class="container is-fluid"> 
+            
+          <div class="control"> 
+            
+            <article class="message is-warning">
+              <div class="message-header">
+                <p>I forgot my password, how do I reset it?
+                </p>
+                
+                <button class="button is-warning is-light "  @click="toggle= !toggle">
+                  <span class="icon is-small">
+                    <i class="fas fa-chevron-circle-down"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="message-body" v-show='toggle'>
+                <div class="notification is-info  is-light">
+                  You can always reset your password from the sign in form.
+                </div>
+                
+              </div>
+            </article>
+
+            <article class="message is-warning">
+              <div class="message-header">
+                <p>I have not received an email to reset my password, what should I do?
+                </p>
+                
+                <button class="button is-warning is-light"  @click="toggle1= !toggle1">
+                  <span class="icon is-small">
+                    <i class="fas fa-chevron-circle-down"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="message-body" v-show='toggle1'>
+                <div class="notification is-info  is-light">
+                  If you have not received an email to change your password try checking your spam folder. Otherwise please contact mlfframework@gmail.com.
+
+                </div>
+                </div>
+            </article>
+
+
+            <article class="message is-warning">
+              <div class="message-header">
+                <p>Do I need an account to access this platform?
+                </p>
+                
+                <button class="button is-warning is-light"   @click="toggle2= !toggle2">
+                  <span class="icon is-small">
+                    <i class="fas fa-chevron-circle-down"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="message-body" v-show='toggle2'>
+                <div class="notification is-info  is-light">
+                  You are welcome to browse the site to find out what we offer but you would need an account to use the models listed.
+
+                </div>
+              </div>
+            </article>
+
+
+            <article class="message is-warning">
+              <div class="message-header">
+                <p> My data is not being read correctly, what should I do?
+                </p>
+                
+                <button class="button is-warning is-light" @click="toggle3= !toggle3">
+                  <span class="icon is-small">
+                    <i class="fas fa-chevron-circle-down"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="message-body" v-show='toggle3'>
+                <div class="notification is-info  is-light">
+                    Make sure that your data is correctly formatted according to the guidelines listed on the information page.
+                </div>
+              </div>
+            </article>
+
+            <article class="message is-warning">
+              <div class="message-header">
+                <p> How do I upload my dataset?
+                </p>
+                
+                <button class="button is-warning is-light" @click="toggle4= !toggle4">
+                  <span class="icon is-small">
+                    <i class="fas fa-chevron-circle-down"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="message-body" v-show='toggle4'>
+                <div class="notification is-info  is-light ml-5">
+                  <ol type="1">
+                    <li>Click on "Choose File".</li>
+                    <li>Select a .csv file from your local device.</li>
+                    <li>Click on "Submit".</li>
+                    <li>Wait and let the magic happen!</li>
+                  </ol>             
+                </div>
+              </div>
+            </article>
+
+          </div>
  
-          <div class="card-content" v-show='toggle'>
-            <div class="content" v-show='toggle'>
-              You can always reset your password from the sign in form.
-            </div>
-          </div>
-          </div>
-          </div>
-        <br/>
-        <div class="column  is-half"> 
-          <div class="card">
-              <header class="card-header">
-                <p class="card-header-title">
-              I have not received an email to reset my password, what should I do?
-            </p>
-          <button class="card-header-icon"  aria-label="more options" @click="toggle1= !toggle1 ">
-            <span class="icon" >
-              <img src="@/assets/images/arrow-down-sign-to-navigate.png" alt="Logo">
-            </span>
-          </button>
-        </header>
-          <div class="card-content" v-show='toggle1'>
-            <div class="content" v-show='toggle1'>
-              If you have not received an email to change your password try checking your spam folder. Otherwise please contact mlfframework@gmail.com.
-            </div>
-          </div>
-          </div>
-          </div>
-          
-          
-        <div class="column  is-half"> 
-          <div class="card">
-              <header class="card-header">
-                <p class="card-header-title">
-              Do I need an account to access this platform?
-            </p>
-          <button class="card-header-icon" aria-label="more options" @click="toggle2= !toggle2">
-            <span class="icon">
-             <img src="@/assets/images/arrow-down-sign-to-navigate.png" alt="Logo">
-            </span>
-          </button>
-        </header>
-          <div class="card-content" v-show='toggle2'>
-            <div class="content" v-show='toggle2'>
-              You are welcome to browse the site to find out what we offer but you would need an account to use the models listed.
-            </div>
-          </div>
-          </div>
-        </div> 
+        
         </div>  
-          </template>
-          
-      </div>
-      <div class="get-foot"></div>
-    </section>
-  </div>  
+
+      </template>
+
+      <template v-else>
+        <div class="control"> 
+            
+            <article class="message is-warning">
+              <div class="message-header">
+                <p>I forgot my password, how do I reset it?
+                </p>
+                
+                <button class="button is-warning is-light"  @click="toggle= !toggle">
+                  <span class="icon is-small">
+                    <i class="fas fa-chevron-circle-down"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="message-body" v-show='toggle'>
+                <div class="notification is-info  is-light">
+                  You can always reset your password from the sign in form.
+                </div>
+                
+              </div>
+            </article>
+
+            <article class="message is-warning">
+              <div class="message-header">
+                <p>I have not received an email to reset my password, what should I do?
+                </p>
+                
+                <button class="button is-warning is-light"  @click="toggle1= !toggle1">
+                  <span class="icon is-small">
+                    <i class="fas fa-chevron-circle-down"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="message-body" v-show='toggle1'>
+                <div class="notification is-info  is-light">
+                  If you have not received an email to change your password try checking your spam folder. Otherwise please contact mlfframework@gmail.com.
+
+                </div>
+                </div>
+            </article>
+
+
+            <article class="message is-warning">
+              <div class="message-header">
+                <p>Do I need an account to access this platform?
+                </p>
+                
+                <button class="button is-warning is-light"   @click="toggle2= !toggle2">
+                  <span class="icon is-small">
+                    <i class="fas fa-chevron-circle-down"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="message-body" v-show='toggle2'>
+                <div class="notification is-info  is-light">
+                  You are welcome to browse the site to find out what we offer but you would need an account to use the models listed.
+
+                </div>
+              </div>
+            </article>
+          </div>
+    </template>
+
+  </div> 
+
 </template>
 
 <style scoped>
@@ -210,7 +222,8 @@ export default {
       toggle: false,
       toggle1: false,
       toggle2: false,
-      toggle3: false
+      toggle3: false,
+      toggle4: false,
     }
   }
 }

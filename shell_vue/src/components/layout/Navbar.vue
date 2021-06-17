@@ -118,7 +118,7 @@
 
                                 <div  class="control">
                                     <div class="modal__action">
-                                    <button class="button is-info has-text-black" @click="logout(); showModal=false;"><strong>I want to break free!</strong></button>
+                                    <button class="button is-medium is-info" @click="logout(); showModal=false;"><strong>I want to break free!</strong></button>
                                     <!-- <button @click="showModal=false;" class="action_cancel">CANCEL</button> -->
                                 </div>
                                 </div>
