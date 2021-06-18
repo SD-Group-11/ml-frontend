@@ -2,6 +2,7 @@
    
    <section class="hero is-fullheight" style="background-image: '@/assets/images/cheeky.png'">
   <div class="hero-body">
+    
     <div class="container">
     <p class="title">
       Machine Learning Front-End Framework
