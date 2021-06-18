@@ -1,43 +1,83 @@
 <template>
-    <div class="container">  
-    <section class="hero is-light" style=" background-color:lightyellow">
-      <div class="get-head"></div>
-      <div class="get-body">
-          <div class="card" style="max-width:800px">
-         <header class="card-header">
-                <p class="card-header-title is-centered" style="font-size:40px">
-             We are IllegalSkillsException
-                </p>
-         </header>    
-         <div class="card-content">
-           <div class="content">
-             
-               <dd>Michael De Carvalho</dd>
-               <dd>Phoenix Krinsky</dd>
-               <dd>Fatima-Zahraa Daya</dd>
-               <dd>Ureeshah Moodley</dd>
-               <dd>Ziyaad Ballim</dd>
-               <dd>Jeremy Crouch</dd>
-               <dd>Zahraa Hoosen</dd>
-               <dd>Yaseen Haffejee</dd>
-               <dd>Talion Naidoo</dd>
 
-          <br/>
-           To view our repository, click the icon below.  
-           </div>
-           <div class="github-card" data-github="SD-Group-11/ml-frontend" data-width="400" data-height="" data-theme="default"></div>
-          
-         </div>    
-         <div class="card">
-          <footer class="card-footer">
-            <a class="card-footer-item" href="https://github.com/SD-Group-11/ml-frontend" target="_blank"><img src="@/assets/images/GitHub-Mark-32px.png" alt="Github"></a>
-          </footer>
-        </div>
-        </div>
-      </div>
-      <div class="get-foot"></div>
-    </section>
-  </div>  
+    <div class="container is-fluid">  
+
+		<div class="container is-fluid p-2">
+			
+			<div class="notification is-info has-text-centered" >
+				<strong><h3 class="title is-1">We are IllegalSkillsException</h3></strong>
+			</div>
+		</div>
+
+	
+
+    <div class="block" > </div>
+	<div class="tile is-ancestor">
+		<div class="tile is-parent">
+			<article class="tile notification is-primary is-child box "> 
+			<p class="title">Michael De Carvalho</p>
+			<!-- <p class="subtitle">Subtitle</p> -->
+			</article>
+		</div>
+		<div class="tile is-parent">
+			<article class="tile notification is-link is-child box">
+			<p class="title">Phoenix Krinsky</p>
+			<!-- <p class="subtitle">Subtitle</p> -->
+			</article>
+		</div>
+		<div class="tile is-parent">
+			<article class="tile notification is-danger is-light is-child box">
+			<p class="title">Fatima Daya</p>
+			<!-- <p class="subtitle">Subtitle</p> -->
+			</article>
+		</div>
+		<div class="tile is-parent">
+			<article class="tile notification is-success is-child box">
+			<p class="title">Ureeshah Moodley</p>
+			<!-- <p class="subtitle">Subtitle</p> -->
+			</article>
+		</div>
+		<div class="tile is-parent">
+			<article class="tile notification is-link is-light is-child box">
+			<p class="title">Ziyaad Ballim</p>
+			<!-- <p class="subtitle">Subtitle</p> -->
+			</article>
+		</div>
+	</div>
+
+	<div class="tile is-ancestor">
+		<div class="tile is-parent">
+			<article class="tile notification is-warning is-child box">
+			<p class="title">Jeremy Crouch</p>
+			<!-- <p class="subtitle">Subtitle</p> -->
+			</article>
+		</div>
+		<div class="tile is-parent">
+			<article class="tile notification is-primary is-light is-child box">
+			<p class="title">Zahraa Hoosen</p>
+			<!-- <p class="subtitle">Subtitle</p> -->
+			</article>
+		</div>
+		<div class="tile is-parent">
+			<article class="tile notification is-success is-light is-child box">
+			<p class="title">Yaseen Haffejee</p>
+			<!-- <p class="subtitle">Subtitle</p> -->
+			</article>
+		</div>
+		<div class="tile is-parent">
+			<article class="tile notification is-danger is-child box">
+			<p class="title">Talion Naidoo</p>
+			<!-- <p class="subtitle">Subtitle</p> -->
+			</article>
+		</div>
+		<div class="tile is-parent">
+			<article class="tile has-background-primary  is-child box">
+			<p class="subtitle has-text-black"><strong>View our repository</strong></p>
+			 <a class="card-footer-item" href="https://github.com/SD-Group-11/ml-frontend" target="_blank"><img src="@/assets/images/GitHub-Mark-32px.png" alt="Github"></a>
+			</article>
+		</div>
+	</div>
+  </div> 
 </template>
 
 <style scoped>
