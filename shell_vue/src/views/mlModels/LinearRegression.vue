@@ -25,7 +25,7 @@
 
                             <div class="control ml-6">
                                 <label class="label">Split</label>
-                                <input type="range" id="split" min="1" max="99" step="1" v-model="initialSplit" style="width: 210%;"/>
+                                <input type="range" id="split" min="1" max="99" step="1" v-model="initialSplit" style="width: 150%;"/> <!--changed width to 150% from 210-->
                                 <div class="output">Training and test data split: {{ initialSplit }}/{{ 100-initialSplit }}</div>
                             </div>
                             
@@ -66,7 +66,8 @@
                
                
         <!-- Training Graphs -->
-        <span><h2 v-if="showTrainingGraphs">Training results: <span class="accuracy">{{ (trainAccuracy*100).toFixed(2) }}% </span></h2></span>
+        <span><h2 v-if="showTrainingGraphs">Training results: <span class="accuracy">{{ (trainAccuracy).toFixed(2) }} </span></h2></span>
+        <span><h2 v-if="showTestingGraphs">Mean Squared Error: <span class="meansquared">{{ (meanSquaredError).toFixed(2) }} </span></h2></span>
                     
         <!-- Predicted VS actual for Training Data-->
         <apexchart v-if="showTrainingGraphs" type="line" :options="trainingOptionsPredictedVSActual" height=600 :series="trainingSeriesPredictedVSActual"></apexchart>
@@ -74,13 +75,45 @@
         <!-- Test Model Button -->
         <button class="button" id="testModelButton" v-if="showTrainingGraphs" v-on:click='showTestGraphs'> Test Model</button>
         <!-- Testing Graphs -->
-        <span><h2 v-if="showTestingGraphs">Testing results: <span class="accuracy">{{ (testAccuracy*100).toFixed(2) }}% </span></h2></span>
+        <span><h2 v-if="showTestingGraphs">Testing Results: <span class="accuracy">{{ (testAccuracy).toFixed(2) }} </span></h2></span>
+        <span><h2 v-if="showTestingGraphs">Mean Squared Error: <span class="meansquared">{{ (meanSquaredError).toFixed(2) }} </span></h2></span>
         <!-- Line of best fit for Training Data-->
-        <apexchart v-if="showTestingGraphs && numberFeatures==1" type="line" :options="optionsLOBF" height=600 :series="seriesLOBF"></apexchart>
+        <!-- <apexchart v-if="showTestingGraphs && numberFeatures==1" type="line" :options="optionsLOBF" height=600 :series="seriesLOBF"></apexchart> -->
         <br>
         <!-- Predicted VS actual for Testing-->
-        <apexchart v-if="showTestingGraphs" type="line" :options="testingOptionsPredictedVSActual" height=600 :series="testingSeriesPredictedVSActual"></apexchart>
+        <!-- <apexchart v-if="showTestingGraphs" type="line" :options="testingOptionsPredictedVSActual" height=600 :series="testingSeriesPredictedVSActual"></apexchart> -->
           
+
+
+        <!-- GRAPH TABS FOR TESTING -->
+        <div class="tabs is-toggle is-toggle-rounded is-centered" v-if="showTestingGraphs">
+            <ul>
+                <li class="is-active tablinks" v-on:click="openTab(event, 'line')">
+                    <a>
+                        <span class="icon is-small"><i class="fas fa-chart-line" aria-hidden="true"></i></span>
+                        <span>Line of Best Fit</span>
+                    </a>
+                </li>
+                <li class="tablinks" v-on:click="openTab(event, 'dots')">
+                    <a>
+                        <span class="icon is-small"><i class="fas fa-chart-area" aria-hidden="true"></i></span>
+                        <span>Predicted vs Actual</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+
+        <!-- TAB CONTENTS -->
+        <div id="line" class="tabcontent">
+                <!-- <h1>hello</h1> -->
+                <apexchart v-if="showTestingGraphs && numberFeatures==1" type="line" :options="optionsLOBF" height=450 :series="seriesLOBF"></apexchart>
+        </div>
+
+        <div id="dots" class="tabcontent">
+                <!-- <h1>old friend</h1> -->
+                <apexchart v-if="showTestingGraphs" type="line" :options="testingOptionsPredictedVSActual" height=450 :series="testingSeriesPredictedVSActual"></apexchart>
+        </div>
           
     </div>
 </template>
@@ -482,6 +515,26 @@
                     this.testingSeriesPredictedVSActual = seriesPredictedVSActual
                     this.testingOptionsPredictedVSActual = optionsPredictedVSActual
                 }
+            },
+
+            // tabs
+            openTab(event, tabId){
+            //get all elements w the tab content and hide it
+               var tabcontent = document.getElementsByClassName('tabcontent')
+               for(let i=0; i<tabcontent.length; i++)
+               {
+                   tabcontent[i].style.display = 'none';
+               }
+            //get all the elements w the class tablinks and remove is-active
+               var tablinks = document.getElementsByClassName('tablinks')
+               for(let i=0; i<tablinks.length; i++)
+               {
+                   tablinks[i].className = tablinks[i].className.replace('is-active', '')
+               }
+
+            //show curr tab and add is-active to that tab
+                document.getElementById(tabId).style.display = 'block'
+                event.currentTarget.className += "is-active"
             }
         }
     }
