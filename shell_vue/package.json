@@ -25,6 +25,7 @@
     "bulma-tooltip": "^3.0.2",
     "chart.js": "^3.3.2",
     "core-js": "^3.6.5",
+    "css-loader": "^3.6.0",
     "json": "^11.0.0",
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-rc.1",
