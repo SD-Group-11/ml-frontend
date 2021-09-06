@@ -95,12 +95,17 @@ def receive_TestData(request):
         
         id,filename,testData,nullValues = filterTestData(dataset)
         try:
+            print('beginning of try')
+            print('filename: ', filename)
             Obj = Dataset.objects.get(UserId=id, filename=json.dumps(filename))
+            print('after obj get')
             Obj.testData = testData
             Obj.save()
+            print('after save')
             response['response'] = "Successfully uploaded test data."
             return Response(response)
         except:
+            print('except')
             response['response'] = "Failed to locate corresponding training dataset."
             return Response(response)
 ##json.dumps adds "" to a string
