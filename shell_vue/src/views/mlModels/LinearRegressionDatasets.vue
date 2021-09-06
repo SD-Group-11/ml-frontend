@@ -15,8 +15,10 @@
                             <div class="control">
                                 <div class="file has-name is-medium is-warning" >
                                     <label class="file-label">
+                                        <form id="trainForm">
+                                            <input class="file-input" id="myFile" type="file" accept=".csv"  v-on:input="fileValidation('myFile')">
+                                        </form>
                                         
-                                        <input class="file-input" id="myFile" type="file" accept=".csv"  v-on:input="fileValidation">
                                             
                                             <div class="file-cta">
                                                 <div class="file-label" >
@@ -37,8 +39,8 @@
                         <div class="field">
                             <div class="control is-pulled-right  ml-3">
                                 <!-- <button id = 'uploadFile' v-if="uploadable" type="submit" v-on:click = 'Upload' class="button is-info has-text-black"><strong>Submit</strong></button> -->
-                                <button  class="button is-medium  is-info is-outlined " id = 'uploadFile' type="submit" v-if="uploadable" v-on:click = 'Upload'><strong>Upload</strong></button>
-
+                                <button  class="button is-medium  is-info is-outlined " id = 'uploadFile' type="submit" v-if="uploadable && !testsetUploadable && uploadedName != ''" v-on:click = 'Upload'><strong>Upload</strong></button>
+                                <button  class="button is-medium  is-info is-outlined " id = 'uploadFile' type="submit" v-if="uploadable && testsetUploadable && uploadedName != ''" v-on:click = 'uploadTestDataset(tempTrainFilename)'><strong>Upload</strong></button>
                             </div>
                         </div>
                     </div>
@@ -145,6 +147,39 @@
                                             <!-- <span>Download</span> -->
 
                                         </button>
+                                    </p>
+
+                                    <p class="control">
+                                        <button class="button is-normal is-danger is-dark has-tooltip-arrow has-tooltip-info" data-tooltip="Delete dataset" type="button" v-on:click ="DeleteDataset(dataset.filename)">
+                                            
+                                            <span class="icon is-normal ">
+                                                <i class="fas fa-trash-alt " style="color: #ff9999"></i>
+                                            </span>
+                                            
+
+                                            <!-- <span><strong>Download</strong></span> -->
+                                            <!-- <span>Download</span> -->
+
+                                        </button>
+                                    </p>
+
+                                    <p class="control">
+                                        
+                                        <button class="button is-normal is-inverse has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" v-on:click ="inputTestset = true; tempTrainFilename = dataset.filename;">
+                                        
+                                            <input class="file-input" id="myTestFile" type="file" accept=".csv" v-if="inputTestset"  v-on:input="fileValidation('myTestFile'); testsetUploadable = true;">
+                                            
+                                            <span class="icon is-normal">
+                                                <i class="fas fa-chart-line"></i>
+                                            </span>
+                                            
+
+                                            <!-- <span><strong>Download</strong></span> -->
+                                            <!-- <span>Download</span> -->
+
+                                        </button>
+
+                                        
                                     </p>
 
                                 </div>
@@ -264,7 +299,6 @@
         justify-content: center;
         align-items: center;
     }
-
     ::v-deep .modal-content {
         position: relative;
         display: flex;
@@ -276,7 +310,6 @@
         border-radius: 0.25rem;
         background: #fff;
     }
-
     .modal__title {
         margin: 0 2rem 0 0;
         font-size: 1.5rem;
@@ -292,28 +325,28 @@
         top: 0.5rem;
         right: 0.5rem;
     }
-
 </style>
 
 
 <script>
     import axios from 'axios'
-
     import {toast} from 'bulma-toast'
-
     import { AgGridVue } from "ag-grid-vue3"
-
     export default {
         name: "LinearRegressionDatasets",
         data() {
             return{
                 userDetails: [],
-
                 uploadedFilename: '',
+                uploadedTestFilename: '',
                 uploadedSummary: [],
                 uploadable: false,
                 uploaded: false,
+                uploadedTestData: false,
                 showUploadedModal: false,
+                inputTestset: false,
+                testsetUploadable: false,
+                tempTrainFilename: '',
                 
                 hasDatasets: false,
                 userFiles: [],
@@ -324,7 +357,6 @@
                     TrainAccuracy: "",
                     TestAccuracy: ""
                 },
-
                 columnDefs: [],
                 rowData: [],
                 showDatasetModal: false,
@@ -340,27 +372,21 @@
             async getAccount(){
                 this.$store.commit('setIsLoading',true)
                 this.userDetails=[]
-
                 await axios
                     .get('/api/v1/users/me')
-
                     .then(response => {
                         this.userDetails=response.data
                         this.getUserDatasets()
                     })
-
                     .catch(error => {
                         console.log(error)
                     })
-
                 this.$store.commit('setIsLoading',false)
-
             },
             async getUserDatasets(){
                 this.$store.commit('setIsLoading',true)
                 this.userFiles=[]
                 var data ={"UserId":this.userDetails.id}
-
                 await axios
                 .post('/datasets/getDatasetsInfo',data)
                 .then(response =>{
@@ -394,6 +420,8 @@
                 this.uploaded=false;
                 this.$store.commit('setIsLoading',true)
                 var file = document.getElementById("myFile").files[0];
+                
+
                 var formData = new FormData();
                 formData.append("dataset",file);
                 formData.append("id",this.userDetails.id);
@@ -422,9 +450,59 @@
                             })  
                         }
                     });
-
+                this.uploadedName = '';
                 this.$store.commit('setIsLoading',false)
             },
+
+            async uploadTestDataset(trainsetFilename){
+                console.log('trainsetFilename',trainsetFilename)
+                this.uploadedTestData=false;
+                this.$store.commit('setIsLoading',true)
+                var testFile = document.getElementById("myTestFile").files[0];
+                var testFormData = new FormData();
+                testFormData.append("dataset",testFile);
+                testFormData.append("id",this.userDetails.id);
+                testFormData.append("TrainingFileName", trainsetFilename);
+                await axios
+                    .post('/datasets/uploadTestData',testFormData)
+                    .then(response => {
+                        var resp =  response.data['response'];
+                        
+                        var Type;
+                        if (resp == 'Successfully uploaded test data.'){
+                            Type = 'is-success';
+                            this.uploadedTestData=true;
+                            //this.uploadedTestFilename = `${testFile.name}`
+                            // Not sure if the next two lines are necesssary just yet
+                            // this.getUploaded(this.uploadedTestFilename) 
+                            // this.getUserDatasets() 
+                            toast({
+                                message: resp,
+                                type: Type,
+                                dismissible: true,
+                                pauseOnHover: true,
+                                duration: 1000,
+                                position: 'bottom-center',
+                            }) 
+                        }
+                        else{
+                            this.uploadedTestData =false;
+                            Type = 'is-danger';
+                            toast({
+                                message: resp,
+                                type: Type,
+                                dismissible: true,
+                                pauseOnHover: true,
+                                duration: 1000,
+                                position: 'bottom-center',
+                            })  
+                        }
+                    });
+                    this.uploadedName = '';
+                this.testsetUploadable = false;
+                this.$store.commit('setIsLoading',false)
+            },
+
             async getUploaded(filename){
                 this.showUploadedModal=false
                 this.$store.commit('setIsLoading',true)
@@ -490,7 +568,6 @@
                     } 
                 })
                 this.$store.commit('setIsLoading',false)
-
             },
             async getData(filename){
                 this.$store.commit('setIsLoading',true)
@@ -518,7 +595,6 @@
                     } 
                 })
                 this.$store.commit('setIsLoading',false)
-
             },
             async getReport(mse,trainAccuracy,testAccuracy){
                 this.$store.commit('setIsLoading',true)
@@ -529,20 +605,19 @@
                 this.showReportModal = true
                 this.$store.commit('setIsLoading',false)
             },
-            async fileValidation(){
-                this.$store.commit('setIsLoading',true)
+
+            // elementID is the name of the html element which chooses the file to be validated
+            async fileValidation(elementID){
                 
-                this.uploadable=false
-
-                var fileInput = document.getElementById("myFile").files[0];
-                var fileName = fileInput.name;
-
-                const allowedExtensions =  ['csv']
-
-                const fileExtension = fileName.split(".").pop();
-
-                if(!allowedExtensions.includes(fileExtension)){
-                    toast({
+                try {
+                    this.$store.commit('setIsLoading',true)
+                    this.uploadable=false
+                    var fileInput = document.getElementById(elementID).files[0];
+                    var fileName = fileInput.name;
+                    const allowedExtensions =  ['csv']
+                    const fileExtension = fileName.split(".").pop();
+                    if(!allowedExtensions.includes(fileExtension)){
+                        toast({
                             message: 'Please upload a .csv file',
                             type: 'is-danger',
                             dismissible: true,
@@ -550,10 +625,10 @@
                             duration: 2000,
                             position: 'bottom-center',
                         })
-                    fileInput.value = '';
-                    this.uploadedName = '';
-                    this.uploadable = false;
-                    this.$store.commit('setIsLoading',false)
+                        fileInput.value = '';
+                        this.uploadedName = '';
+                        this.uploadable = false;
+                        this.$store.commit('setIsLoading',false)
                     return false;
                 }
                 else{
@@ -571,8 +646,91 @@
                     this.$store.commit('setIsLoading',false)
                     return true;
                 }         
-            }
+                }catch {
+                    //Nothing should happen
+                    this.$store.commit('setIsLoading',false)
+                }
+                
+            },
 
+            async DeleteDataset(filename){
+                    this.$store.commit('setIsLoading',true)
+                    console.log(filename)
+                    console.log(this.userDetails.id)
+                    const id =  this.userDetails.id
+                    const data = {'UserID':id,"Filename":filename}
+                    await axios
+                    .post("/datasets/deleteDataset",data)
+                    .then(response => {
+                        var resp
+                        try {
+                            resp = response.data['success']
+
+                            var Type = 'is-success';
+                            this.uploadedTestData=true;
+                            //this.uploadedTestFilename = `${testFile.name}`
+                            // Not sure if the next two lines are necesssary just yet
+                            // this.getUploaded(this.uploadedTestFilename) 
+                            this.getUserDatasets() 
+                            toast({
+                                message: resp,
+                                type: Type,
+                                dismissible: true,
+                                pauseOnHover: true,
+                                duration: 1000,
+                                position: 'bottom-center',
+                            }) 
+                        }catch {
+                            resp = response.data['error']
+
+                            var Type = 'is-danger';
+                            this.uploadedTestData=true;
+                            //this.uploadedTestFilename = `${testFile.name}`
+                            // Not sure if the next two lines are necesssary just yet
+                            // this.getUploaded(this.uploadedTestFilename) 
+                            // this.getUserDatasets() 
+                            toast({
+                                message: resp,
+                                type: Type,
+                                dismissible: true,
+                                pauseOnHover: true,
+                                duration: 1000,
+                                position: 'bottom-center',
+                            }) 
+                        }
+                        
+                        // var Type;
+                        // if (resp == 'Successfully uploaded test data.'){
+                        //     Type = 'is-success';
+                        //     this.uploadedTestData=true;
+                        //     //this.uploadedTestFilename = `${testFile.name}`
+                        //     // Not sure if the next two lines are necesssary just yet
+                        //     // this.getUploaded(this.uploadedTestFilename) 
+                        //     // this.getUserDatasets() 
+                        //     toast({
+                        //         message: resp,
+                        //         type: Type,
+                        //         dismissible: true,
+                        //         pauseOnHover: true,
+                        //         duration: 1000,
+                        //         position: 'bottom-center',
+                        //     }) 
+                        // }
+                        // else{
+                        //     this.uploadedTestData =false;
+                        //     Type = 'is-danger';
+                        //     toast({
+                        //         message: resp,
+                        //         type: Type,
+                        //         dismissible: true,
+                        //         pauseOnHover: true,
+                        //         duration: 1000,
+                        //         position: 'bottom-center',
+                        //     })  
+                        // }
+                    });
+                this.$store.commit('setIsLoading',false)
+            }
         }
     }
 </script>
