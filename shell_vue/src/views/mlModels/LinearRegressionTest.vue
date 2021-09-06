@@ -7,8 +7,7 @@
 
             <form @submit.prevent="submitForm"> 
                 <div class="columns">
-                
-                    <!-- should be one or the other, need to sort out the logic -->
+
                     <!-- add the upload test data here  -->
 
                     <div class="column is-half">
@@ -17,6 +16,7 @@
                             <label class="label">Trained Model</label>
                             <select v-model="selected" id = "files" class="select is-normal is-size-6 is-info" style="width: 100%;">
                                 <option disabled value="">Select trained model</option>
+                                <!-- select a test dataset associated w a trained model -->
                                 <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
                             </select>
                         </div>
@@ -27,22 +27,21 @@
             </form>
 
             <div class="columns">
-
                 <div class="column is-full is-warning ">
-                    <div class="box" style="background-color:#FFD55A;">
-                        
+                    <div class="box" style="background-color:#FFD55A;">   
                     </div>
-
                 </div>
             </div>
 
+
+            <!-- TEST BUTTON -->
             <button class="button" id="testModelButton" v-on:click='showTestGraphs'>Test Model</button>
 
-            <span><h2 v-if="showTestingGraphs">Coefficient of Determination: <span class="accuracy">{{ (testAccuracy).toFixed(2) }} </span></h2></span>
+            <!-- <span><h2 v-if="showTestingGraphs">Coefficient of Determination: <span class="accuracy">{{ (testAccuracy).toFixed(2) }} </span></h2></span> -->
             <span><h2 v-if="showTestingGraphs">Mean Squared Error: <span class="meansquared">{{ (meanSquaredError).toFixed(2) }} </span></h2></span>
 
 
-             <!-- GRAPH TABS FOR TESTING -->
+            <!-- GRAPH TABS FOR TESTING -->
             <div class="tabs is-toggle is-toggle-rounded is-centered" v-if="showTestingGraphs">
                 <ul>
                     <li class="is-active tablinks" v-on:click="openTab(event, 'line')">
@@ -61,16 +60,16 @@
             </div>
 
 
-        <!-- TAB CONTENTS -->
-        <div id="line" class="tabcontent">
-                <!-- testing line graph -->
-                <apexchart v-if="showTestingGraphs && numberFeatures==1" type="line" :options="optionsLOBF" height=450 :series="seriesLOBF"></apexchart>
-        </div>
+            <!-- TAB CONTENTS: GRAPHS -->
+            <div id="line" class="tabcontent">
+                    <!-- testing line graph -->
+                    <apexchart v-if="showTestingGraphs && numberFeatures==1" type="line" :options="optionsLOBF" height=450 :series="seriesLOBF"></apexchart>
+            </div>
 
-        <div id="dots" class="tabcontent">
-                <!-- testing predicted vs actual-->
-                <apexchart  v-if="showTestingGraphs" type="line" :options="testingOptionsPredictedVSActual" height=450 :series="testingSeriesPredictedVSActual"></apexchart>
-        </div>
+            <div id="dots" class="tabcontent">
+                    <!-- testing predicted vs actual-->
+                    <apexchart  v-if="showTestingGraphs" type="line" :options="testingOptionsPredictedVSActual" height=450 :series="testingSeriesPredictedVSActual"></apexchart>
+            </div>
           
 
 

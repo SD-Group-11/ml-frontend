@@ -72,7 +72,7 @@
         <apexchart v-if="showTrainingGraphs" type="line" :options="trainingOptionsPredictedVSActual" height=600 :series="trainingSeriesPredictedVSActual"></apexchart>
 
         <!-- Test Model Button -->
-        <button class="button" id="testModelButton" v-if="showTrainingGraphs" v-on:click='showTestGraphs'> Test Model</button>
+        <button class="button" id="testModelButton" v-if="showTrainingGraphs" v-on:click='showTestGraphs'>Test Model</button>
         <!-- Testing Graphs -->
         <!-- <span><h2 v-if="showTestingGraphs">Testing Results: <span class="accuracy">{{ (testAccuracy).toFixed(2) }} </span></h2></span> -->
         <span><h2 v-if="showTestingGraphs">Mean Squared Error: <span class="meansquared">{{ (meanSquaredError).toFixed(2) }} </span></h2></span> <!--MSE MIGHT BE FOR TRAINING ONLY-->
@@ -207,7 +207,6 @@
                 showTrainingGraphs: false,
                 showTestingGraphs: false,
                 
-
             }
         },
         mounted(){
