@@ -15,11 +15,7 @@
                             <div class="control">
                                 <div class="file has-name is-medium is-warning" >
                                     <label class="file-label">
-                                        <form id="trainForm">
                                             <input class="file-input" id="myFile" type="file" accept=".csv"  v-on:input="fileValidation('myFile')">
-                                        </form>
-                                        
-                                            
                                             <div class="file-cta">
                                                 <div class="file-label" >
                                                     <strong>Choose a file…</strong>
@@ -608,11 +604,12 @@
 
             // elementID is the name of the html element which chooses the file to be validated
             async fileValidation(elementID){
-                
+                console.log("VALIDATION")
                 try {
                     this.$store.commit('setIsLoading',true)
                     this.uploadable=false
                     var fileInput = document.getElementById(elementID).files[0];
+                    console.log(fileInput)
                     var fileName = fileInput.name;
                     const allowedExtensions =  ['csv']
                     const fileExtension = fileName.split(".").pop();
@@ -685,10 +682,6 @@
 
                             var Type = 'is-danger';
                             this.uploadedTestData=true;
-                            //this.uploadedTestFilename = `${testFile.name}`
-                            // Not sure if the next two lines are necesssary just yet
-                            // this.getUploaded(this.uploadedTestFilename) 
-                            // this.getUserDatasets() 
                             toast({
                                 message: resp,
                                 type: Type,
@@ -699,35 +692,7 @@
                             }) 
                         }
                         
-                        // var Type;
-                        // if (resp == 'Successfully uploaded test data.'){
-                        //     Type = 'is-success';
-                        //     this.uploadedTestData=true;
-                        //     //this.uploadedTestFilename = `${testFile.name}`
-                        //     // Not sure if the next two lines are necesssary just yet
-                        //     // this.getUploaded(this.uploadedTestFilename) 
-                        //     // this.getUserDatasets() 
-                        //     toast({
-                        //         message: resp,
-                        //         type: Type,
-                        //         dismissible: true,
-                        //         pauseOnHover: true,
-                        //         duration: 1000,
-                        //         position: 'bottom-center',
-                        //     }) 
-                        // }
-                        // else{
-                        //     this.uploadedTestData =false;
-                        //     Type = 'is-danger';
-                        //     toast({
-                        //         message: resp,
-                        //         type: Type,
-                        //         dismissible: true,
-                        //         pauseOnHover: true,
-                        //         duration: 1000,
-                        //         position: 'bottom-center',
-                        //     })  
-                        // }
+                        
                     });
                 this.$store.commit('setIsLoading',false)
             }
