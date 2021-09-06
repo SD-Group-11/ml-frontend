@@ -7,17 +7,17 @@
 
             <form @submit.prevent="submitForm"> 
                 <div class="columns">
-
+                
+                    <!-- should be one or the other, need to sort out the logic -->
                     <!-- add the upload test data here  -->
 
                     <div class="column is-half">
                         <!-- Selecting trained model -->
                         <div class="field ">
                             <label class="label">Trained Model</label>
-                            <select v-model="selected" id = "files" class="select is-normal is-size-6 is-info" style="width: 100%;">
+                            <select v-model="selected" id = "files" @change="checkTestingData()" class="select is-normal is-size-6 is-info" style="width: 100%;">
                                 <option disabled value="">Select trained model</option>
-                                <!-- select a test dataset associated w a trained model -->
-                                <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
+                                <option  v-for="dataset in userFiles" v-bind:key="dataset" >{{dataset}}</option>
                             </select>
                         </div>
                         
@@ -27,21 +27,22 @@
             </form>
 
             <div class="columns">
+
                 <div class="column is-full is-warning ">
-                    <div class="box" style="background-color:#FFD55A;">   
+                    <div class="box" style="background-color:#FFD55A;">
+                        
                     </div>
+
                 </div>
             </div>
 
-
-            <!-- TEST BUTTON -->
             <button class="button" id="testModelButton" v-on:click='showTestGraphs'>Test Model</button>
 
-            <!-- <span><h2 v-if="showTestingGraphs">Coefficient of Determination: <span class="accuracy">{{ (testAccuracy).toFixed(2) }} </span></h2></span> -->
+            <span><h2 v-if="showTestingGraphs">Coefficient of Determination: <span class="accuracy">{{ (testAccuracy).toFixed(2) }} </span></h2></span>
             <span><h2 v-if="showTestingGraphs">Mean Squared Error: <span class="meansquared">{{ (meanSquaredError).toFixed(2) }} </span></h2></span>
 
 
-            <!-- GRAPH TABS FOR TESTING -->
+             <!-- GRAPH TABS FOR TESTING -->
             <div class="tabs is-toggle is-toggle-rounded is-centered" v-if="showTestingGraphs">
                 <ul>
                     <li class="is-active tablinks" v-on:click="openTab(event, 'line')">
@@ -60,23 +61,17 @@
             </div>
 
 
-            <!-- TAB CONTENTS: GRAPHS -->
-            <div id="line" class="tabcontent">
-                    <!-- testing line graph -->
-                    <apexchart v-if="showTestingGraphs && numberFeatures==1" type="line" :options="optionsLOBF" height=450 :series="seriesLOBF"></apexchart>
-            </div>
+        <!-- TAB CONTENTS -->
+        <div id="line" class="tabcontent">
+                <!-- testing line graph -->
+                <apexchart v-if="showTestingGraphs && numberFeatures==1" type="line" :options="optionsLOBF" height=450 :series="seriesLOBF"></apexchart>
+        </div>
 
-            <div id="dots" class="tabcontent">
-                    <!-- testing predicted vs actual-->
-                    <apexchart  v-if="showTestingGraphs" type="line" :options="testingOptionsPredictedVSActual" height=450 :series="testingSeriesPredictedVSActual"></apexchart>
-            </div>
+        <div id="dots" class="tabcontent">
+                <!-- testing predicted vs actual-->
+                <apexchart  v-if="showTestingGraphs" type="line" :options="testingOptionsPredictedVSActual" height=450 :series="testingSeriesPredictedVSActual"></apexchart>
+        </div>
           
-
-
-
-
-
-
         </div>
     </div>
 
@@ -192,7 +187,7 @@
 
                     .then(response => {
                         this.userDetails=response.data
-                        this.getUserDatasets()
+                        this.getTrainedDatasets()
                     })
 
                     .catch(error => {
@@ -202,14 +197,37 @@
                 this.$store.commit('setIsLoading',false)
 
             },
-            async getUserDatasets(){
+
+            async checkTestingData() {
+                var filename = this.selected;
+                var data ={"UserID":this.userDetails.id,"Filename":filename}
+                await axios
+                .post('/datasets/checkTestData',data)
+                .then(response =>{
+                    if(response.data['response']=="Test Data does not exist"){
+                        console.log("no testing data")
+                        //have the pop-up come here
+                    }
+                    else{
+                        //do all the funky stuff here
+                        //re-run linear regression here
+                        console.log(this.userFiles)
+                        console.log("SUCCES MY GUY LETS GOOOO")
+                    }
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+
+            },
+            async getTrainedDatasets(){
                 this.$store.commit('setIsLoading',true)
                 this.userFiles=[] 
-                var data ={"UserId":this.userDetails.id}
+                var data ={"UserID":this.userDetails.id}
                 await axios
-                .post('/datasets/getDatasetsInfo',data)
+                .post('/datasets/getTrainedDatasets',data)
                 .then(response =>{
-                    if(response.data['error']=="No datasets have been uploaded."){
+                    if(response.data['response']=="No trained datasets"){
                         console.log("has no datasets")
                         console.log(response.data)
                         this.hasDatasets = false
@@ -226,67 +244,13 @@
                         for(var i=1;i<number_of_datasets+1;i++){
                             this.userFiles.push(response.data[i])
                         }
+                        console.log(this.userFiles)
                     }
                 })
                 .catch(error => {
                     console.log(error)
                 })
                 this.$store.commit('setIsLoading',false)
-            },
-
-
-            //MAY NOT NEED THIS FOR TEST PAGE
-            // Call this method when the user clicks Train Model 
-            async TrainModel(){
-                var id = this.userDetails.id;
-                //Please get the filename from the dropdown and set it here 
-                var filename = this.selected;
-                // tol and learningRate must be decimal values
-                var tol = document.getElementById("tol").value;
-                var learningRate = document.getElementById("learningRate").value;
-                // Must be a value between 0 and 100 representing a percentage of data that must be assigned to the training data
-                var split = document.getElementById("split").value;
-                var data ={"UserId":id,"filename":filename,"learningRate":learningRate,"tol":tol,"split":split}
-
-                console.log('data: ',data)
-                await axios
-                .post("/datasets/doLinearRegression",data)
-
-                .then(response =>{
-                    //Michael will use response.data for his graphing 
-                    console.log(response.data)
-                    this.extractData(response.data);
-
-                    this.isTraining = true
-                    
-                    this.plotPredictedVSActual(this.trainX.length, this.trainY, this.trainPredictedY)
-
-                    this.showTrainingGraphs = true
-                    this.isTraining = false
-
-                    // Create graphs for Test dataset
-                    this.isTesting = true
-
-                    //If there is only one feature we can plot the line of best fit
-                    if (this.numberFeatures == 1) {
-                        // Since testX is received and stored as a 2D array, even if there is only one feature
-                        // we need to reshape it into a 1D array to plot the line of best fit
-
-                        // Reshape Test X data
-                        var tempTestX = []
-                        for (let i = 0; i < this.testX.length; i++) {
-                            tempTestX.push(this.testX[i][0])
-                        }
-                        this.testX = tempTestX
-
-                        this.plotLineOfBestFit(this.testX, this.testY, this.coefficients, this.intercept);
-                    }
-
-                    this.plotPredictedVSActual(this.testX.length, this.testY, this.testPredictedY)
-
-                    // this.showTestingGraphs = true
-
-                });
             },
 
 

@@ -255,6 +255,7 @@
                         for(var i=1;i<number_of_datasets+1;i++){
                             this.userFiles.push(response.data[i])
                         }
+                        console.log(this.userFiles)
                     }
                 })
                 .catch(error => {
