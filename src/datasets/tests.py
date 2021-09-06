@@ -1,7 +1,8 @@
 from django.test import TestCase
 from .models import Dataset
-from .views import  filterData
+from .views import  filterData,delete_dataset
 import pandas as pd
+from users.models import User
 from LinearRegression.views import linearRegression,TrainingLinearRegression
 from LinearRegression.models import TrainedModel
 import json
@@ -232,6 +233,7 @@ class DatasetModelTests(TestCase):
         self.results  = TrainingLinearRegression(o.UserId,o.filename,o.learningRate,o.tol,pd.read_json(o.data))
         self.assertEquals(len(self.results[0]['0']),3)
         self.assertNotEquals(len(self.results[0]['0']),1)
+
 
 
     
