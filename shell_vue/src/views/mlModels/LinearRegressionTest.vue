@@ -15,12 +15,14 @@
                         <!-- Selecting trained model -->
                         <div class="field ">
                             <label class="label">Trained Model</label>
-                            <select v-model="selected" id = "files" @change="checkTestingData()" class="select is-normal is-size-6 is-info" style="width: 100%;">
+                            <select v-model="selected" id = "files" class="select is-normal is-size-6 is-info" style="width: 100%;">
                                 <option disabled value="">Select trained model</option>
                                 <option  v-for="dataset in userFiles" v-bind:key="dataset" >{{dataset}}</option>
                             </select>
+
                         </div>
-                        
+                        <!-- possibly set this to train secretly and select -->
+                        <button class="button" id="selectButton" v-on:click='checkTestingData()'>Select</button>
                     </div>
 
                 </div>
@@ -36,7 +38,10 @@
                 </div>
             </div>
 
+            <!-- test model just like on train page : v-on:click='showTestGraphs' -->
             <button class="button" id="testModelButton" v-on:click='showTestGraphs'>Test Model</button>
+            <!-- <button class="button" id="testModelButton" v-on:click='checkTestingData()'>Test Model</button> -->
+
 
             <span><h2 v-if="showTestingGraphs">Coefficient of Determination: <span class="accuracy">{{ (testAccuracy).toFixed(2) }} </span></h2></span>
             <span><h2 v-if="showTestingGraphs">Mean Squared Error: <span class="meansquared">{{ (meanSquaredError).toFixed(2) }} </span></h2></span>
@@ -201,18 +206,35 @@
             async checkTestingData() {
                 var filename = this.selected;
                 var data ={"UserID":this.userDetails.id,"Filename":filename}
+
                 await axios
                 .post('/datasets/checkTestData',data)
                 .then(response =>{
-                    if(response.data['response']=="Test Data does not exist"){
+                    if( response.data['response'] == "Test Data does not exist"){
                         console.log("no testing data")
+                        // Type = 'is-danger';
+
+                        toast({
+                            message: "please upload test dataset on Manage Datasets page :D",
+                            type: 'is-danger',
+                            dismissible: true,
+                            pauseOnHover: true,
+                            duration: 15000,
+                            position: 'bottom-center',
+                        })
                         //have the pop-up come here
+                        //WORK HERE - toast message
                     }
                     else{
                         //do all the funky stuff here
                         //re-run linear regression here
+
+                        //secretly run regression:
+
                         console.log(this.userFiles)
-                        console.log("SUCCES MY GUY LETS GOOOO")
+                        console.log("SUCCESS MY GUY LETS GOOOO")
+                        this.TrainModel()
+
                     }
                 })
                 .catch(error => {
@@ -220,6 +242,63 @@
                 })
 
             },
+
+            // Call this method when the user clicks Train Model 
+            async TrainModel(){
+                var id = this.userDetails.id;
+                //Please get the filename from the dropdown and set it here 
+                var filename = this.selected;
+                // tol and learningRate must be decimal values
+                // var tol = document.getElementById("tol").value;
+                // var learningRate = document.getElementById("learningRate").value;
+                // // Must be a value between 0 and 100 representing a percentage of data that must be assigned to the training data
+                // var split = document.getElementById("split").value;
+                var learningRate = '';
+                var tol = '';
+                var data ={"UserId":id,"filename":filename,"learningRate":learningRate,"tol":tol}
+
+                console.log('data: ',data)
+                await axios
+                .post("/datasets/doLinearRegression",data)
+
+                .then(response =>{
+                    //Michael will use response.data for his graphing 
+                    console.log(response.data)
+                    this.extractData(response.data);
+
+                    this.isTraining = true
+                    
+                    this.plotPredictedVSActual(this.trainX.length, this.trainY, this.trainPredictedY)
+
+                    this.showTrainingGraphs = true
+                    this.isTraining = false
+
+                    // Create graphs for Test dataset
+                    this.isTesting = true
+
+                    //If there is only one feature we can plot the line of best fit
+                    if (this.numberFeatures == 1) {
+                        // Since testX is received and stored as a 2D array, even if there is only one feature
+                        // we need to reshape it into a 1D array to plot the line of best fit
+
+                        // Reshape Test X data
+                        var tempTestX = []
+                        for (let i = 0; i < this.testX.length; i++) {
+                            tempTestX.push(this.testX[i][0])
+                        }
+                        this.testX = tempTestX
+
+                        this.plotLineOfBestFit(this.testX, this.testY, this.coefficients, this.intercept);
+                    }
+
+                    this.plotPredictedVSActual(this.testX.length, this.testY, this.testPredictedY)
+
+                    // this.showTestingGraphs = true
+
+                });
+
+            },
+
             async getTrainedDatasets(){
                 this.$store.commit('setIsLoading',true)
                 this.userFiles=[] 
