@@ -2,7 +2,7 @@ from django.test import TestCase
 from .models import Dataset
 from .views import  filterData
 import pandas as pd
-from LinearRegression.views import linearRegression
+from LinearRegression.views import linearRegression,TrainingLinearRegression
 from LinearRegression.models import TrainedModel
 import json
 import numpy as np
@@ -119,13 +119,12 @@ class DatasetModelTests(TestCase):
         #cant be anything else
         self.assertNotEquals(type(self.obj.tol),int)
 
-    def test_type_of_split(self):
+    def test_no_test_data(self):
         self.obj = Dataset.objects.create(UserId = self.id, filename=self.filename,data=self.dataset)
         self.obj.save()
-        self.obj.split = 0.8
 
         #must be float
-        self.assertEquals(type(self.obj.split),float)
+        self.assertEquals(type(self.obj.testData),dict)
         #cant be int
         self.assertNotEquals(type(self.obj.learningRate),int)
 
@@ -187,12 +186,11 @@ class DatasetModelTests(TestCase):
         o = Dataset.objects.get(UserId = id,filename=filename)
         o.tol = json.dumps("auto")
         o.learningRate = json.dumps("auto")
-        o.split = 80
 
-        self.results  = linearRegression(o.UserId,o.filename,o.learningRate,o.tol,pd.read_json(o.data),int(o.split)/100)
+        self.results  = TrainingLinearRegression(o.UserId,o.filename,o.learningRate,o.tol,pd.read_json(o.data))
         
         ## check that the ml was performed and not empty
-        self.assertEquals(len(self.results),12)
+        self.assertEquals(len(self.results),7)
         
 
         ##Check for failures
@@ -206,9 +204,8 @@ class DatasetModelTests(TestCase):
         o = Dataset.objects.get(UserId = id,filename=filename)
         o.tol = json.dumps("auto")
         o.learningRate = json.dumps("auto")
-        o.split = 80
 
-        self.results  = linearRegression(o.UserId,o.filename,o.learningRate,o.tol,pd.read_json(o.data),int(o.split)/100)
+        self.results  = TrainingLinearRegression(o.UserId,o.filename,o.learningRate,o.tol,pd.read_json(o.data))
         self.assertEquals(type(self.results[0]),dict)
         self.assertNotEquals(type(self.results[0]),str)
     
@@ -219,11 +216,10 @@ class DatasetModelTests(TestCase):
         o = Dataset.objects.get(UserId = id,filename=filename)
         o.tol = json.dumps("auto")
         o.learningRate = json.dumps("auto")
-        o.split = 80
 
-        self.results  = linearRegression(o.UserId,o.filename,o.learningRate,o.tol,pd.read_json(o.data),int(o.split)/100)
-        self.assertAlmostEquals(round(self.results[8],2),0.99)
-        self.assertNotEquals(round(self.results[8],2),0)
+        self.results  = TrainingLinearRegression(o.UserId,o.filename,o.learningRate,o.tol,pd.read_json(o.data))
+        self.assertAlmostEquals(round(self.results[5],2),0.99)
+        self.assertNotEquals(round(self.results[5],2),0)
     
     def test_numFeatures(self):
         id,filename,dataset,nullValues = filterData(self.data)
@@ -232,9 +228,8 @@ class DatasetModelTests(TestCase):
         o = Dataset.objects.get(UserId = id,filename=filename)
         o.tol = json.dumps("auto")
         o.learningRate = json.dumps("auto")
-        o.split = 80
 
-        self.results  = linearRegression(o.UserId,o.filename,o.learningRate,o.tol,pd.read_json(o.data),int(o.split)/100)
+        self.results  = TrainingLinearRegression(o.UserId,o.filename,o.learningRate,o.tol,pd.read_json(o.data))
         self.assertEquals(len(self.results[0]['0']),3)
         self.assertNotEquals(len(self.results[0]['0']),1)
 
