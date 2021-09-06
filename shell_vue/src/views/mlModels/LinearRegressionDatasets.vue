@@ -153,7 +153,7 @@
                                         <button class="button is-normal is-danger is-dark has-tooltip-arrow has-tooltip-info" data-tooltip="Delete dataset" type="button" v-on:click ="DeleteDataset(dataset.filename)">
                                             
                                             <span class="icon is-normal ">
-                                                <i class="fas fa-trash-alt " style="color: #ff9999"></i>
+                                                <i class="fas fa-trash-alt " style="color: white"></i>
                                             </span>
                                             
 
