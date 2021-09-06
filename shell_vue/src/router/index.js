@@ -18,6 +18,7 @@ import MyAccount from '../views/dashboard/MyAccount.vue'
 import DecisionTrees from '../views/DecisionTrees.vue'
 import LinearRegression from '../views/mlModels/LinearRegression.vue'
 import LinearRegressionDatasets from '../views/mlModels/LinearRegressionDatasets.vue'
+import LinearRegressionTest from '../views/mlModels/LinearRegressionTest.vue'
 
 const routes = [
   {
@@ -99,6 +100,14 @@ const routes = [
     path: '/linear-regression-datasets',
     name: 'LinearRegressionDatasets',
     component: LinearRegressionDatasets,
+    meta: {
+      requireLogin: true
+    }
+  },
+  {
+    path: '/linear-regression-test',
+    name: 'LinearRegressionTest',
+    component: LinearRegressionTest,
     meta: {
       requireLogin: true
     }

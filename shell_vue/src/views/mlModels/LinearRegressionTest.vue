@@ -1,44 +1,22 @@
-<template>   
+<template>
     <div class="container is-fluid">
-
         <div class="container is-fluid">
             <div class="notification is-info has-text-centered" >
-                <strong><h3 class="title is-3">Linear Regression Model Trainer</h3></strong>
+                <strong><h3 class="title is-3">Linear Regression Model Tester</h3></strong>
             </div>
 
             <form @submit.prevent="submitForm"> 
                 <div class="columns">
+                
+                    <!-- should be one or the other, need to sort out the logic -->
+                    <!-- add the upload test data here  -->
 
-                    <div class="column is-four-fifths">
-                        <div class="field is-grouped">
-                            
-                            <div class="control">
-                                <label class="label">Learning Rate</label>
-                                <input class="input" id="learningRate" type="text" placeholder="0.1">
-                            </div>
-                        
-                            
-                            <div class="control">
-                                <label class="label">Tolerance</label>
-                                <input class="input" id = "tol" type="email" placeholder="0.5">
-                            </div>
-
-                            <div class="control ml-6">
-                                <label class="label">Split</label>
-                                <input type="range" id="split" min="1" max="99" step="1" v-model="initialSplit" style="width: 150%;"/> <!--changed width to 150% from 210-->
-                                <div class="output">Training and test data split: {{ initialSplit }}/{{ 100-initialSplit }}</div>
-                            </div>
-                            
-                        </div>
-    
-                    </div> 
-
-                    <div class="column is-one-fifth">
-                        <!-- Selecting a dataset -->
+                    <div class="column is-half">
+                        <!-- Selecting trained model -->
                         <div class="field ">
-                            <label class="label">Dataset</label>
+                            <label class="label">Trained Model</label>
                             <select v-model="selected" id = "files" class="select is-normal is-size-6 is-info" style="width: 100%;">
-                                <option disabled value="">Select dataset</option>
+                                <option disabled value="">Select trained model</option>
                                 <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
                             </select>
                         </div>
@@ -52,54 +30,35 @@
 
                 <div class="column is-full is-warning ">
                     <div class="box" style="background-color:#FFD55A;">
-                        <!-- <h2 class="title is-3 has-text-centered">Enter Hyperparameters</h2> -->
                         
                     </div>
 
                 </div>
             </div>
 
-            <!-- Train model button -->
-            <div><button style="text-align: center;" class="button"  v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false; '> Train Model</button></div>
-        </div> 
+            <button class="button" id="testModelButton" v-on:click='showTestGraphs'>Test Model</button>
 
-               
-               
-        <!-- Training Graphs -->
-        <span><h2 v-if="showTrainingGraphs">Coefficiant of Determination: <span class="accuracy">{{ (trainAccuracy).toFixed(2) }} </span></h2></span>
-        
-        <!-- Predicted VS actual for Training Data-->
-        <apexchart v-if="showTrainingGraphs" type="line" :options="trainingOptionsPredictedVSActual" height=600 :series="trainingSeriesPredictedVSActual"></apexchart>
-
-        <!-- Test Model Button -->
-        <button class="button" id="testModelButton" v-if="showTrainingGraphs" v-on:click='showTestGraphs'> Test Model</button>
-        <!-- Testing Graphs -->
-        <!-- <span><h2 v-if="showTestingGraphs">Testing Results: <span class="accuracy">{{ (testAccuracy).toFixed(2) }} </span></h2></span> -->
-        <span><h2 v-if="showTestingGraphs">Mean Squared Error: <span class="meansquared">{{ (meanSquaredError).toFixed(2) }} </span></h2></span> <!--MSE MIGHT BE FOR TRAINING ONLY-->
-        <!-- Line of best fit for Training Data-->
-        <!-- <apexchart v-if="showTestingGraphs && numberFeatures==1" type="line" :options="optionsLOBF" height=600 :series="seriesLOBF"></apexchart> -->
-        <!-- Predicted VS actual for Testing-->
-        <!-- <apexchart v-if="showTestingGraphs" type="line" :options="testingOptionsPredictedVSActual" height=600 :series="testingSeriesPredictedVSActual"></apexchart> -->
-          
+            <span><h2 v-if="showTestingGraphs">Coefficient of Determination: <span class="accuracy">{{ (testAccuracy).toFixed(2) }} </span></h2></span>
+            <span><h2 v-if="showTestingGraphs">Mean Squared Error: <span class="meansquared">{{ (meanSquaredError).toFixed(2) }} </span></h2></span>
 
 
-        <!-- GRAPH TABS FOR TESTING -->
-        <div class="tabs is-toggle is-toggle-rounded is-centered" v-if="showTestingGraphs">
-            <ul>
-                <li class="is-active tablinks" v-on:click="openTab(event, 'line')">
-                    <a>
-                        <span class="icon is-small"><i class="fas fa-chart-line" aria-hidden="true"></i></span>
-                        <span>Line of Best Fit</span>
-                    </a>
-                </li>
-                <li class="tablinks" v-on:click="openTab(event, 'dots')">
-                    <a>
-                        <span class="icon is-small"><i class="fas fa-chart-area" aria-hidden="true"></i></span>
-                        <span>Predicted vs Actual</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
+             <!-- GRAPH TABS FOR TESTING -->
+            <div class="tabs is-toggle is-toggle-rounded is-centered" v-if="showTestingGraphs">
+                <ul>
+                    <li class="is-active tablinks" v-on:click="openTab(event, 'line')">
+                        <a>
+                            <span class="icon is-small"><i class="fas fa-chart-line" aria-hidden="true"></i></span>
+                            <span>Line of Best Fit</span>
+                        </a>
+                    </li>
+                    <li class="tablinks" v-on:click="openTab(event, 'dots')">
+                        <a>
+                            <span class="icon is-small"><i class="fas fa-chart-area" aria-hidden="true"></i></span>
+                            <span>Predicted vs Actual</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
 
         <!-- TAB CONTENTS -->
@@ -113,7 +72,16 @@
                 <apexchart  v-if="showTestingGraphs" type="line" :options="testingOptionsPredictedVSActual" height=450 :series="testingSeriesPredictedVSActual"></apexchart>
         </div>
           
+
+
+
+
+
+
+        </div>
     </div>
+
+    
 </template>
 
 <style scoped>
@@ -150,6 +118,9 @@
         font-size: 30px;
     }
 </style>
+
+
+
 
 
 <script>
@@ -265,7 +236,7 @@
             },
 
 
-
+            //MAY NOT NEED THIS FOR TEST PAGE
             // Call this method when the user clicks Train Model 
             async TrainModel(){
                 var id = this.userDetails.id;

@@ -56,8 +56,8 @@
 
                         <div class="navbar-dropdown">
                             <router-link to="/linear-regression" class="navbar-item"><strong>Train Model</strong></router-link>
-                            <router-link to="/linear-regression-datasets" class="navbar-item"><strong>Manage Datasets</strong></router-link>
-
+                            <router-link to="/linear-regression-test" class="navbar-item"><strong>Test Model</strong></router-link>
+                            <router-link to="/linear-regression-datasets" class="navbar-item"><strong>Manage Datasets</strong></router-link>   
                         </div>
                     </div>
 
