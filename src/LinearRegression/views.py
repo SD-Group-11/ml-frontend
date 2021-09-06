@@ -152,6 +152,7 @@ def discard_training_results(request):
         resp['response'] = "Failed to delete results"
         return Response(resp)
 
+    
 def UploadTrainingResults(userid,filename,coef,TrainAcc):
     try:
         DataInstance = TrainedModel(UserId=userid,filename=filename,Trained_coefficients=coef,TrainCoeffDetermination = TrainAcc)

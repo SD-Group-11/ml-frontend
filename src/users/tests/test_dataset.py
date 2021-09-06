@@ -47,9 +47,9 @@ class DatasetModelTests(TestCase):
         self.obj.save()
         FromDb = Dataset.objects.get(UserId =self.id,filename=self.filename)
 
-        "Check filename is stored"
+        #"Check filename is stored"
         self.assertEquals(self.obj.filename,FromDb.filename)
-        "Only allows csv"
+        #"Only allows csv"
         self.assertNotEquals(self.filename,"train.odt")
     
     def test_data_is_stored_correct(self):

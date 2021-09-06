@@ -95,17 +95,12 @@ def receive_TestData(request):
         
         id,filename,testData,nullValues = filterTestData(dataset)
         try:
-            print('beginning of try')
-            print('filename: ', filename)
             Obj = Dataset.objects.get(UserId=id, filename=json.dumps(filename))
-            print('after obj get')
             Obj.testData = testData
             Obj.save()
-            print('after save')
             response['response'] = "Successfully uploaded test data."
             return Response(response)
         except:
-            print('except')
             response['response'] = "Failed to locate corresponding training dataset."
             return Response(response)
 ##json.dumps adds "" to a string
@@ -117,27 +112,28 @@ def getDatasetsInfo(request):
     UserId = request.data['UserId']
     try:
         i =0 
-        for Obj in Dataset.objects.all():
+        AllDatasets = Dataset.objects.filter(UserId=UserId)
+        for Obj in AllDatasets:
                 
             dataAttributes = {}
-            if(Obj.UserId ==UserId):
-                dataset = pd.read_json(Obj.data)
-                i+=1
-                dataAttributes['id'] = Obj.id
-                dataAttributes['filename'] = json.loads(Obj.filename)
-                dataAttributes['datapoints'] = dataset.shape[0]
-                dataAttributes['columns'] = dataset.shape[1]
-                dataAttributes['featureNames'] = list(dataset.columns)
-                dataAttributes['nullValues'] = Obj.nullValues
-                dataAttributes['created'] = Obj.created
-                try:
-                    ModelData = TrainedModel.objects.get(UserId=Obj.UserId, filename=Obj.filename)
-                    dataAttributes['MSE'] = ModelData.meanSquaredError
-                    dataAttributes['TrainAccuracy'] = ModelData.TrainCoeffDetermination
-                    dataAttributes['TestAccuracy'] = ModelData.TestCoeffDetermination
-                except:
-                    dataAttributes['Info'] = "Model not trained yet."
-                response[i] = dataAttributes
+           
+            dataset = pd.read_json(Obj.data)
+            i+=1
+            dataAttributes['id'] = Obj.id
+            dataAttributes['filename'] = json.loads(Obj.filename)
+            dataAttributes['datapoints'] = dataset.shape[0]
+            dataAttributes['columns'] = dataset.shape[1]
+            dataAttributes['featureNames'] = list(dataset.columns)
+            dataAttributes['nullValues'] = Obj.nullValues
+            dataAttributes['created'] = Obj.created
+            try:
+                ModelData = TrainedModel.objects.get(UserId=Obj.UserId, filename=Obj.filename)
+                dataAttributes['MSE'] = ModelData.meanSquaredError
+                dataAttributes['TrainAccuracy'] = ModelData.TrainCoeffDetermination
+                dataAttributes['TestAccuracy'] = ModelData.TestCoeffDetermination
+            except:
+                dataAttributes['Info'] = "Model not trained yet."
+            response[i] = dataAttributes
             
         if( not response):
              response['error'] = "No datasets have been uploaded."
@@ -259,3 +255,44 @@ def delete_dataset(request):
     except:
         response['error'] = "Failed to delete dataset."
         return Response(response)
+
+
+@api_view(['POST',])   ## ensures only POST requests can be made to the api
+@csrf_exempt
+
+def getTrainedDatasets(request):
+## View to return all the datasets that training has been performed on
+    UserId = request.data["UserID"]
+    response ={}
+    
+    try:
+        i = 1
+        AllTrained = TrainedModel.objects.filter(UserId=UserId)
+        for Obj in AllTrained:
+            response[i] = json.loads(Obj.filename)
+            i+=1
+        return Response(response)
+    
+    except:
+        response['response'] = "No trained datasets"
+        return Response(response)
+
+@api_view(['POST',])   ## ensures only POST requests can be made to the api
+@csrf_exempt
+
+def check_if_test_data_is_available(request):
+## given the composite PK, check if the user has uploaded test data
+    UserId = request.data["UserID"]
+    filename = request.data["Filename"]
+    response = {}
+    try:
+        Obj = Dataset.objects.get(UserId=UserId, filename=json.dumps(filename))
+        if(Obj.testData != {}): 
+            response['response'] = "Test Data exists"
+        else:
+            response['response'] = "Test Data does not exist"
+
+        return Response(response)
+    
+    except:
+        response['response'] = "Failed"
