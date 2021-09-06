@@ -21,7 +21,6 @@ def TrainingLinearRegression(userid, filename, learningrate, tolerance, datafr):
     print(np.shape(datafr))
     data = datafr.to_numpy()
     data=data.transpose()
-    
     #populating x and y
     x=np.array(data[0:len(data)-1])
     y=np.array(data[len(data)-1])
