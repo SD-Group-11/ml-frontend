@@ -1,10 +1,42 @@
 <template>   
     <div class="container is-fluid">
+        <GlobalEvents
+            @keydown.left="pageNav('/linear-regression-datasets')"
+            @keydown.right="pageNav('/linear-regression-tests')"
+        />
 
         <div class="container is-fluid">
-            <div class="notification is-info has-text-centered" >
+            <!-- <div class="notification is-info has-text-centered" >
                 <strong><h3 class="title is-3">Linear Regression Model Trainer</h3></strong>
+            </div> -->
+            <div class="notification is-info has-text-centered" >
+
+            <div class="columns">
+                    <div class="column is-one-fifth">                        
+                        <div class="button is-pulled-left is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/linear-regression-datasets')" data-tooltip="Manage datasets">
+                            <span class="icon is-normal">
+                                <i class="fas fa-lg fa-arrow-left"></i>                                
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="column">
+                        <strong><h3 class="title is-3">Model Training</h3></strong>
+                    </div>
+                    
+                    <div class="column is-one-fifth">
+                        <div class="button is-pulled-right is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/linear-regression-tests')" data-tooltip="Test a model">
+                            <span class="icon is-normal">
+                                <i class="fas fa-lg fa-arrow-right"></i>
+                            </span>
+                        </div>
+                    </div>
+                    
+                </div>
+            
             </div>
+                
+            <div class="block"></div>
 
             <form @submit.prevent="submitForm"> 
                 <div class="columns">
@@ -25,7 +57,7 @@
 
                             <div class="control ml-6">
                                 <label class="label">Split</label>
-                                <input type="range" id="split" min="1" max="99" step="1" v-model="initialSplit" style="width: 200%;"/>
+                                <input type="range" id="split" min="1" max="99" step="1" v-model="initialSplit" style="width: 380px;"/>
                                 <div class="output">Training and test data split: {{ initialSplit }}/{{ 100-initialSplit }}</div>
                             </div>
                             
@@ -60,7 +92,11 @@
             </div>
 
             <!-- Train model button -->
-            <div><button style="text-align: center;" class="button"  v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false; '> Train Model</button></div>
+            <div>
+                <button style="text-align: center;" class="button is-info has-text-black"  v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false'><strong>Train Model</strong></button>
+            </div>
+            <div class="block"></div>
+        
         </div> 
 
                
@@ -85,12 +121,8 @@
     </div>
 </template>
 
-<style scoped>
-    .button {
-        /* #fd0b0b */
-        /* #fd1201 
-            #ff5e5e
-        */
+<style scoped>   
+    /* .button {
         font-weight:500;
         border-color: #007EFF;
         color: rgb(0, 0, 0);
@@ -103,7 +135,7 @@
     }
     .button:hover {
         background-position: 0;
-    }
+    } */
 
     h2 {
         color: black;
@@ -124,13 +156,15 @@
 <script>
     import axios from 'axios'
     import Chart from 'chart.js'
-    import VueApexCharts from "vue3-apexcharts";
+    import VueApexCharts from "vue3-apexcharts"
+    import { GlobalEvents } from 'vue-global-events'
     import {toast} from 'bulma-toast'
 
     export default {
         name: "LinearRegressionDatasets",
         components: {
             apexchart: VueApexCharts,
+            GlobalEvents
         },
         data() {
             return{
@@ -183,6 +217,9 @@
             this.getAccount()
         },
         methods:{
+            pageNav(route){
+                this.$router.push(route)
+            },
             async getAccount(){
                 this.$store.commit('setIsLoading',true)
 
@@ -237,6 +274,7 @@
 
             // Call this method when the user clicks Train Model 
             async TrainModel(){
+                this.$store.commit('setIsLoading',true)
                 var id = this.userDetails.id;
                 //Please get the filename from the dropdown and set it here 
                 var filename = this.selected;
@@ -286,21 +324,25 @@
                     // this.showTestingGraphs = true
 
                 });
+                this.$store.commit('setIsLoading',false)
             },
 
 
             // Used in order to show Test data charts on button click
             showTestGraphs() {
+                this.$store.commit('setIsLoading',true)
                 this.showTestingGraphs = true
                 var btn = document.getElementById('testModelButton')
                 // btn.remove()
                 if (btn.style.display === "none") {
                     btn.style.display = "block";
-                } 
+                }
+                this.$store.commit('setIsLoading',false) 
             },
 
             //Extract http response into accessible javascript data
             extractData(responseData) {
+                this.$store.commit('setIsLoading',true)
                 console.log('responseData', responseData)
                 
                 // Train data
@@ -325,9 +367,11 @@
                 this.coefficients = Object.values(responseData['coefficients'])[0]
                 this.intercept = Object.values(responseData['Intercept'])[0]
                 this.numberFeatures = Object.values(responseData['jsonFeatures'])[0].length -1
+                this.$store.commit('setIsLoading',false)
             },
 
             plotLineOfBestFit(xValues, yValues, m, c) {
+                this.$store.commit('setIsLoading',true)
                 //Pair together each X-value with its corresponding Y-value, thus creating a 2D array being a list of pairs.
                 var actualXYPairs = []
                 //var predictedXYPairs =[]
@@ -406,10 +450,11 @@
                         decimalsInFloat: 2,
                     }
                 }
-
+                this.$store.commit('setIsLoading',false)
             },
 
             plotPredictedVSActual(xSize, yValues, yPredicated) {
+                this.$store.commit('setIsLoading',true)
                 var xyPairs = []
                 var xyPredicted = []
                 for (let i = 0; i < xSize; i++) {
@@ -482,6 +527,7 @@
                     this.testingSeriesPredictedVSActual = seriesPredictedVSActual
                     this.testingOptionsPredictedVSActual = optionsPredictedVSActual
                 }
+                this.$store.commit('setIsLoading',false)
             }
         }
     }

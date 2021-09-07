@@ -1,10 +1,42 @@
 <template>   
-    <div class="container">
+    <div class="container is-fluid">
 
-        <div class="container">
-            <div class="notification is-info has-text-centered" >
-                <strong><h3 class="title is-3">Linear Regression Datasets</h3></strong>
+        <GlobalEvents
+            @keydown.left="pageNav('/linear-regression-tests')"
+            @keydown.right="pageNav('/linear-regression')"
+        />
+
+        <div class="container is-fluid">
+            <!-- <div class="container is-fluid"> -->
+                
+                <div class="notification is-info has-text-centered" >
+                    
+                <div class="columns">
+                    <div class="column is-one-fifth">
+                        <div class="button is-pulled-left is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/linear-regression-tests')" data-tooltip="Test a model">
+                            <span class="icon is-normal">
+                                <i class="fas fa-lg fa-arrow-left"></i>                                
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="column is-three-fifths">
+                        <strong><h3 class="title is-3">Datasets</h3></strong>
+                    </div>
+                    
+                    <div class="column is-one-fifth">
+                        <div class="button is-pulled-right is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/linear-regression')" data-tooltip="Train a model">
+                            <span class="icon is-normal">
+                                <i class="fas fa-lg fa-arrow-right"></i>
+                            </span>
+                        </div>
+                    </div>
+                    
+                </div>
+
             </div>
+            <div class="block"></div>
+            
             <form @submit.prevent="submitForm"> <!-- style="background-color:lightyellow;" -->
                 <div class="columns">
                     <!-- <div class="column is-pulled-right">
@@ -119,12 +151,26 @@
                                         </template>
                                     </p>
 
+
                                     <p class="control">
                                         <button class="button is-normal is-info is-inverted has-tooltip-arrow has-tooltip-info" data-tooltip="View dataset" type="button" v-on:click ="getData(dataset.filename)">
                                     
                                         
                                             <span class="icon is-normal">
                                                 <i class="far fa-lg fa-eye"></i>
+                                            </span>
+
+                                            <!-- <span><strong>View Dataset</strong></span> -->
+                                            <!-- <span>Data</span> -->
+
+                                        </button>
+                                    </p>
+
+                                    <p class="control">
+                                        <button class="button is-normal is-primary is-inverted has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" v-on:click ="getData(dataset.filename)">                             
+                                        
+                                            <span class="icon is-normal">
+                                                <i class="fas fa-lg fa-plus"></i>
                                             </span>
 
                                             <!-- <span><strong>View Dataset</strong></span> -->
@@ -258,6 +304,8 @@
 </template>
 
 <style scoped>
+
+
     
     ::v-deep .modal-container {
         display: flex;
@@ -298,13 +346,13 @@
 
 <script>
     import axios from 'axios'
-
     import {toast} from 'bulma-toast'
-
     import { AgGridVue } from "ag-grid-vue3"
+    import { GlobalEvents } from 'vue-global-events'
 
     export default {
         name: "LinearRegressionDatasets",
+
         data() {
             return{
                 userDetails: [],
@@ -331,12 +379,16 @@
             }
         },
         components: {
-            AgGridVue
+            AgGridVue,
+            GlobalEvents
         },
         mounted(){
             this.getAccount()
         },
         methods:{
+            pageNav(route){
+                this.$router.push(route)
+            },
             async getAccount(){
                 this.$store.commit('setIsLoading',true)
                 this.userDetails=[]
