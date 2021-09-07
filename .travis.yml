@@ -1,25 +1,49 @@
-language: python
-python:
-  - "3.6"
-cache: pip
-install:
-  - pip install pytest
-  - pip install pytest-cov
-  - pip install codecov
-  - pip install -r requirements.txt
-  
-services:
-  - postgresql
-before_script:
-  #- psql -c 'create database ml_frontend;' -U postgres
-  - psql -c 'create role dev login superuser;' -U postgres
-  #- psql -c 'alter database ml_frontend owner to dev;' -U postgres
+matrix:
+  include:
+    -
+      language: node_js
+      node_js:
+        - node 
 
-env:       
-  -DJANGO=3.1.2 DB=postgresql   
-script:
-  #- python src/manage.py test src/users
-  - coverage run --source =. src/manage.py test src/users/ 
-after_success:
-  #- coveralls
-  - codecov
+      cache:
+        directories:
+          - node_modules
+      before_script:
+        - "cd shell_vue"
+        - "npm install -g @vue/cli"
+        - "npm install bulma"
+        - "npm install bulma-toast"
+        - "npm install axios"
+        - "npm install --save-dev codecov"
+      script:
+        - npm run test:unit 
+      after_success:
+        #- coveralls
+        #- codecov
+    -
+      language: python
+      python:
+        - "3.6"
+      cache: pip
+      install:
+        - pip install pytest
+        - pip install pytest-cov
+        - pip install codecov
+        - pip install -r requirements.txt
+
+      services:
+        - postgresql
+      before_script:
+        #- psql -c 'create database ml_frontend;' -U postgres
+        - psql -c 'create role dev login superuser;' -U postgres
+        #- psql -c 'alter database ml_frontend owner to dev;' -U postgres
+       
+
+      env:       
+        -DJANGO=3.1.2 DB=postgresql   
+      script:
+        #- python src/manage.py test src/users
+        - coverage run --source =. src/manage.py test src/users/ 
+      after_success:
+        #- coveralls
+        - codecov
