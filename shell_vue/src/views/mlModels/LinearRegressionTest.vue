@@ -23,9 +23,11 @@
                         </div>
                         <!-- possibly set this to train secretly and select -->
                         <button class="button" id="selectButton" v-on:click='checkTestingData()'>Select</button>
+                        </div>
+
                     </div>
 
-                </div>
+
             </form>
 
             <div class="columns">
@@ -43,9 +45,37 @@
             <!-- <button class="button" id="testModelButton" v-on:click='checkTestingData()'>Test Model</button> -->
 
 
-            <span><h2 v-if="showTestingGraphs">Coefficient of Determination: <span class="accuracy">{{ (testAccuracy).toFixed(2) }} </span></h2></span>
-            <span><h2 v-if="showTestingGraphs">Mean Squared Error: <span class="meansquared">{{ (meanSquaredError).toFixed(2) }} </span></h2></span>
+        
+            <!-- testing results -->
+            <div class="container is-fluid" v-if="showTestingGraphs">
+                <span><h2 v-if="showTrainingGraphs">Results:<span class="accuracy"></span></h2></span>
+                
+                <div class="columns">
+                    <div class="column is-half">
+                        <div class="notification is-warning has-text-black has-text-left" >
+                            <!-- <span><h3 v-if="showTestingGraphs">Coefficient of Determination: <span class="accuracy">{{ (testAccuracy).toFixed(2) }} </span></h3></span> -->
+                            <strong v-if="showTestingGraphs">Coefficient of Determination: {{ (testAccuracy).toFixed(2) }}</strong>
+                        </div>
+                        
+                    </div>
+                    <div class="column is-half is-warning">
+                        
+                        <div class="notification is-warning has-text-black has-text-left" >
+                            <!-- <span><h3 v-if="showTestingGraphs">Mean Squared Error: <span class="meansquared">{{ (meanSquaredError).toFixed(2) }} </span></h3></span> -->
+                            <strong v-if="showTestingGraphs">Mean Squared Error: {{ (meanSquaredError).toFixed(2) }}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <div class="block"></div>
+            <div class="columns is-centered">
+                <div class="column">
+                    <button class="button has-tooltip-arrow has-tooltip-info is-pulled-right" data-tooltip="Download dataset" type="button" v-if="showTestingGraphs" v-on:click ="download()">Download Results</button>
+                </div>
+            </div>
+
+            <div class="block"></div>
 
              <!-- GRAPH TABS FOR TESTING -->
             <div class="tabs is-toggle is-toggle-rounded is-centered" v-if="showTestingGraphs">
@@ -531,21 +561,33 @@
             // tabs
             openTab(event, tabId){
             //get all elements w the tab content and hide it
-               var tabcontent = document.getElementsByClassName('tabcontent')
+               var tabcontent = document.getElementsByClassName('tabcontent');
                for(let i=0; i<tabcontent.length; i++)
                {
                    tabcontent[i].style.display = 'none';
                }
             //get all the elements w the class tablinks and remove is-active
-               var tablinks = document.getElementsByClassName('tablinks')
+               var tablinks = document.getElementsByClassName('tablinks');
                for(let i=0; i<tablinks.length; i++)
                {
                    tablinks[i].className = tablinks[i].className.replace('is-active', '')
                }
 
             //show curr tab and add is-active to that tab
-                document.getElementById(tabId).style.display = 'block'
-                event.currentTarget.className += "is-active"
+                document.getElementById(tabId).style.display = 'block';
+                event.currentTarget.className += "is-active";
+            },
+
+            download() {
+                var element = document.createElement('a');
+                let filename = 'results.txt';
+                let text = "Mean Squared Error: "+String(this.meanSquaredError)+"\n"+"Coefficient of Determination: "+String(this.testAccuracy)
+                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+                element.setAttribute('download', filename);
+                element.style.display = 'none';
+                document.body.appendChild(element);
+                element.click();
+                document.body.removeChild(element);
             }
         }
     }
