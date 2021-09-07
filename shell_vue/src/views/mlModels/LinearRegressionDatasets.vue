@@ -15,7 +15,11 @@
                             <div class="control">
                                 <div class="file has-name is-medium is-warning" >
                                     <label class="file-label">
+                                        <form id="trainForm">
                                             <input class="file-input" id="myFile" type="file" accept=".csv"  v-on:input="fileValidation('myFile')">
+                                        </form>
+                                        
+                                            
                                             <div class="file-cta">
                                                 <div class="file-label" >
                                                     <strong>Choose a file…</strong>
@@ -163,7 +167,7 @@
                                         
                                         <button class="button is-normal is-inverse has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" v-on:click ="inputTestset = true; tempTrainFilename = dataset.filename;">
                                         
-                                            <input class="file-input" id="myTestFile" type="file" accept=".csv" v-if="inputTestset"  v-on:input="fileValidation('myTestFile'); testsetUploadable = true;">
+                                            <input class="file-input" v-bind:id="dataset.filename" type="file" accept=".csv" v-if="inputTestset"  v-on:input="fileValidation(dataset.filename); testsetUploadable = true;">
                                             
                                             <span class="icon is-normal">
                                                 <i class="fas fa-chart-line"></i>
@@ -454,7 +458,7 @@
                 console.log('trainsetFilename',trainsetFilename)
                 this.uploadedTestData=false;
                 this.$store.commit('setIsLoading',true)
-                var testFile = document.getElementById("myTestFile").files[0];
+                var testFile = document.getElementById(trainsetFilename).files[0];
                 var testFormData = new FormData();
                 testFormData.append("dataset",testFile);
                 testFormData.append("id",this.userDetails.id);
@@ -604,12 +608,12 @@
 
             // elementID is the name of the html element which chooses the file to be validated
             async fileValidation(elementID){
-                console.log("VALIDATION")
+                
                 try {
                     this.$store.commit('setIsLoading',true)
                     this.uploadable=false
+                    console.log(elementID)
                     var fileInput = document.getElementById(elementID).files[0];
-                    console.log(fileInput)
                     var fileName = fileInput.name;
                     const allowedExtensions =  ['csv']
                     const fileExtension = fileName.split(".").pop();
@@ -665,9 +669,7 @@
 
                             var Type = 'is-success';
                             this.uploadedTestData=true;
-                            //this.uploadedTestFilename = `${testFile.name}`
-                            // Not sure if the next two lines are necesssary just yet
-                            // this.getUploaded(this.uploadedTestFilename) 
+                           
                             this.getUserDatasets() 
                             toast({
                                 message: resp,
@@ -682,6 +684,7 @@
 
                             var Type = 'is-danger';
                             this.uploadedTestData=true;
+                          
                             toast({
                                 message: resp,
                                 type: Type,
@@ -691,8 +694,7 @@
                                 position: 'bottom-center',
                             }) 
                         }
-                        
-                        
+
                     });
                 this.$store.commit('setIsLoading',false)
             }
