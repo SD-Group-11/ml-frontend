@@ -116,7 +116,7 @@
                 <div class="column is-two-thirds is-warning">
                     
                     <div class="notification is-warning has-text-black has-text-left" >
-                        <strong>Coefficients: {{ coefficients }}</strong>
+                        <strong>Learned Parameters: {{ coefficients }}</strong>
                     </div>
                 </div>
             </div>
@@ -139,7 +139,8 @@
         <br>
         <!-- Predicted VS actual for Testing-->
         <apexchart v-if="showTestingGraphs" type="line" :options="testingOptionsPredictedVSActual" height=600 :series="testingSeriesPredictedVSActual"></apexchart>
-          
+
+  
           
     </div>
 </template>
@@ -596,7 +597,37 @@
                     this.testingOptionsPredictedVSActual = optionsPredictedVSActual
                 }
                 this.$store.commit('setIsLoading',false)
-            }
+            },
+            // download() {
+            //     // credit: https://www.bitdegree.org/learn/javascript-download
+            //     let text = JSON.stringify([this.coefficients,this.trainAccuracy]);
+            //     let filename = 'results.txt';
+            //     let element = document.createElement('a');
+            //     element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(text));
+            //     element.setAttribute('download', filename);
+
+            //     element.style.display = 'none';
+            //     document.body.appendChild(element);
+
+            //     element.click();
+            //     document.body.removeChild(element);     
+            // },
+            download() {
+                var element = document.createElement('a');
+                let filename = 'results.txt';
+                let text = "Learned Parameters: "+String(this.coefficients)+"\n"+"Coefficient of Determination: "+String(this.trainAccuracy)
+                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+                element.setAttribute('download', filename);
+
+                element.style.display = 'none';
+                document.body.appendChild(element);
+
+                element.click();
+
+                document.body.removeChild(element);
+}
+
+
         }
     }
 </script>
