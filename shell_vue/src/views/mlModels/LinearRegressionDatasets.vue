@@ -611,7 +611,7 @@
                 
                 try {
                     this.$store.commit('setIsLoading',true)
-                    this.uploadable=false
+                    this.uploadable=false    
                     var fileInput = document.getElementById(elementID).files[0];
                     var fileName = fileInput.name;
                     const allowedExtensions =  ['csv']
