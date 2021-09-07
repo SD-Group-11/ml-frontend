@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1631001509164" clover="3.2.0">
-  <project timestamp="1631001509164" name="All files">
+<coverage generated="1631003086369" clover="3.2.0">
+  <project timestamp="1631003086369" name="All files">
     <metrics statements="372" coveredstatements="44" conditionals="48" coveredconditionals="1" methods="57" coveredmethods="12" elements="477" coveredelements="57" complexity="0" loc="372" ncloc="372" packages="3" files="5" classes="5"/>
     <package name="assets.images">
       <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
@@ -291,10 +291,10 @@
         <line num="127" count="1" type="stmt"/>
         <line num="128" count="1" type="stmt"/>
         <line num="130" count="1" type="stmt"/>
-        <line num="136" count="2" type="stmt"/>
-        <line num="183" count="2" type="stmt"/>
-        <line num="187" count="2" type="stmt"/>
-        <line num="189" count="2" type="stmt"/>
+        <line num="136" count="3" type="stmt"/>
+        <line num="183" count="3" type="stmt"/>
+        <line num="187" count="3" type="stmt"/>
+        <line num="189" count="3" type="stmt"/>
         <line num="193" count="0" type="stmt"/>
         <line num="194" count="0" type="stmt"/>
         <line num="198" count="0" type="stmt"/>

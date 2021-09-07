@@ -48,7 +48,7 @@
 
 
              <!-- GRAPH TABS FOR TESTING -->
-            <div class="tabs is-toggle is-toggle-rounded is-centered" id="lineButton" v-if="showTestingGraphs">
+            <div class="tabs is-toggle is-toggle-rounded is-centered" v-if="showTestingGraphs">
                 <ul>
                     <li class="is-active tablinks"  v-on:click="openTab(event, 'line')">
                         <a>
@@ -73,7 +73,7 @@
 
         <div id="dots" class="tabcontent">
                 <!-- testing predicted vs actual-->
-                <apexchart  v-if="showTestingGraphs" type="line" :options="testingOptionsPredictedVSActual" height=450 :series="testingSeriesPredictedVSActual"></apexchart>
+                <apexchart id = "testPredictedVsActualGraph" v-if="showTestingGraphs" type="line" :options="testingOptionsPredictedVSActual" height=450 :series="testingSeriesPredictedVSActual"></apexchart>
         </div>
           
         </div>

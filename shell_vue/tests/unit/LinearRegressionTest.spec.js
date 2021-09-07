@@ -1341,11 +1341,15 @@ describe('LinearRegressionDatasets.vue', () => {
     // expect(COD.text()).toBe("Coefficient of Determination:1")
     // })
 
-   test('coefficeint of determined renders',() => {
+   test('line graph renders',() => {
     const wrapper = factory()
-    const COD = wrapper.get("#lineButton")
- //   expect(COD.html).toBe("Coefficient of Determination:1")
+    const testLineGraph = wrapper.get("#testLineGraph")
     })
+    test('Predicted vs Actual graph renders',() => {
+    const wrapper = factory()
+    const testLineGraph = wrapper.get("#testLineGraph")
+    })
+
 
  
 
