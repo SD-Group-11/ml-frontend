@@ -102,8 +102,27 @@
                
                
         <!-- Training Graphs -->
-        <span><h2 v-if="showTrainingGraphs">Training results: <span class="accuracy">{{ (trainAccuracy*100).toFixed(2) }}% </span></h2></span>
+        <div class="container is-fluid" v-if="showTrainingGraphs">
+            <span><h2 v-if="showTrainingGraphs">Results:<span class="accuracy"></span></h2></span>
+            
+            <div class="columns">
+                <div class="column is-one-third">
+                    <div class="notification is-warning has-text-black has-text-left" >
+                        <strong>Training Accuracy: {{ (trainAccuracy).toFixed(2) }}</strong>
+                        
+                    </div>
                     
+                </div>
+                <div class="column is-two-thirds is-warning">
+                    
+                    <div class="notification is-warning has-text-black has-text-left" >
+                        <strong>Coefficients: {{ coefficients }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="block"></div>
+                  
         <!-- Predicted VS actual for Training Data-->
         <apexchart v-if="showTrainingGraphs" type="line" :options="trainingOptionsPredictedVSActual" height=600 :series="trainingSeriesPredictedVSActual"></apexchart>
 
@@ -192,7 +211,8 @@
                 testPredictedY: [],
                 trainAccuracy: -1,
                 testAccuracy: -1,
-                coefficients: 0,
+                // coefficients: 0,
+                coefficients: [],
                 meanSquaredError: -1,
                 intercept: 0,
                 numberFeatures: -1,
@@ -300,6 +320,7 @@
                     this.extractData(response.data);
 
                     this.isTraining = true
+
                     
                     this.plotPredictedVSActual(this.trainX.length, this.trainY, this.trainPredictedY)
 
@@ -408,7 +429,11 @@
 
                 //Mean Squared Error, Coefficients, Intercept and number of Features
                 this.meanSquaredError = responseData['meansquared']
-                this.coefficients = Object.values(responseData['coefficients'])[0]
+                // this.coefficients = Object.values(responseData['coefficients'])[0]
+                this.coefficients = Object.values(responseData['coefficients'])
+                this.coefficients = this.coefficients.map(function(each_element){
+                    return Number(each_element.toFixed(2));
+                });
                 this.intercept = Object.values(responseData['Intercept'])[0]
                 this.numberFeatures = Object.values(responseData['jsonFeatures'])[0].length -1
                 this.$store.commit('setIsLoading',false)
