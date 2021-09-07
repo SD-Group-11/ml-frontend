@@ -340,14 +340,14 @@
 
 
                 // Test data
-                this.testX = Object.values(responseData['TestX'])
-                this.testY = Object.values(responseData['TestY'])
-                this.testPredictedY = Object.values(responseData['Test_PredictY'])
+                // this.testX = Object.values(responseData['TestX'])
+                // this.testY = Object.values(responseData['TestY'])
+                // this.testPredictedY = Object.values(responseData['Test_PredictY'])
 
 
                 // Train and Test accuracy
                 this.trainAccuracy = responseData['Train_accuracy']
-                this.testAccuracy = responseData['Test_accuracy']
+                // this.testAccuracy = responseData['Test_accuracy']
 
 
                 //Mean Squared Error, Coefficients, Intercept and number of Features
