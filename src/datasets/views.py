@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response 
 from .models import Dataset
 import json
-from LinearRegression.views import linearRegression
+from LinearRegression.views import linearRegression,TrainingLinearRegression
 from LinearRegression.models import TrainedModel
 import numpy as np
 import pandas as pd
@@ -29,6 +29,27 @@ def filterData(dataset):
     filename = newd[1][newd[1].find('filename=')+9:len(newd[1])-2]
     nullValues =  df.isnull().sum().sum()
     return id,filename,dataset,nullValues
+
+## same as filterData just adjusted indices to account for the appended filename 
+def filterTestData(dataset):
+    newd = dataset.split(r'\n')  # split the string by the new line character 
+    data = newd[4:-10]
+    data_str = "\n".join(data)
+    data_str = data_str.replace(r'\r', '')
+    ##print(data_str)
+    data_io = io.StringIO(data_str)
+    df = pd.read_csv(data_io, sep=",")
+    dataset = pd.DataFrame.to_json(df)
+
+    # print(dataset)
+    # print(df.head())
+    result = df.to_json(orient="split")
+    num = newd[len(newd)-7]
+    id = int(num[:len(num)-2])
+    filename = newd[len(newd)-3].replace(r'\r', '')
+    nullValues =  df.isnull().sum().sum()
+    return id,filename,dataset,nullValues
+
 
 @api_view(['POST',])   ## ensures only POST requests can be made to the api
 @csrf_exempt
@@ -67,33 +88,52 @@ def receiveData(request):
 
 @api_view(['POST',])   ## ensures only POST requests can be made to the api
 @csrf_exempt
+def receive_TestData(request):
+    dataset = str(request.body)
+    response = {}
+    if(dataset != ''):
+        
+        id,filename,testData,nullValues = filterTestData(dataset)
+        try:
+            Obj = Dataset.objects.get(UserId=id, filename=json.dumps(filename))
+            Obj.testData = testData
+            Obj.save()
+            response['response'] = "Successfully uploaded test data."
+            return Response(response)
+        except:
+            response['response'] = "Failed to locate corresponding training dataset."
+            return Response(response)
+##json.dumps adds "" to a string
+@api_view(['POST',])   ## ensures only POST requests can be made to the api
+@csrf_exempt
 def getDatasetsInfo(request):
 
     response ={}
     UserId = request.data['UserId']
     try:
         i =0 
-        for Obj in Dataset.objects.all():
+        AllDatasets = Dataset.objects.filter(UserId=UserId)
+        for Obj in AllDatasets:
                 
             dataAttributes = {}
-            if(Obj.UserId ==UserId):
-                dataset = pd.read_json(Obj.data)
-                i+=1
-                dataAttributes['id'] = Obj.id
-                dataAttributes['filename'] = json.loads(Obj.filename)
-                dataAttributes['datapoints'] = dataset.shape[0]
-                dataAttributes['columns'] = dataset.shape[1]
-                dataAttributes['featureNames'] = list(dataset.columns)
-                dataAttributes['nullValues'] = Obj.nullValues
-                dataAttributes['created'] = Obj.created
-                try:
-                    ModelData = TrainedModel.objects.get(UserId=Obj.UserId, filename=Obj.filename)
-                    dataAttributes['MSE'] = ModelData.meanSquaredError
-                    dataAttributes['TrainAccuracy'] = ModelData.TrainCoeffDetermination
-                    dataAttributes['TestAccuracy'] = ModelData.TestCoeffDetermination
-                except:
-                    dataAttributes['Info'] = "Model not trained yet."
-                response[i] = dataAttributes
+           
+            dataset = pd.read_json(Obj.data)
+            i+=1
+            dataAttributes['id'] = Obj.id
+            dataAttributes['filename'] = json.loads(Obj.filename)
+            dataAttributes['datapoints'] = dataset.shape[0]
+            dataAttributes['columns'] = dataset.shape[1]
+            dataAttributes['featureNames'] = list(dataset.columns)
+            dataAttributes['nullValues'] = Obj.nullValues
+            dataAttributes['created'] = Obj.created
+            try:
+                ModelData = TrainedModel.objects.get(UserId=Obj.UserId, filename=Obj.filename)
+                dataAttributes['MSE'] = ModelData.meanSquaredError
+                dataAttributes['TrainAccuracy'] = ModelData.TrainCoeffDetermination
+                dataAttributes['TestAccuracy'] = ModelData.TestCoeffDetermination
+            except:
+                dataAttributes['Info'] = "Model not trained yet."
+            response[i] = dataAttributes
             
         if( not response):
              response['error'] = "No datasets have been uploaded."
@@ -142,7 +182,6 @@ def doLinearRegression(request):
     filename = request.data['filename']
     learningRate = request.data['learningRate']
     tol = request.data['tol']
-    split = request.data['split']
     
     try:
         dataset = Dataset.objects.get(UserId = UserId,filename=json.dumps(filename))
@@ -153,26 +192,38 @@ def doLinearRegression(request):
 
         dataset.tol = json.dumps(tol)
         dataset.learningRate = json.dumps(learningRate)
-        dataset.split = split
         dataset.save()
 
                     ## fill in the code that uses LR model coded by Ballim and return response provided by it 
 
                     ## I need to send in the dataset, learning rate, tol and split
-        print("My view working")
-        results  = linearRegression(dataset.UserId,dataset.filename,dataset.learningRate,dataset.tol,pd.read_json(dataset.data),int(dataset.split)/100)
-        resp['jsonFeatures'] = results[0]
-        resp['coefficients'] = results[1]
-        resp['TrainX'] = results[2]
-        resp['TrainY'] = results[3]
-        resp['TestX'] = results[4]
-        resp['TestY'] = results[5]
-        resp['Train_PredictY'] = results[6]
-        resp['Test_PredictY'] = results[7]
-        resp['Test_accuracy'] = results[8]
-        resp['Train_accuracy'] = results[9]
-        resp['meansquared'] = results[10]
-        resp["Intercept"] = results[11]
+        results =[]
+        if(dataset.testData == {}): 
+            results = TrainingLinearRegression(dataset.UserId,dataset.filename,dataset.learningRate,dataset.tol,pd.read_json(dataset.data))
+            # results  = linearRegression(dataset.UserId,dataset.filename,dataset.learningRate,dataset.tol,pd.read_json(dataset.data))
+            resp['jsonFeatures'] = results[0]
+            resp['coefficients'] = results[1]
+            resp['TrainX'] = results[2]
+            resp['TrainY'] = results[3]
+            resp['Train_PredictY'] = results[4]
+            resp['Train_accuracy'] = results[5]
+            resp["Intercept"] = results[6]
+
+        else:
+            results  = linearRegression(dataset.UserId,dataset.filename,dataset.learningRate,dataset.tol,pd.read_json(dataset.data),pd.read_json(dataset.testData))
+            resp['jsonFeatures'] = results[0]
+            resp['coefficients'] = results[1]
+            resp['TrainX'] = results[2]
+            resp['TrainY'] = results[3]
+            resp['TestX'] = results[4]
+            resp['TestY'] = results[5]
+            resp['Train_PredictY'] = results[6]
+            resp['Test_PredictY'] = results[7]
+            resp['Test_accuracy'] = results[8]
+            resp['Train_accuracy'] = results[9]
+            resp['meansquared'] = results[10]
+            resp["Intercept"] = results[11]
+
         return Response(resp)
 
     except:
@@ -181,3 +232,67 @@ def doLinearRegression(request):
 
         return Response(resp)
 
+
+@api_view(['POST',])   ## ensures only POST requests can be made to the api
+@csrf_exempt
+
+def delete_dataset(request):
+
+    UserId = request.data["UserID"]
+    filename = request.data["Filename"]
+    response ={}
+    try:
+        dataset = Dataset.objects.get(UserId = UserId, filename=json.dumps(filename))
+        try:
+            Obj = TrainedModel.objects.get(UserId=UserId, filename=json.dumps(filename))
+            Obj.delete()
+        except:
+            pass
+        dataset.delete()
+        response['success'] = "Dataset Successfully deleted."
+
+        return Response(response)
+    except:
+        response['error'] = "Failed to delete dataset."
+        return Response(response)
+
+
+@api_view(['POST',])   ## ensures only POST requests can be made to the api
+@csrf_exempt
+
+def getTrainedDatasets(request):
+## View to return all the datasets that training has been performed on
+    UserId = request.data["UserID"]
+    response ={}
+    
+    try:
+        i = 1
+        AllTrained = TrainedModel.objects.filter(UserId=UserId)
+        for Obj in AllTrained:
+            response[i] = json.loads(Obj.filename)
+            i+=1
+        return Response(response)
+    
+    except:
+        response['response'] = "No trained datasets"
+        return Response(response)
+
+@api_view(['POST',])   ## ensures only POST requests can be made to the api
+@csrf_exempt
+
+def check_if_test_data_is_available(request):
+## given the composite PK, check if the user has uploaded test data
+    UserId = request.data["UserID"]
+    filename = request.data["Filename"]
+    response = {}
+    try:
+        Obj = Dataset.objects.get(UserId=UserId, filename=json.dumps(filename))
+        if(Obj.testData != {}): 
+            response['response'] = "Test Data exists"
+        else:
+            response['response'] = "Test Data does not exist"
+
+        return Response(response)
+    
+    except:
+        response['response'] = "Failed"

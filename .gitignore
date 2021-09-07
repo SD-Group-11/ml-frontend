@@ -10,6 +10,8 @@ shell_vue/dist/
  venv/
  bin/
  lib/python3.7/site-packages
+ lib64/python3.7/site-packages
+ 
 
 
 # Log files
