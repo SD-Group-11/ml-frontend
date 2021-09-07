@@ -69,7 +69,7 @@
         <span><h2 v-if="showTrainingGraphs">Coefficiant of Determination: <span class="accuracy">{{ (trainAccuracy).toFixed(2) }} </span></h2></span>
         
         <!-- Predicted VS actual for Training Data-->
-        <apexchart v-if="showTrainingGraphs" type="line" :options="trainingOptionsPredictedVSActual" height=600 :series="trainingSeriesPredictedVSActual"></apexchart>
+        <apexchart id="trainingGraph" v-if="showTrainingGraphs" type="line" :options="trainingOptionsPredictedVSActual" height=600 :series="trainingSeriesPredictedVSActual"></apexchart>
 
         <!-- Test Model Button -->
         <button class="button" id="testModelButton" v-if="showTrainingGraphs" v-on:click='showTestGraphs'>Test Model</button>
@@ -340,19 +340,19 @@
                 this.trainPredictedY = Object.values(responseData['Train_PredictY'])
 
 
-                // Test data
-                this.testX = Object.values(responseData['TestX'])
-                this.testY = Object.values(responseData['TestY'])
-                this.testPredictedY = Object.values(responseData['Test_PredictY'])
+                // // Test data
+                // this.testX = Object.values(responseData['TestX'])
+                // this.testY = Object.values(responseData['TestY'])
+                // this.testPredictedY = Object.values(responseData['Test_PredictY'])
 
 
                 // Train and Test accuracy
                 this.trainAccuracy = responseData['Train_accuracy']
-                this.testAccuracy = responseData['Test_accuracy']
+                // this.testAccuracy = responseData['Test_accuracy']
 
 
                 //Mean Squared Error, Coefficients, Intercept and number of Features
-                this.meanSquaredError = responseData['meansquared']
+                // this.meanSquaredError = responseData['meansquared']
                 this.coefficients = Object.values(responseData['coefficients'])[0]
                 this.intercept = Object.values(responseData['Intercept'])[0]
                 this.numberFeatures = Object.values(responseData['jsonFeatures'])[0].length -1

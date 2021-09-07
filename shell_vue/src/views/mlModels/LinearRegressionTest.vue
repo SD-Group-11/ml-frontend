@@ -43,14 +43,14 @@
             <!-- <button class="button" id="testModelButton" v-on:click='checkTestingData()'>Test Model</button> -->
 
 
-            <span><h2 v-if="showTestingGraphs">Coefficient of Determination: <span class="accuracy">{{ (testAccuracy).toFixed(2) }} </span></h2></span>
+            <span><h2  v-if="showTestingGraphs" id= "CoefOfDetermination" >Coefficient of Determination: <span class="accuracy">{{ (testAccuracy).toFixed(2) }} </span></h2></span>
             <span><h2 v-if="showTestingGraphs">Mean Squared Error: <span class="meansquared">{{ (meanSquaredError).toFixed(2) }} </span></h2></span>
 
 
              <!-- GRAPH TABS FOR TESTING -->
-            <div class="tabs is-toggle is-toggle-rounded is-centered" v-if="showTestingGraphs">
+            <div class="tabs is-toggle is-toggle-rounded is-centered" id="lineButton" v-if="showTestingGraphs">
                 <ul>
-                    <li class="is-active tablinks" v-on:click="openTab(event, 'line')">
+                    <li class="is-active tablinks"  v-on:click="openTab(event, 'line')">
                         <a>
                             <span class="icon is-small"><i class="fas fa-chart-line" aria-hidden="true"></i></span>
                             <span>Line of Best Fit</span>
@@ -65,11 +65,10 @@
                 </ul>
             </div>
 
-
         <!-- TAB CONTENTS -->
         <div id="line" class="tabcontent">
                 <!-- testing line graph -->
-                <apexchart v-if="showTestingGraphs && numberFeatures==1" type="line" :options="optionsLOBF" height=450 :series="seriesLOBF"></apexchart>
+                <apexchart id="testLineGraph" v-if="showTestingGraphs && numberFeatures==1" type="line" :options="optionsLOBF" height=450 :series="seriesLOBF"></apexchart>
         </div>
 
         <div id="dots" class="tabcontent">
@@ -341,6 +340,7 @@
                 if (btn.style.display === "none") {
                     btn.style.display = "block";
                 } 
+                
             },
 
             //Extract http response into accessible javascript data
@@ -407,6 +407,8 @@
                     data: [{x:minX, y:(m*minX+c)}, {x:maxX, y:(m*maxX+c)}]
                     //data: predictedXYPairs
                 }]
+    
+                console.log("seriesLOBF",this.seriesLOBF)
 
                 // Options and settings to customise the chart
                 this.optionsLOBF = {
@@ -450,6 +452,7 @@
                         decimalsInFloat: 2,
                     }
                 }
+                console.log("optionsLOBF",this.optionsLOBF)
 
             },
 
