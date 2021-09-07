@@ -55,11 +55,11 @@
                                 <input class="input" id = "tol" type="email" placeholder="0.5">
                             </div>
 
-                            <div class="control ml-6">
+                            <!-- <div class="control ml-6">
                                 <label class="label">Split</label>
                                 <input type="range" id="split" min="1" max="99" step="1" v-model="initialSplit" style="width: 210%;"/>
                                 <div class="output">Training and test data split: {{ initialSplit }}/{{ 100-initialSplit }}</div>
-                            </div>
+                            </div> -->
                             
                         </div>
     
@@ -108,7 +108,7 @@
             <div class="columns">
                 <div class="column is-one-third">
                     <div class="notification is-warning has-text-black has-text-left" >
-                        <strong>Training Accuracy: {{ (trainAccuracy).toFixed(2) }}</strong>
+                        <strong>Coefficient of Determination: {{ (trainAccuracy).toFixed(2) }}</strong>
                         
                     </div>
                     
