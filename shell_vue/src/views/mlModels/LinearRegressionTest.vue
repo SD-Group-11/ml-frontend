@@ -97,14 +97,14 @@
 
 
         <!-- TAB CONTENTS -->
-        <div id="line" class="tabcontent">
+        <div id="line" class="tabcontent" v-if="showTestingGraphs && numberFeatures==1">
                 <!-- testing line graph -->
-                <apexchart v-if="showTestingGraphs && numberFeatures==1" type="line" :options="optionsLOBF" height=450 :series="seriesLOBF"></apexchart>
+                <apexchart type="line" :options="optionsLOBF" height=450 :series="seriesLOBF"></apexchart>
         </div>
 
-        <div id="dots" class="tabcontent">
+        <div id="dots" class="tabcontent"  v-if="showTestingGraphs && (hideGraphs==true)">
                 <!-- testing predicted vs actual-->
-                <apexchart  v-if="showTestingGraphs" type="line" :options="testingOptionsPredictedVSActual" height=450 :series="testingSeriesPredictedVSActual"></apexchart>
+                <apexchart type="line" :options="testingOptionsPredictedVSActual" height=450 :series="testingSeriesPredictedVSActual"></apexchart>
         </div>
           
         </div>
@@ -206,8 +206,7 @@
                 isTesting: false,
                 showTrainingGraphs: false,
                 showTestingGraphs: false,
-                
-
+                hideGraphs: false,
             }
         },
         mounted(){
@@ -574,6 +573,7 @@
                }
 
             //show curr tab and add is-active to that tab
+                this.hideGraphs = true;
                 document.getElementById(tabId).style.display = 'block';
                 event.currentTarget.className += "is-active";
             },
