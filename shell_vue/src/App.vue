@@ -8,9 +8,23 @@
   
   <section class="section">
    
-  <transition name="router-anim" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutUp">
+  <!-- <transition name="router-anim" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutUp">
     <router-view/>
-  </transition> 
+  </transition>  -->
+
+  <!-- <transition>
+    <router-view/>
+  </transition>  -->
+
+
+  <router-view v-slot="{ Component,route }">
+    <!-- <transition name="fade" mode="out-in"> -->
+    <transition :name="route.meta.transitionName || 'fade'" mode="out-in">
+      <component :is="Component" />
+    </transition>
+  </router-view>
+
+
 
    <!--PAGE ANIMATIONS ADDED HERE -->
    <!-- FOOTER why is it so THICK?!! -->
@@ -64,6 +78,40 @@
 @import "https://cdn.jsdelivr.net/npm/animate.css@3.5.1"; //animation lib
 
 
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.slide-left-leave-active,
+.slide-left-enter-active,
+.slide-right-leave-active,
+.slide-right-enter-active {
+  transition: 0.4s;
+}
+
+.slide-left-enter {
+  transform: translate(100%, 0);
+}
+
+.slide-left-leave-to {
+  transform: translate(-100%, 0);
+}
+
+.slide-right-enter {
+  transform: translate(-100%, 0);
+}
+
+.slide-right-leave-to {
+  transform: translate(100%, 0);
+}
+
+
 .lds-dual-ring {
     display: inline-block;
     width: 80px;
@@ -97,6 +145,8 @@
     &.is-loading {
         height: 80px;
     }
+
+
 }
 
 </style>

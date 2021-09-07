@@ -18,6 +18,7 @@ import MyAccount from '../views/dashboard/MyAccount.vue'
 import DecisionTrees from '../views/DecisionTrees.vue'
 import LinearRegression from '../views/mlModels/LinearRegression.vue'
 import LinearRegressionDatasets from '../views/mlModels/LinearRegressionDatasets.vue'
+import LinearRegressionTests from '../views/mlModels/LinearRegressionTests.vue'
 
 const routes = [
   {
@@ -88,20 +89,37 @@ const routes = [
     }
   },
   {
-    path: '/linear-regression',
-    name: 'LinearRegression',
-    component: LinearRegression,
-    meta: {
-      requireLogin: true
-    }
-  },
-  {
     path: '/linear-regression-datasets',
     name: 'LinearRegressionDatasets',
     component: LinearRegressionDatasets,
     meta: {
-      requireLogin: true
+      requireLogin: true,
+      model: true,
+      modelName: 'linReg',
+      type: 0
     }
+  },
+  {
+    path: '/linear-regression',
+    name: 'LinearRegression',
+    component: LinearRegression,
+    meta: {
+      requireLogin: true,
+      model: true,
+      modelName: 'linReg',
+      type: 1
+    }
+  },
+  {
+    path: '/linear-regression-tests',
+    name: 'LinearRegressionTests',
+    component: LinearRegressionTests,
+    meta: {
+      requireLogin: true,
+      model: true,
+      modelName: 'linReg',
+      type: 2
+    }    
   }
 ]
 
@@ -118,5 +136,17 @@ router.beforeEach((to,from,next) => {
     next()
   }
 })
+
+router.afterEach((to, from) => {
+  if(to.meta.model){
+    // if(to.meta.type>from.meta.type || to.meta.type-from.meta.type==-2){
+    // }
+    if(to.meta.modelName==from.meta.modelName){
+      to.meta.transitionName = (to.meta.type>from.meta.type || to.meta.type-from.meta.type==-2) && to.meta.type-from.meta.type!=2 ? 'slide-left' : 'slide-right'
+    }
+
+  }
+})
+
 
 export default router

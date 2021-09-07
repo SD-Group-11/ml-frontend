@@ -1,182 +1,124 @@
-<template>   
+<template>
     <div class="container is-fluid">
-        <GlobalEvents
-            @keydown.left="pageNav('/linear-regression-datasets')"
-            @keydown.right="pageNav('/linear-regression-tests')"
-        />
-
         <div class="container is-fluid">
-            <!-- <div class="notification is-info has-text-centered" >
-                <strong><h3 class="title is-3">Linear Regression Model Trainer</h3></strong>
-            </div> -->
             <div class="notification is-info has-text-centered" >
-
-            <div class="columns">
-                    <div class="column is-one-fifth">                        
-                        <div class="button is-pulled-left is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/linear-regression-datasets')" data-tooltip="Manage datasets">
-                            <span class="icon is-normal">
-                                <i class="fas fa-lg fa-arrow-left"></i>                                
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <div class="column">
-                        <strong><h3 class="title is-3">Model Training</h3></strong>
-                    </div>
-                    
-                    <div class="column is-one-fifth">
-                        <div class="button is-pulled-right is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/linear-regression-tests')" data-tooltip="Test a model">
-                            <span class="icon is-normal">
-                                <i class="fas fa-lg fa-arrow-right"></i>
-                            </span>
-                        </div>
-                    </div>
-                    
-                </div>
-            
+                <strong><h3 class="title is-3">Linear Regression Model Tester</h3></strong>
             </div>
-                
-            <div class="block"></div>
 
             <form @submit.prevent="submitForm"> 
                 <div class="columns">
+                
+                    <!-- should be one or the other, need to sort out the logic -->
+                    <!-- add the upload test data here  -->
 
-                    <div class="column is-four-fifths">
-                        <div class="field is-grouped">
-                            
-                            <div class="control">
-                                <label class="label">Learning Rate</label>
-                                <input class="input" id="learningRate" type="text" placeholder="0.1">
-                            </div>
-                        
-                            
-                            <div class="control">
-                                <label class="label">Tolerance</label>
-                                <input class="input" id = "tol" type="email" placeholder="0.5">
-                            </div>
-
-                            <div class="control ml-6" style="display: none;">
-                                <label class="label">Split</label>
-                                <input type="range" id="split" min="1" max="99" step="1" v-model="initialSplit" style="width: 150%;"/> <!--changed width to 150% from 210-->
-                                <div class="output">Training and test data split: {{ initialSplit }}/{{ 100-initialSplit }}</div>
-                            </div>
-                            
-                        </div>
-    
-                    </div> 
-
-                    <div class="column is-one-fifth">
-                        <!-- Selecting a dataset -->
+                    <div class="column is-half">
+                        <!-- Selecting trained model -->
                         <div class="field ">
-                            <label class="label">Dataset</label>
+                            <label class="label">Trained Model</label>
                             <select v-model="selected" id = "files" class="select is-normal is-size-6 is-info" style="width: 100%;">
-                                <option disabled value="">Select dataset</option>
-                                <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
+                                <option disabled value="">Select trained model</option>
+                                <option  v-for="dataset in userFiles" v-bind:key="dataset" >{{dataset}}</option>
                             </select>
+
                         </div>
-                        
+                        <!-- possibly set this to train secretly and select -->
+                        <button class="button" id="selectButton" v-on:click='checkTestingData()'>Select</button>
+                        </div>
+
                     </div>
 
-                </div>
+
             </form>
 
             <div class="columns">
 
                 <div class="column is-full is-warning ">
                     <div class="box" style="background-color:#FFD55A;">
-                        <!-- <h2 class="title is-3 has-text-centered">Enter Hyperparameters</h2> -->
                         
                     </div>
 
                 </div>
             </div>
 
-            <!-- Train model button -->
-            <div>
-                <button style="text-align: center;" class="button is-info has-text-black"  v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false'><strong>Train Model</strong></button>
+            <!-- test model just like on train page : v-on:click='showTestGraphs' -->
+            <button class="button" id="testModelButton" v-on:click='showTestGraphs'>Test Model</button>
+            <!-- <button class="button" id="testModelButton" v-on:click='checkTestingData()'>Test Model</button> -->
+
+
+        
+            <!-- testing results -->
+            <div class="container is-fluid" v-if="showTestingGraphs">
+                <span><h2 v-if="showTrainingGraphs">Results:<span class="accuracy"></span></h2></span>
+                
+                <div class="columns">
+                    <div class="column is-half">
+                        <div class="notification is-warning has-text-black has-text-left" >
+                            <!-- <span><h3 v-if="showTestingGraphs">Coefficient of Determination: <span class="accuracy">{{ (testAccuracy).toFixed(2) }} </span></h3></span> -->
+                            <strong v-if="showTestingGraphs">Coefficient of Determination: {{ (testAccuracy).toFixed(2) }}</strong>
+                        </div>
+                        
+                    </div>
+                    <div class="column is-half is-warning">
+                        
+                        <div class="notification is-warning has-text-black has-text-left" >
+                            <!-- <span><h3 v-if="showTestingGraphs">Mean Squared Error: <span class="meansquared">{{ (meanSquaredError).toFixed(2) }} </span></h3></span> -->
+                            <strong v-if="showTestingGraphs">Mean Squared Error: {{ (meanSquaredError).toFixed(2) }}</strong>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div class="block"></div>
-        
-        </div> 
-
-               
-               
-        <!-- Training Graphs -->
-        <div class="container is-fluid" v-if="showTrainingGraphs">
-            <span><h2 v-if="showTrainingGraphs">Results:<span class="accuracy"></span></h2></span>
-            
-            <div class="columns">
-                <div class="column is-one-third">
-                    <div class="notification is-warning has-text-black has-text-left" >
-                        <strong>Coefficient of Determination: {{ (trainAccuracy).toFixed(2) }}</strong>
-                        
-                    </div>
-                    
-                </div>
-                <div class="column is-two-thirds is-warning">
-                    
-                    <div class="notification is-warning has-text-black has-text-left" >
-                        <strong>Learned Parameters: {{ coefficients }}</strong>
-                    </div>
+            <div class="columns is-centered">
+                <div class="column">
+                    <button class="button has-tooltip-arrow has-tooltip-info is-pulled-right" data-tooltip="Download dataset" type="button" v-if="showTestingGraphs" v-on:click ="download()">Download Results</button>
                 </div>
             </div>
-        </div>
-        <div class="block"></div>
-                  
-        <!-- Predicted VS actual for Training Data-->
-        <apexchart id = "trainingGraph" v-if="showTrainingGraphs" type="line" :options="trainingOptionsPredictedVSActual" height=600 :series="trainingSeriesPredictedVSActual"></apexchart>
-        <!-- Test Model Button -->
-        <!-- <button class="button" id="testModelButton" v-if="showTrainingGraphs" v-on:click='showTestGraphs'> Test Model</button> -->
-        
-        <!-- Discard Results Button -->
-        <button class="button is-danger is-pulled-right"  v-if="showTrainingGraphs" v-on:click='DiscardTrainResults'><strong>Discard Results</strong></button>
-        
-        
-        <!-- Testing Graphs -->
-        <!-- <span><h2 v-if="showTestingGraphs">Testing Results: <span class="accuracy">{{ (testAccuracy).toFixed(2) }} </span></h2></span> -->
-        <span><h2 v-if="showTestingGraphs">Mean Squared Error: <span class="meansquared">{{ (meanSquaredError).toFixed(2) }} </span></h2></span> <!--MSE MIGHT BE FOR TRAINING ONLY-->
-        <!-- Line of best fit for Training Data-->
-        <!-- <apexchart v-if="showTestingGraphs && numberFeatures==1" type="line" :options="optionsLOBF" height=600 :series="seriesLOBF"></apexchart> -->
-        <!-- Predicted VS actual for Testing-->
-        <!-- <apexchart v-if="showTestingGraphs" type="line" :options="testingOptionsPredictedVSActual" height=600 :series="testingSeriesPredictedVSActual"></apexchart> -->
-          
 
+            <div class="block"></div>
 
-        <!-- GRAPH TABS FOR TESTING -->
-        <div class="tabs is-toggle is-toggle-rounded is-centered" v-if="showTestingGraphs">
-            <ul>
-                <li class="is-active tablinks" v-on:click="openTab(event, 'line')">
-                    <a>
-                        <span class="icon is-small"><i class="fas fa-chart-line" aria-hidden="true"></i></span>
-                        <span>Line of Best Fit</span>
-                    </a>
-                </li>
-                <li class="tablinks" v-on:click="openTab(event, 'dots')">
-                    <a>
-                        <span class="icon is-small"><i class="fas fa-chart-area" aria-hidden="true"></i></span>
-                        <span>Predicted vs Actual</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
+             <!-- GRAPH TABS FOR TESTING -->
+            <div class="tabs is-toggle is-toggle-rounded is-centered" v-if="showTestingGraphs">
+                <ul>
+                    <li class="is-active tablinks" v-on:click="openTab(event, 'line')">
+                        <a>
+                            <span class="icon is-small"><i class="fas fa-chart-line" aria-hidden="true"></i></span>
+                            <span>Line of Best Fit</span>
+                        </a>
+                    </li>
+                    <li class="tablinks" v-on:click="openTab(event, 'dots')">
+                        <a>
+                            <span class="icon is-small"><i class="fas fa-chart-area" aria-hidden="true"></i></span>
+                            <span>Predicted vs Actual</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
 
         <!-- TAB CONTENTS -->
-        <div id="line" class="tabcontent">
+        <div id="line" class="tabcontent" v-if="showTestingGraphs && numberFeatures==1">
                 <!-- testing line graph -->
-                <apexchart v-if="showTestingGraphs && numberFeatures==1" type="line" :options="optionsLOBF" height=450 :series="seriesLOBF"></apexchart>
+                <apexchart type="line" :options="optionsLOBF" height=450 :series="seriesLOBF"></apexchart>
         </div>
 
-        <div id="dots" class="tabcontent">
+        <div id="dots" class="tabcontent"  v-if="showTestingGraphs && (hideGraphs==true)">
                 <!-- testing predicted vs actual-->
-                <apexchart  v-if="showTestingGraphs" type="line" :options="testingOptionsPredictedVSActual" height=450 :series="testingSeriesPredictedVSActual"></apexchart>
+                <apexchart type="line" :options="testingOptionsPredictedVSActual" height=450 :series="testingSeriesPredictedVSActual"></apexchart>
         </div>
           
+        </div>
     </div>
+
+    
 </template>
 
-<style scoped>   
-    /* .button {
+<style scoped>
+    .button {
+        /* #fd0b0b */
+        /* #fd1201 
+            #ff5e5e
+        */
         font-weight:500;
         border-color: #007EFF;
         color: rgb(0, 0, 0);
@@ -189,7 +131,7 @@
     }
     .button:hover {
         background-position: 0;
-    } */
+    }
 
     h2 {
         color: black;
@@ -207,18 +149,19 @@
 </style>
 
 
+
+
+
 <script>
     import axios from 'axios'
     import Chart from 'chart.js'
-    import VueApexCharts from "vue3-apexcharts"
-    import { GlobalEvents } from 'vue-global-events'
+    import VueApexCharts from "vue3-apexcharts";
     import {toast} from 'bulma-toast'
 
     export default {
         name: "LinearRegressionDatasets",
         components: {
             apexchart: VueApexCharts,
-            GlobalEvents
         },
         data() {
             return{
@@ -241,8 +184,7 @@
                 testPredictedY: [],
                 trainAccuracy: -1,
                 testAccuracy: -1,
-                // coefficients: 0,
-                coefficients: [],
+                coefficients: 0,
                 meanSquaredError: -1,
                 intercept: 0,
                 numberFeatures: -1,
@@ -264,16 +206,13 @@
                 isTesting: false,
                 showTrainingGraphs: false,
                 showTestingGraphs: false,
-                
+                hideGraphs: false,
             }
         },
         mounted(){
             this.getAccount()
         },
         methods:{
-            pageNav(route){
-                this.$router.push(route)
-            },
             async getAccount(){
                 this.$store.commit('setIsLoading',true)
 
@@ -282,7 +221,7 @@
 
                     .then(response => {
                         this.userDetails=response.data
-                        this.getUserDatasets()
+                        this.getTrainedDatasets()
                     })
 
                     .catch(error => {
@@ -292,53 +231,60 @@
                 this.$store.commit('setIsLoading',false)
 
             },
-            async getUserDatasets(){
-                this.$store.commit('setIsLoading',true)
-                this.userFiles=[] 
-                var data ={"UserId":this.userDetails.id}
+
+            async checkTestingData() {
+                var filename = this.selected;
+                var data ={"UserID":this.userDetails.id,"Filename":filename}
+
                 await axios
-                .post('/datasets/getDatasetsInfo',data)
+                .post('/datasets/checkTestData',data)
                 .then(response =>{
-                    if(response.data['error']=="No datasets have been uploaded."){
-                        console.log("has no datasets")
-                        console.log(response.data)
-                        this.hasDatasets = false
+                    if( response.data['response'] == "Test Data does not exist"){
+                        console.log("no testing data")
+                        // Type = 'is-danger';
+
+                        toast({
+                            message: "please upload test dataset on Manage Datasets page :D",
+                            type: 'is-danger',
+                            dismissible: true,
+                            pauseOnHover: true,
+                            duration: 15000,
+                            position: 'bottom-center',
+                        })
+                        //have the pop-up come here
+                        //WORK HERE - toast message
                     }
                     else{
-                        //console.log(response.data[0])
-                        this.hasDatasets = true
-                        //idk why but accessing UserFiles out of this scope returns empty. Please check what im doing wrong
-                        // response.data though holds all the datasets of a user and their respective summary details
-                        //this.userFiles = response.data;
-                        // Tell us how many datasets are associated with the user 
-                        // you can loop from 1 to number_of_datasets+1 and use that to index response.data[i] to get a dataset and its summary
-                        var number_of_datasets = Object.keys(response.data).length
-                        for(var i=1;i<number_of_datasets+1;i++){
-                            this.userFiles.push(response.data[i])
-                        }
+                        //do all the funky stuff here
+                        //re-run linear regression here
+
+                        //secretly run regression:
+
                         console.log(this.userFiles)
+                        console.log("SUCCESS MY GUY LETS GOOOO")
+                        this.TrainModel()
+
                     }
                 })
                 .catch(error => {
                     console.log(error)
                 })
-                this.$store.commit('setIsLoading',false)
+
             },
-
-
 
             // Call this method when the user clicks Train Model 
             async TrainModel(){
-                this.$store.commit('setIsLoading',true)
                 var id = this.userDetails.id;
                 //Please get the filename from the dropdown and set it here 
                 var filename = this.selected;
                 // tol and learningRate must be decimal values
-                var tol = document.getElementById("tol").value;
-                var learningRate = document.getElementById("learningRate").value;
-                // Must be a value between 0 and 100 representing a percentage of data that must be assigned to the training data
-                var split = document.getElementById("split").value;
-                var data ={"UserId":id,"filename":filename,"learningRate":learningRate,"tol":tol,"split":split}
+                // var tol = document.getElementById("tol").value;
+                // var learningRate = document.getElementById("learningRate").value;
+                // // Must be a value between 0 and 100 representing a percentage of data that must be assigned to the training data
+                // var split = document.getElementById("split").value;
+                var learningRate = '';
+                var tol = '';
+                var data ={"UserId":id,"filename":filename,"learningRate":learningRate,"tol":tol}
 
                 console.log('data: ',data)
                 await axios
@@ -350,7 +296,6 @@
                     this.extractData(response.data);
 
                     this.isTraining = true
-
                     
                     this.plotPredictedVSActual(this.trainX.length, this.trainY, this.trainPredictedY)
 
@@ -380,64 +325,55 @@
                     // this.showTestingGraphs = true
 
                 });
+
+            },
+
+            async getTrainedDatasets(){
+                this.$store.commit('setIsLoading',true)
+                this.userFiles=[] 
+                var data ={"UserID":this.userDetails.id}
+                await axios
+                .post('/datasets/getTrainedDatasets',data)
+                .then(response =>{
+                    if(response.data['response']=="No trained datasets"){
+                        console.log("has no datasets")
+                        console.log(response.data)
+                        this.hasDatasets = false
+                    }
+                    else{
+                        //console.log(response.data[0])
+                        this.hasDatasets = true
+                        //idk why but accessing UserFiles out of this scope returns empty. Please check what im doing wrong
+                        // response.data though holds all the datasets of a user and their respective summary details
+                        //this.userFiles = response.data;
+                        // Tell us how many datasets are associated with the user 
+                        // you can loop from 1 to number_of_datasets+1 and use that to index response.data[i] to get a dataset and its summary
+                        var number_of_datasets = Object.keys(response.data).length
+                        for(var i=1;i<number_of_datasets+1;i++){
+                            this.userFiles.push(response.data[i])
+                        }
+                        console.log(this.userFiles)
+                    }
+                })
+                .catch(error => {
+                    console.log(error)
+                })
                 this.$store.commit('setIsLoading',false)
             },
 
-            // We require the UserID as well as the corresponding filename to delete the results we get from training
-            async DiscardTrainResults(){
-                var id = this.userDetails.id;
-                //get the filename from what has been selected.
-                var filename = document.getElementById("files").value ;
-                //create the dict that will be the data for backend
-                var data = {"UserID":id,"Filename":filename};
-                await axios
-                .post('/LinearRegression/discardMetrics',data)
-                .then(response => {
-                    // get response from backend
-                    var resp = response.data['response'];
-                    var Type;
-                    //indicates successful deleting of the data
-                    if(resp == "Results discarded."){
-                         Type = 'is-success';
-                         //Toast to give user indication of outcome of action
-                        toast({
-                            message: "Results successfully discarded.",
-                            type: Type,
-                            dismissible: true,
-                            pauseOnHover: true,
-                            duration: 1000,
-                            position: 'bottom-center',
-                        })  
-                    }
-                    else{
-                        // Failed to discard the data
-                         Type = 'is-danger';
-                            toast({
-                                message: resp,
-                                type: Type,
-                                dismissible: true,
-                                pauseOnHover: true,
-                                duration: 1000,
-                                position: 'bottom-center',
-                            })  
-                    }
-                })
-            },
+
             // Used in order to show Test data charts on button click
             showTestGraphs() {
-                this.$store.commit('setIsLoading',true)
                 this.showTestingGraphs = true
                 var btn = document.getElementById('testModelButton')
                 // btn.remove()
                 if (btn.style.display === "none") {
                     btn.style.display = "block";
-                }
-                this.$store.commit('setIsLoading',false) 
+                } 
             },
 
             //Extract http response into accessible javascript data
             extractData(responseData) {
-                this.$store.commit('setIsLoading',true)
                 console.log('responseData', responseData)
                 
                 // Train data
@@ -446,31 +382,25 @@
                 this.trainPredictedY = Object.values(responseData['Train_PredictY'])
 
 
-                // // Test data
-                // this.testX = Object.values(responseData['TestX'])
-                // this.testY = Object.values(responseData['TestY'])
-                // this.testPredictedY = Object.values(responseData['Test_PredictY'])
+                // Test data
+                this.testX = Object.values(responseData['TestX'])
+                this.testY = Object.values(responseData['TestY'])
+                this.testPredictedY = Object.values(responseData['Test_PredictY'])
 
 
                 // Train and Test accuracy
                 this.trainAccuracy = responseData['Train_accuracy']
-                // this.testAccuracy = responseData['Test_accuracy']
+                this.testAccuracy = responseData['Test_accuracy']
 
 
                 //Mean Squared Error, Coefficients, Intercept and number of Features
                 this.meanSquaredError = responseData['meansquared']
-                // this.coefficients = Object.values(responseData['coefficients'])[0]
-                this.coefficients = Object.values(responseData['coefficients'])
-                this.coefficients = this.coefficients.map(function(each_element){
-                    return Number(each_element.toFixed(2));
-                });
+                this.coefficients = Object.values(responseData['coefficients'])[0]
                 this.intercept = Object.values(responseData['Intercept'])[0]
                 this.numberFeatures = Object.values(responseData['jsonFeatures'])[0].length -1
-                this.$store.commit('setIsLoading',false)
             },
 
             plotLineOfBestFit(xValues, yValues, m, c) {
-                this.$store.commit('setIsLoading',true)
                 //Pair together each X-value with its corresponding Y-value, thus creating a 2D array being a list of pairs.
                 var actualXYPairs = []
                 //var predictedXYPairs =[]
@@ -549,11 +479,10 @@
                         decimalsInFloat: 2,
                     }
                 }
-                this.$store.commit('setIsLoading',false)
+
             },
 
             plotPredictedVSActual(xSize, yValues, yPredicated) {
-                this.$store.commit('setIsLoading',true)
                 var xyPairs = []
                 var xyPredicted = []
                 for (let i = 0; i < xSize; i++) {
@@ -631,21 +560,34 @@
             // tabs
             openTab(event, tabId){
             //get all elements w the tab content and hide it
-               var tabcontent = document.getElementsByClassName('tabcontent')
+               var tabcontent = document.getElementsByClassName('tabcontent');
                for(let i=0; i<tabcontent.length; i++)
                {
                    tabcontent[i].style.display = 'none';
                }
             //get all the elements w the class tablinks and remove is-active
-               var tablinks = document.getElementsByClassName('tablinks')
+               var tablinks = document.getElementsByClassName('tablinks');
                for(let i=0; i<tablinks.length; i++)
                {
                    tablinks[i].className = tablinks[i].className.replace('is-active', '')
                }
 
             //show curr tab and add is-active to that tab
-                document.getElementById(tabId).style.display = 'block'
-                event.currentTarget.className += "is-active"
+                this.hideGraphs = true;
+                document.getElementById(tabId).style.display = 'block';
+                event.currentTarget.className += "is-active";
+            },
+
+            download() {
+                var element = document.createElement('a');
+                let filename = 'results.txt';
+                let text = "Mean Squared Error: "+String(this.meanSquaredError)+"\n"+"Coefficient of Determination: "+String(this.testAccuracy)
+                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+                element.setAttribute('download', filename);
+                element.style.display = 'none';
+                document.body.appendChild(element);
+                element.click();
+                document.body.removeChild(element);
             }
         }
     }
