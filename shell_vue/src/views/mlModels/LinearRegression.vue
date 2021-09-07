@@ -108,7 +108,12 @@
         <apexchart v-if="showTrainingGraphs" type="line" :options="trainingOptionsPredictedVSActual" height=600 :series="trainingSeriesPredictedVSActual"></apexchart>
 
         <!-- Test Model Button -->
-        <button class="button" id="testModelButton" v-if="showTrainingGraphs" v-on:click='showTestGraphs'> Test Model</button>
+        <!-- <button class="button" id="testModelButton" v-if="showTrainingGraphs" v-on:click='showTestGraphs'> Test Model</button> -->
+        
+        <!-- Discard Results Button -->
+        <button class="button is-danger is-pulled-right"  v-if="showTrainingGraphs" v-on:click='DiscardTrainResults'><strong>Discard Results</strong></button>
+        
+        
         <!-- Testing Graphs -->
         <span><h2 v-if="showTestingGraphs">Testing results: <span class="accuracy">{{ (testAccuracy*100).toFixed(2) }}% </span></h2></span>
         <!-- Line of best fit for Training Data-->
@@ -327,7 +332,46 @@
                 this.$store.commit('setIsLoading',false)
             },
 
-
+            // We require the UserID as well as the corresponding filename to delete the results we get from training
+            async DiscardTrainResults(){
+                var id = this.userDetails.id;
+                //get the filename from what has been selected.
+                var filename = document.getElementById("files").value ;
+                //create the dict that will be the data for backend
+                var data = {"UserID":id,"Filename":filename};
+                await axios
+                .post('/LinearRegression/discardMetrics',data)
+                .then(response => {
+                    // get response from backend
+                    var resp = response.data['response'];
+                    var Type;
+                    //indicates successful deleting of the data
+                    if(resp == "Results discarded."){
+                         Type = 'is-success';
+                         //Toast to give user indication of outcome of action
+                        toast({
+                            message: "Results successfully discarded.",
+                            type: Type,
+                            dismissible: true,
+                            pauseOnHover: true,
+                            duration: 1000,
+                            position: 'bottom-center',
+                        })  
+                    }
+                    else{
+                        // Failed to discard the data
+                         Type = 'is-danger';
+                            toast({
+                                message: resp,
+                                type: Type,
+                                dismissible: true,
+                                pauseOnHover: true,
+                                duration: 1000,
+                                position: 'bottom-center',
+                            })  
+                    }
+                })
+            },
             // Used in order to show Test data charts on button click
             showTestGraphs() {
                 this.$store.commit('setIsLoading',true)
@@ -351,15 +395,15 @@
                 this.trainPredictedY = Object.values(responseData['Train_PredictY'])
 
 
-                // Test data
-                this.testX = Object.values(responseData['TestX'])
-                this.testY = Object.values(responseData['TestY'])
-                this.testPredictedY = Object.values(responseData['Test_PredictY'])
+                // // Test data
+                // this.testX = Object.values(responseData['TestX'])
+                // this.testY = Object.values(responseData['TestY'])
+                // this.testPredictedY = Object.values(responseData['Test_PredictY'])
 
 
                 // Train and Test accuracy
                 this.trainAccuracy = responseData['Train_accuracy']
-                this.testAccuracy = responseData['Test_accuracy']
+                // this.testAccuracy = responseData['Test_accuracy']
 
 
                 //Mean Squared Error, Coefficients, Intercept and number of Features

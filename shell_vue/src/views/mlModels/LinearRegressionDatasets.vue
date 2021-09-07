@@ -168,18 +168,6 @@
                                         </button>
                                     </p>
 
-                                    <p class="control">
-                                        <button class="button is-normal is-primary is-inverted has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" v-on:click ="getData(dataset.filename)">                             
-                                        
-                                            <span class="icon is-normal">
-                                                <i class="fas fa-lg fa-plus"></i>
-                                            </span>
-
-                                            <!-- <span><strong>View Dataset</strong></span> -->
-                                            <!-- <span>Data</span> -->
-
-                                        </button>
-                                    </p>
 
                                     <p class="control">
                                         <button class="button is-normal is-link has-tooltip-arrow has-tooltip-info" data-tooltip="Download dataset" type="button" v-on:click ="getDatasetData(dataset.filename)">
@@ -721,7 +709,7 @@
                         try {
                             resp = response.data['success']
 
-                            var Type = 'is-success';
+                            var Type = 'is-warning';
                             this.uploadedTestData=true;
                             //this.uploadedTestFilename = `${testFile.name}`
                             // Not sure if the next two lines are necesssary just yet
@@ -732,7 +720,7 @@
                                 type: Type,
                                 dismissible: true,
                                 pauseOnHover: true,
-                                duration: 1000,
+                                duration: 2000,
                                 position: 'bottom-center',
                             }) 
                         }catch {
