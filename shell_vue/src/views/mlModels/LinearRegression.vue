@@ -124,8 +124,7 @@
         <div class="block"></div>
                   
         <!-- Predicted VS actual for Training Data-->
-        <apexchart v-if="showTrainingGraphs" type="line" :options="trainingOptionsPredictedVSActual" height=600 :series="trainingSeriesPredictedVSActual"></apexchart>
-
+        <apexchart id = "trainingGraph" v-if="showTrainingGraphs" type="line" :options="trainingOptionsPredictedVSActual" height=600 :series="trainingSeriesPredictedVSActual"></apexchart>
         <!-- Test Model Button -->
         <!-- <button class="button" id="testModelButton" v-if="showTrainingGraphs" v-on:click='showTestGraphs'> Test Model</button> -->
         
