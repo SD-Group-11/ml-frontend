@@ -54,7 +54,7 @@
                     <div class="column is-half">
                         <div class="notification is-warning has-text-black has-text-left" >
                             <!-- <span><h3 v-if="showTestingGraphs">Coefficient of Determination: <span class="accuracy">{{ (testAccuracy).toFixed(2) }} </span></h3></span> -->
-                            <strong v-if="showTestingGraphs">Coefficient of Determination: {{ (testAccuracy).toFixed(2) }}</strong>
+                            <strong v-if="showTestingGraphs" id= "CoefOfDetermination">Coefficient of Determination: {{ (testAccuracy).toFixed(2) }}</strong>
                         </div>
                         
                     </div>
@@ -62,7 +62,7 @@
                         
                         <div class="notification is-warning has-text-black has-text-left" >
                             <!-- <span><h3 v-if="showTestingGraphs">Mean Squared Error: <span class="meansquared">{{ (meanSquaredError).toFixed(2) }} </span></h3></span> -->
-                            <strong v-if="showTestingGraphs">Mean Squared Error: {{ (meanSquaredError).toFixed(2) }}</strong>
+                            <strong id= "MSE" v-if="showTestingGraphs">Mean Squared Error: {{ (meanSquaredError).toFixed(2) }}</strong>
                         </div>
                     </div>
                 </div>
@@ -99,12 +99,12 @@
         <!-- TAB CONTENTS -->
         <div id="line" class="tabcontent" v-if="showTestingGraphs && numberFeatures==1">
                 <!-- testing line graph -->
-                <apexchart type="line" :options="optionsLOBF" height=450 :series="seriesLOBF"></apexchart>
+                <apexchart id="testLineGraph" type="line" :options="optionsLOBF" height=450 :series="seriesLOBF"></apexchart>
         </div>
 
         <div id="dots" class="tabcontent"  v-if="showTestingGraphs && (hideGraphs==true)">
                 <!-- testing predicted vs actual-->
-                <apexchart type="line" :options="testingOptionsPredictedVSActual" height=450 :series="testingSeriesPredictedVSActual"></apexchart>
+                <apexchart id="testPredVsActGraph" type="line" :options="testingOptionsPredictedVSActual" height=450 :series="testingSeriesPredictedVSActual"></apexchart>
         </div>
           
         </div>
