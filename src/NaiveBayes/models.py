@@ -12,6 +12,7 @@ class NaiveBayes(models.Model):
     filename = models.CharField(max_length=300)
     TrainingAccuracy = JSONField(default=dict,null=True)
     TestingAccuracy = models.DecimalField(max_digits=19,decimal_places=10,null=True)
+    f1score = models.DecimalField(max_digits=19,decimal_places=10,null=True)
     AUCScore = models.DecimalField(max_digits=19,decimal_places=10,null=True)
 
 

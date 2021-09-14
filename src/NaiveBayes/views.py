@@ -7,6 +7,9 @@ from datasets.models import Dataset
 from rest_framework.response import Response 
 # Create your views here.
 
+def TrainNaiveBayes(data):
+    ## fill in naive bayes training
+    return
 @api_view(['POST',])
 @csrf_exempt
 
@@ -20,6 +23,7 @@ def PerformNaiveBayes(request):
         dataset = Dataset.objects.get(UserId = UserId, filename=json.dumps(filename))
 
         ## need to use the dataset.data to train a model. Note that tolerance etc won't be used for Naive Bayes
+        results = TrainNaiveBayes(pd.read_json(dataset.data))
     except:
         ## if we fail to find the file and user id , return this
         ## Should almost never happen since the filename is associated with their user id.
