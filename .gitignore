@@ -11,6 +11,8 @@ shell_vue/dist/
  bin/
  lib/python3.7/site-packages
  lib64/python3.7/site-packages
+ lib/
+ lib64/
  
 
 
