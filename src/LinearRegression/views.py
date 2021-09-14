@@ -144,20 +144,25 @@ def discard_training_results(request):
     filename = request.data["Filename"]
     resp = {}
     try:
+        ## try to locate the object and if it exists delete it
         Obj = TrainedModel.objects.get(UserId=id,filename=json.dumps(filename))
         Obj.delete()
         resp['response'] = "Results discarded."
         return Response(resp)
     except:
+        ## failing to locate object so we return a fail
+        ## should never occur though
         resp['response'] = "Failed to delete results"
         return Response(resp)
 
     
 def UploadTrainingResults(userid,filename,coef,TrainAcc):
     try:
+        ## create new object in db and pass it all the necessary info
         DataInstance = TrainedModel(UserId=userid,filename=filename,Trained_coefficients=coef,TrainCoeffDetermination = TrainAcc)
         DataInstance.save()
     except:
+        ## if the object already exists, get the object an update all the data. Once upated save it
         obj = TrainedModel.objects.get(UserId=userid, filename=filename)
         obj.Trained_coefficients = coef
         obj.TrainCoeffDetermination = TrainAcc
@@ -165,9 +170,11 @@ def UploadTrainingResults(userid,filename,coef,TrainAcc):
 
 def uploadResults(id, filename,coef,TrainAcc,TestAcc,MSE):
     try:
+         ## create new object in db and pass it all the necessary info
         DataInstance = TrainedModel(UserId=id,filename=filename,Trained_coefficients=coef,TrainCoeffDetermination = TrainAcc,TestCoeffDetermination=TestAcc,meanSquaredError = MSE)
         DataInstance.save()
     except:
+        ## if the object already exists, get the object an update all the data. Once upated save it
         obj = TrainedModel.objects.get(UserId=id, filename=filename)
         obj.Trained_coefficients = coef
         obj.TrainCoeffDetermination = TrainAcc

@@ -29,6 +29,7 @@ urlpatterns = [
     path('api/v1/', include('djoser.urls.authtoken')),
     path('datasets/',include('datasets.urls')),
     path('LinearRegression/', include('LinearRegression.urls')),
+    path('NaiveBayes/',include('NaiveBayes.urls')),
 
 ]
 

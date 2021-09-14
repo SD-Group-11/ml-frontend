@@ -60,20 +60,25 @@ def receiveData(request):
     if request.method == "POST":
         
         dataset = str(request.body)
+        ## check dataset is not empty
         if(dataset != ''):
+            ## filter the data and get these values from the string
             id,filename,dataset,nullValues = filterData(dataset)
             obj = None
             try:
+                ## check if user already has a file with that name, if so then return it
                 obj =  Dataset.objects.get(UserId = id, filename=filename)
                 resp['response'] = "A dataset with that name already exists"
                 return Response(resp)
             except:
+                ##if no dataset with the name , then try to create the dataset
                 try:
                     DataInstance = Dataset(UserId=id, filename=filename, data=dataset,nullValues=nullValues)
                     DataInstance.save()
                     resp['response'] ='Data Uploaded Successfully'
                     return Response(resp)
                 except:
+                    ##failure to upload. Should never occur unless data is in the incorrect format
                     resp['response'] ='Failed to upload data'
                     return Response(resp)
 
@@ -89,12 +94,14 @@ def receiveData(request):
 @api_view(['POST',])   ## ensures only POST requests can be made to the api
 @csrf_exempt
 def receive_TestData(request):
+    ## same as receive data just that the string coming in has some extra info we need to filter for
     dataset = str(request.body)
     response = {}
     if(dataset != ''):
         
         id,filename,testData,nullValues = filterTestData(dataset)
         try:
+            ## find inital dataset and this new data to the test field
             Obj = Dataset.objects.get(UserId=id, filename=json.dumps(filename))
             Obj.testData = testData
             Obj.save()
@@ -106,13 +113,16 @@ def receive_TestData(request):
 ##json.dumps adds "" to a string
 @api_view(['POST',])   ## ensures only POST requests can be made to the api
 @csrf_exempt
+## view to get meta data about each dataset
 def getDatasetsInfo(request):
 
     response ={}
     UserId = request.data['UserId']
     try:
         i =0 
+        ## filter for all the datasets associated with a User
         AllDatasets = Dataset.objects.filter(UserId=UserId)
+        ## loop through the returned set and get the respective info
         for Obj in AllDatasets:
                 
             dataAttributes = {}
@@ -121,18 +131,20 @@ def getDatasetsInfo(request):
             i+=1
             dataAttributes['id'] = Obj.id
             dataAttributes['filename'] = json.loads(Obj.filename)
-            dataAttributes['datapoints'] = dataset.shape[0]
-            dataAttributes['columns'] = dataset.shape[1]
+            dataAttributes['datapoints'] = dataset.shape[0] ## get the number of rows
+            dataAttributes['columns'] = dataset.shape[1] ## number of columns/features
             dataAttributes['featureNames'] = list(dataset.columns)
             dataAttributes['nullValues'] = Obj.nullValues
-            dataAttributes['created'] = Obj.created
+            dataAttributes['created'] = Obj.created ## date created which automatically filled when object is created
             try:
+                ## if we succed in finding the dataset, check if it was trained and return metrics from database
                 ModelData = TrainedModel.objects.get(UserId=Obj.UserId, filename=Obj.filename)
                 dataAttributes['MSE'] = ModelData.meanSquaredError
                 dataAttributes['TrainAccuracy'] = ModelData.TrainCoeffDetermination
                 dataAttributes['TestAccuracy'] = ModelData.TestCoeffDetermination
             except:
                 dataAttributes['Info'] = "Model not trained yet."
+                ## if the model is not trained then just return the general info about the dataset
             response[i] = dataAttributes
             
         if( not response):
@@ -153,6 +165,7 @@ def getDatasetsInfo(request):
 
 def getDatasetData(request):
 
+    ## just a view that gets the data in the dataset and returns in a specific format, to populate search table in frontend 
     UserId = request.data.get('UserId')
     filename = request.data.get('filename')
     resp = {}
@@ -184,6 +197,7 @@ def doLinearRegression(request):
     tol = request.data['tol']
     
     try:
+        ## locate dataset object and if the tolerance and learning rate are empty strings then set them to auto in the db and use general in regression function
         dataset = Dataset.objects.get(UserId = UserId,filename=json.dumps(filename))
         if(tol ==''):
             tol = "auto"
@@ -198,9 +212,10 @@ def doLinearRegression(request):
 
                     ## I need to send in the dataset, learning rate, tol and split
         results =[]
+        ## when no test data has been uploaded train on full training data
         if(dataset.testData == {}): 
             results = TrainingLinearRegression(dataset.UserId,dataset.filename,dataset.learningRate,dataset.tol,pd.read_json(dataset.data))
-            # results  = linearRegression(dataset.UserId,dataset.filename,dataset.learningRate,dataset.tol,pd.read_json(dataset.data))
+            ## below is everything returned for training data . Metrics etc
             resp['jsonFeatures'] = results[0]
             resp['coefficients'] = results[1]
             resp['TrainX'] = results[2]
@@ -210,7 +225,9 @@ def doLinearRegression(request):
             resp["Intercept"] = results[6]
 
         else:
+            ## test data uploaded, then train again and test this time 
             results  = linearRegression(dataset.UserId,dataset.filename,dataset.learningRate,dataset.tol,pd.read_json(dataset.data),pd.read_json(dataset.testData))
+            ##results for training and testing used in front end for the reports etc
             resp['jsonFeatures'] = results[0]
             resp['coefficients'] = results[1]
             resp['TrainX'] = results[2]
@@ -242,12 +259,15 @@ def delete_dataset(request):
     filename = request.data["Filename"]
     response ={}
     try:
+        ## get dataset to be deleted in the db
         dataset = Dataset.objects.get(UserId = UserId, filename=json.dumps(filename))
         try:
+            ## if model was trained on , get that data as well and delete it
             Obj = TrainedModel.objects.get(UserId=UserId, filename=json.dumps(filename))
             Obj.delete()
         except:
             pass
+        ##delete dataset
         dataset.delete()
         response['success'] = "Dataset Successfully deleted."
 
@@ -267,6 +287,7 @@ def getTrainedDatasets(request):
     
     try:
         i = 1
+        ##get queryset of all datasets where they occur in the TrainedModel db
         AllTrained = TrainedModel.objects.filter(UserId=UserId)
         for Obj in AllTrained:
             response[i] = json.loads(Obj.filename)
@@ -286,7 +307,9 @@ def check_if_test_data_is_available(request):
     filename = request.data["Filename"]
     response = {}
     try:
+        ## get dataset object
         Obj = Dataset.objects.get(UserId=UserId, filename=json.dumps(filename))
+        ## if test data field is empty dict then return no test data
         if(Obj.testData != {}): 
             response['response'] = "Test Data exists"
         else:
