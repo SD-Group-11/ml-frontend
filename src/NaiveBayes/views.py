@@ -13,7 +13,7 @@ def TrainNaiveBayes(data,id,filename):
     return
 
 def TestNaiveBayes(data,testdata,id,filename):
-    ## fill in naive bayes training
+    ## fill in naive bayes testing 
     return
 @api_view(['POST',])
 @csrf_exempt
@@ -40,7 +40,58 @@ def PerformNaiveBayes(request):
         ## Should almost never happen since the filename is associated with their user id.
         response['response'] = "Failed to locate file "
         return Response(response)
-    
+
+@api_view(['POST',])   ## ensures only POST requests can be made to the api
+@csrf_exempt
+## view to get meta data about each dataset
+def getDatasetsInfo(request):
+
+    response ={}
+    UserId = request.data['UserId']
+    try:
+        i =0 
+        ## filter for all the datasets associated with a User and linear regression
+        AllDatasets = Dataset.objects.filter(UserId=UserId,model = "Naive Bayes")
+        ## loop through the returned set and get the respective info
+        for Obj in AllDatasets:
+                
+            dataAttributes = {}
+           
+            dataset = pd.read_json(Obj.data)
+            i+=1
+            dataAttributes['id'] = Obj.id
+            dataAttributes['filename'] = json.loads(Obj.filename)
+            dataAttributes['datapoints'] = dataset.shape[0] ## get the number of rows
+            dataAttributes['columns'] = dataset.shape[1] ## number of columns/features
+            dataAttributes['featureNames'] = list(dataset.columns)
+            dataAttributes['nullValues'] = Obj.nullValues
+            dataAttributes['created'] = Obj.created ## date created which automatically filled when object is created
+            try:
+                ## if we succed in finding the dataset, check if it was trained and return metrics from database
+                ModelData = NaiveBayes.objects.get(UserId=Obj.UserId, filename=Obj.filename)
+                dataAttributes['MSE'] = ModelData.meanSquaredError
+                dataAttributes['TrainAccuracy'] = ModelData.TrainCoeffDetermination
+                dataAttributes['TestAccuracy'] = ModelData.TestCoeffDetermination
+            except:
+                dataAttributes['Info'] = "Model not trained yet."
+                ## if the model is not trained then just return the general info about the dataset
+            response[i] = dataAttributes
+            
+        if( not response):
+             response['error'] = "No datasets have been uploaded."
+             return Response(response)
+
+        return Response(response)
+
+    except:
+
+        response['error'] = "No datasets have been uploaded."
+        return Response(response)
+
+
+
+
+
 @api_view(['POST',])
 @csrf_exempt
 ## View to check which datasets have been trained

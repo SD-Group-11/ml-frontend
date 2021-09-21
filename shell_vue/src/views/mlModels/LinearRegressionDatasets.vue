@@ -468,6 +468,7 @@
                 var formData = new FormData();
                 formData.append("dataset",file);
                 formData.append("id",this.userDetails.id);
+                formData.append("model","Linear Regression");
                 await axios
                     .post('/datasets/uploadData',formData)
                     .then(response => {
@@ -506,6 +507,7 @@
                 testFormData.append("dataset",testFile);
                 testFormData.append("id",this.userDetails.id);
                 testFormData.append("TrainingFileName", trainsetFilename);
+                testFormData.append("model","Linear Regression");
                 await axios
                     .post('/datasets/uploadTestData',testFormData)
                     .then(response => {
@@ -571,9 +573,10 @@
             async getDatasetData(filename){
                 this.$store.commit('setIsLoading',true)
                 console.log(filename)
-                console.log(this.userDetails.id)
-                const id =  this.userDetails.id
-                const data = {'UserId':id,"filename":filename}
+                console.log(this.userDetails.id);
+                const id =  this.userDetails.id;
+                const model = "Linear Regression";
+                const data = {'UserId':id,"filename":filename,"ModelName":model};
                 await axios
                 .post("/datasets/getDatasetData",data)
                 //Store the response and use it to get converted into a csv file for download
@@ -615,7 +618,8 @@
             async getData(filename){
                 this.$store.commit('setIsLoading',true)
                 const id =  this.userDetails.id
-                const data = {'UserId':id,"filename":filename}
+                const model = "Linear Regression";
+                const data = {'UserId':id,"filename":filename,"ModelName":model}
                 await axios
                 .post("/datasets/getDatasetData",data)
                 .then(response => {
@@ -701,7 +705,8 @@
                     console.log(filename)
                     console.log(this.userDetails.id)
                     const id =  this.userDetails.id
-                    const data = {'UserID':id,"Filename":filename}
+                    const model = "Linear Regression"
+                    const data = {'UserID':id,"Filename":filename,"ModelName":model}
                     await axios
                     .post("/datasets/deleteDataset",data)
                     .then(response => {
