@@ -10,10 +10,13 @@ from rest_framework.response import Response
 
 def TrainNaiveBayes(data,id,filename):
     ## fill in naive bayes training
+    ## save the results into db
     return
 
 def TestNaiveBayes(data,testdata,id,filename):
-    ## fill in naive bayes testing 
+    ## fill in naive bayes training and testing 
+    ## will be the same as TrainNaiveBayes except we also test because we have test data
+    ## remember to save the results
     return
 @api_view(['POST',])
 @csrf_exempt
@@ -69,9 +72,10 @@ def getDatasetsInfo(request):
             try:
                 ## if we succed in finding the dataset, check if it was trained and return metrics from database
                 ModelData = NaiveBayes.objects.get(UserId=Obj.UserId, filename=Obj.filename)
-                dataAttributes['MSE'] = ModelData.meanSquaredError
-                dataAttributes['TrainAccuracy'] = ModelData.TrainCoeffDetermination
-                dataAttributes['TestAccuracy'] = ModelData.TestCoeffDetermination
+                dataAttributes['f1'] = ModelData.f1score
+                dataAttributes['AUC'] = ModelData.AUCScore
+                dataAttributes['TrainingAccuracy'] = ModelData.TrainingAccuracy
+                dataAttributes['TestingAccuracy'] = ModelData.TestingAccuracy
             except:
                 dataAttributes['Info'] = "Model not trained yet."
                 ## if the model is not trained then just return the general info about the dataset

@@ -2,7 +2,9 @@ from django.urls import path
 
 from .views import(
     trained_datasets,
-    discard_training_results
+    discard_training_results,
+    getDatasetsInfo,
+    PerformNaiveBayes
 ) 
 
 app_name ='NaiveBayes'
@@ -10,4 +12,6 @@ app_name ='NaiveBayes'
 urlpatterns =[
     path('trainedDatasets',trained_datasets),
     path("discardResults",discard_training_results),
+    path('getDatasetsInfo',getDatasetsInfo),
+    path('PerformNaiveBayes',PerformNaiveBayes)
 ]

@@ -38,7 +38,6 @@ def filterTestData(dataset):
     data_io = io.StringIO(data_str)
     df = pd.read_csv(data_io, sep=",")
     dataset = pd.DataFrame.to_json(df)
-    print(newd)
     num = newd[len(newd)-11]
     id = int(num[:len(num)-2])
     filename = newd[len(newd)-7].replace(r'\r', '')
