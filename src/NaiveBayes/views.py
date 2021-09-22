@@ -28,7 +28,7 @@ def PerformNaiveBayes(request):
     response ={}
     try:
         ##get the respective dataset they want to train on
-        dataset = Dataset.objects.get(UserId = UserId, filename=json.dumps(filename))
+        dataset = Dataset.objects.get(UserId = UserId, filename=json.dumps(filename),model = "Naive Bayes")
 
         ## Note that tolerance etc won't be used for Naive Bayes
         ## If test data is available, train and test together
