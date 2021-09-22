@@ -99,8 +99,35 @@
         <div class="block"></div>
                   
         <!-- confusion Matrix for Training Data-->
-        <apexchart v-if="showConfusionMatrix"  height="600" type="heatmap" :options="confusionMatrixOptions" :series="confusionMatrixSeries"></apexchart>
-   
+        <!-- GRAPH TABS FOR TESTING -->
+        <div class="tabs is-toggle is-toggle-rounded is-centered" v-if="showTrainingResults">
+            <ul>
+                <li id="show_CF_Btn" class="is-active tablinks" v-on:click="openTab($event, 'confusionMatrix','show_CF_Btn')">
+                    <a>
+                        <span class="icon is-small"><i class="fas fa-table" aria-hidden="true"></i></span>
+                        <span>Confusion Matrix</span>
+                    </a>
+                </li>
+                <li id="show_ROC_Btn" class="tablinks" v-on:click="openTab($event, 'ROC','show_ROC_Btn')">
+                    <a>
+                        <span class="icon is-small"><i class="fas fa-chart-line" aria-hidden="true"></i></span>
+                        <span>ROC curve</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+
+        <!-- TAB CONTENTS -->
+        <div id="confusionMatrix" class="tabcontent">
+                <!-- testing line graph -->
+                <apexchart v-if="showConfusionMatrix&&tabsInitialized"  height="600" type="heatmap" :options="confusionMatrixOptions" :series="confusionMatrixSeries"></apexchart>
+        </div>
+
+        <div id="ROC" class="tabcontent">
+                <!-- testing predicted vs actual-->
+            <apexchart v-if="showROC&&tabsInitialized"  height="600" type="line" :options="ROCOptions" :series="ROCSeries"></apexchart>
+        </div>
         <!-- Discard Results Button -->
         <button class="button is-danger is-pulled-right"  v-if="showTrainingResults" v-on:click='DiscardTrainResults'><strong>Discard Results</strong></button>
  
@@ -167,15 +194,22 @@
                 AUC:-1,
                 numberFeatures:-1,
                 confusionMatrix:[],
+                ROC:[],
   
 
                 
-               //Apex chart confusion matrix data
+               //Apex chart data for confusion matrix and ROC
                 confusionMatrixOptions:[],
                 confusionMatrixSeries: [],
+                ROCOptions: [],
+                ROCSeries:[],
+            
 
-                //controls wether the confusion matrix chart is displayed
+                //booleans to control whether the confusion matrix and the ROC chart should be displayed
                 showConfusionMatrix:false,
+                showROC:false,
+                tabsInitialized:false,
+
                 //controls wether training results are displayed
                 showTrainingResults:false,
             }
@@ -204,7 +238,7 @@
                         title: {
                             text: 'Predicted',
                             style: {
-                                fontSize: '1.5rem'
+                                fontSize: '1.2rem'
                             }
                         },
                         labels: {
@@ -218,7 +252,7 @@
                         title: {
                             text: 'Actual',
                             style: {
-                                fontSize: '1.5rem'
+                                fontSize: '1.2rem'
                             }
                         },
                         labels: {
@@ -260,6 +294,92 @@
                 this.confusionMatrixSeries = confusionMatrixSeries
                 this.showConfusionMatrix = true;
                 return
+            },
+            
+            createROCChart(){
+                var ROC_SeriesArray = []
+                for(let i=0;i<this.ROC.length;i++){
+                    //lineObj is a JSON object containing the name of the class for the ROC curve and the data for the curve
+                    var lineObj = this.ROC[i]
+                    var XYPairs = []
+                    for(let j=0;j<lineObj.fpr_values.length;j++){
+                          XYPairs.push({x: lineObj.fpr_values[j], y: lineObj.tpr_values[j]})
+                    }
+                    var ROC_Series = {
+                        name:lineObj.class,
+                        data:XYPairs
+                    }
+                    ROC_SeriesArray.push(ROC_Series)
+               
+                }
+                this.ROCSeries = ROC_SeriesArray
+                this.ROCOptions={
+                    stroke: {
+                        curve: 'stepline',
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    title: {
+                        text: 'ROC chart',
+                        align: 'center',
+                        margin:40,
+                        style: {
+                            fontweight: 'bold',
+                            fontSize: '1.5rem',
+        
+                        }
+                    },
+                    markers: {
+                        hover: {
+                            sizeOffset: 4
+                            }
+                    },
+                    xaxis: {
+                        min:0,
+                        max:1,
+                        decimalsInFloat: 4,
+                        type: 'numeric',
+                        title: {
+                            text: 'False Positive Rate',
+                            offsetY:5,
+                            style: {
+                                fontSize: '1.2rem'
+                            }
+
+                        },
+                        labels: {
+                            style: {
+                                fontSize: '1rem'
+                            }
+                        },
+                    },
+                    yaxis: {
+                        title: {
+                            text: 'True Positive Rate',
+                            style: {
+                                fontSize: '1.2rem',
+                    
+                            },
+                        
+                        },
+                        decimalsInFloat: 2,
+                        min: 0,
+                        max: 1,
+                        labels: {
+                            style: {
+                                fontSize: '1rem'
+                            }
+                        }
+                    }
+                }
+                
+                // this.ROCSeries=[
+                //     {
+                //     data: ROC_XYPairs[0]
+                // }
+                // ]
+                this.showROC=true;
             },
 
             pageNav(route){
@@ -333,7 +453,14 @@
                 .then(response =>{
                     this.extractData(response.data)
                     this.createConfusionMatrix()
-                    
+                    this.createROCChart()
+                    //neither the confusion matrix or the ROC graph will show unitl one of the tabes is clicked on
+                    //to fix this openTab is called once here to display the confusion matrix by default
+                    this.$nextTick(()=> {
+                        // DOM updated
+                        document.getElementById('show_CF_Btn').click();
+
+                    })
                     this.$store.commit('setIsLoading',false)
 
                 })
@@ -470,6 +597,7 @@
                 // f1 score and AUC
                 this.f1Socre = responseData['f1Score']
                 this.AUC = responseData['AUC']
+                this.ROC = responseData['ROC']
                 this.showTrainingResults=true;
                 //number of features
                 // this.numberFeatures = Object.values(responseData['jsonFeatures'])[0].length -1
@@ -479,7 +607,8 @@
             
 
             // tabs
-            openTab(event, tabId){
+            openTab(event, tabId,tabBtnId){
+                this.tabsInitialized=true;
             //get all elements w the tab content and hide it
                var tabcontent = document.getElementsByClassName('tabcontent')
                for(let i=0; i<tabcontent.length; i++)
@@ -495,7 +624,8 @@
 
             //show curr tab and add is-active to that tab
                 document.getElementById(tabId).style.display = 'block'
-                event.currentTarget.className += "is-active"
+                document.getElementById(tabBtnId).classList.add('is-active')
+                //event.target.classList.add('is-active')
             }
         }
     }
