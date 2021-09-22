@@ -201,7 +201,7 @@
                                         
                                         <button class="button is-normal is-inverse has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" v-on:click ="inputTestset = true; tempTrainFilename = dataset.filename;">
                                         
-                                            <input class="file-input" id="myTestFile" type="file" accept=".csv" v-if="inputTestset"  v-on:input="fileValidation('myTestFile'); testsetUploadable = true;">
+                                            <input class="file-input" v-bind:id="dataset.filename" type="file" accept=".csv" v-if="inputTestset"  v-on:input="fileValidation(dataset.filename); testsetUploadable = true;">
                                             
                                             <span class="icon is-normal">
                                                 <i class="fas fa-chart-line"></i>
@@ -468,6 +468,7 @@
                 var formData = new FormData();
                 formData.append("dataset",file);
                 formData.append("id",this.userDetails.id);
+                formData.append("model","Linear Regression");
                 await axios
                     .post('/datasets/uploadData',formData)
                     .then(response => {
@@ -501,11 +502,12 @@
                 console.log('trainsetFilename',trainsetFilename)
                 this.uploadedTestData=false;
                 this.$store.commit('setIsLoading',true)
-                var testFile = document.getElementById("myTestFile").files[0];
+                var testFile = document.getElementById(trainsetFilename).files[0];
                 var testFormData = new FormData();
                 testFormData.append("dataset",testFile);
                 testFormData.append("id",this.userDetails.id);
                 testFormData.append("TrainingFileName", trainsetFilename);
+                testFormData.append("model","Linear Regression");
                 await axios
                     .post('/datasets/uploadTestData',testFormData)
                     .then(response => {
@@ -571,9 +573,10 @@
             async getDatasetData(filename){
                 this.$store.commit('setIsLoading',true)
                 console.log(filename)
-                console.log(this.userDetails.id)
-                const id =  this.userDetails.id
-                const data = {'UserId':id,"filename":filename}
+                console.log(this.userDetails.id);
+                const id =  this.userDetails.id;
+                const model = "Linear Regression";
+                const data = {'UserId':id,"filename":filename,"ModelName":model};
                 await axios
                 .post("/datasets/getDatasetData",data)
                 //Store the response and use it to get converted into a csv file for download
@@ -615,7 +618,8 @@
             async getData(filename){
                 this.$store.commit('setIsLoading',true)
                 const id =  this.userDetails.id
-                const data = {'UserId':id,"filename":filename}
+                const model = "Linear Regression";
+                const data = {'UserId':id,"filename":filename,"ModelName":model}
                 await axios
                 .post("/datasets/getDatasetData",data)
                 .then(response => {
@@ -701,7 +705,8 @@
                     console.log(filename)
                     console.log(this.userDetails.id)
                     const id =  this.userDetails.id
-                    const data = {'UserID':id,"Filename":filename}
+                    const model = "Linear Regression"
+                    const data = {'UserID':id,"Filename":filename,"ModelName":model}
                     await axios
                     .post("/datasets/deleteDataset",data)
                     .then(response => {
@@ -711,9 +716,7 @@
 
                             var Type = 'is-warning';
                             this.uploadedTestData=true;
-                            //this.uploadedTestFilename = `${testFile.name}`
-                            // Not sure if the next two lines are necesssary just yet
-                            // this.getUploaded(this.uploadedTestFilename) 
+                           
                             this.getUserDatasets() 
                             toast({
                                 message: resp,
@@ -728,10 +731,7 @@
 
                             var Type = 'is-danger';
                             this.uploadedTestData=true;
-                            //this.uploadedTestFilename = `${testFile.name}`
-                            // Not sure if the next two lines are necesssary just yet
-                            // this.getUploaded(this.uploadedTestFilename) 
-                            // this.getUserDatasets() 
+                          
                             toast({
                                 message: resp,
                                 type: Type,
@@ -741,36 +741,7 @@
                                 position: 'bottom-center',
                             }) 
                         }
-                        
-                        // var Type;
-                        // if (resp == 'Successfully uploaded test data.'){
-                        //     Type = 'is-success';
-                        //     this.uploadedTestData=true;
-                        //     //this.uploadedTestFilename = `${testFile.name}`
-                        //     // Not sure if the next two lines are necesssary just yet
-                        //     // this.getUploaded(this.uploadedTestFilename) 
-                        //     // this.getUserDatasets() 
-                        //     toast({
-                        //         message: resp,
-                        //         type: Type,
-                        //         dismissible: true,
-                        //         pauseOnHover: true,
-                        //         duration: 1000,
-                        //         position: 'bottom-center',
-                        //     }) 
-                        // }
-                        // else{
-                        //     this.uploadedTestData =false;
-                        //     Type = 'is-danger';
-                        //     toast({
-                        //         message: resp,
-                        //         type: Type,
-                        //         dismissible: true,
-                        //         pauseOnHover: true,
-                        //         duration: 1000,
-                        //         position: 'bottom-center',
-                        //     })  
-                        // }
+
                     });
                 this.$store.commit('setIsLoading',false)
             }
