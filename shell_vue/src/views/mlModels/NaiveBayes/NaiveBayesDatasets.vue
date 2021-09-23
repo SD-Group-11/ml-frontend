@@ -2,8 +2,8 @@
     <div class="container is-fluid">
 
         <GlobalEvents
-            @keydown.left="pageNav('/naive-bayes-tests')"
-            @keydown.right="pageNav('/naive-bayes-training')"
+            @keydown.left="pageNav('/naive-bayes-test')"
+            @keydown.right="pageNav('/naive-bayes-train')"
         />
 
         <div class="container is-fluid">
@@ -13,7 +13,7 @@
                     
                 <div class="columns">
                     <div class="column is-one-fifth">
-                        <div class="button is-pulled-left is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/naive-bayes-tests')" data-tooltip="Test a model">
+                        <div class="button is-pulled-left is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/naive-bayes-test')" data-tooltip="Test a model">
                             <span class="icon is-normal">
                                 <i class="fas fa-lg fa-arrow-left"></i>                                
                             </span>
@@ -25,7 +25,7 @@
                     </div>
                     
                     <div class="column is-one-fifth">
-                        <div class="button is-pulled-right is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/naive-bayes-training')" data-tooltip="Train a model">
+                        <div class="button is-pulled-right is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/naive-bayes-train')" data-tooltip="Train a model">
                             <span class="icon is-normal">
                                 <i class="fas fa-lg fa-arrow-right"></i>
                             </span>

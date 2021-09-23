@@ -66,7 +66,7 @@
                     </a>
 
                     <a class="navbar-item ">
-                            <router-link to="/naive-bayes-test"><strong>Naive Bayes</strong></router-link>
+                            <router-link to="/naive-bayes-datasets"><strong>Naive Bayes</strong></router-link>
                     </a>
 
                     <!-- <div class="navbar-item has-dropdown is-hoverable">
