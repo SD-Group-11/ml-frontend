@@ -65,7 +65,11 @@
                             <router-link to="/linear-regression-datasets"><strong>Linear Regression</strong></router-link>
                     </a>
 
-                    <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-item ">
+                            <router-link to="/naive-bayes-test"><strong>Niave Bayes</strong></router-link>
+                    </a>
+
+                    <!-- <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
                             
                             <strong>Naive Bayes</strong>
@@ -76,7 +80,7 @@
                                 <strong>Coming Soon...</strong>
                             </a>    
                         </div>  
-                    </div>
+                    </div> -->
 
 
                 </template>

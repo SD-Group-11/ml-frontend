@@ -265,6 +265,7 @@
                         console.log("SUCCESS MY GUY LETS GOOOO")
                         this.TrainModel()
 
+
                     }
                 })
                 .catch(error => {

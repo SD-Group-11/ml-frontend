@@ -20,6 +20,8 @@ import LinearRegression from '../views/mlModels/LinearRegression.vue'
 import LinearRegressionDatasets from '../views/mlModels/LinearRegressionDatasets.vue'
 import LinearRegressionTests from '../views/mlModels/LinearRegressionTests.vue'
 
+import NaiveBayesTest from '../views/mlModels/NaiveBayesTest.vue'
+
 const routes = [
   {
     path: '/',
@@ -120,7 +122,20 @@ const routes = [
       modelName: 'linReg',
       type: 2
     }    
+  },
+
+  {
+    path: '/naive-bayes-test',
+    name: 'NaiveBayesTest',
+    component: NaiveBayesTest,
+    meta: {
+      requireLogin: true,
+      model: true,
+      modelName: 'linReg',
+      type: 2
+    } 
   }
+  
 ]
 
 const router = createRouter({
