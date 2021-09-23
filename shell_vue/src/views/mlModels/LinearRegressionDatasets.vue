@@ -1,10 +1,42 @@
 <template>   
-    <div class="container">
+    <div class="container is-fluid">
 
-        <div class="container">
-            <div class="notification is-info has-text-centered" >
-                <strong><h3 class="title is-3">Linear Regression Datasets</h3></strong>
+        <GlobalEvents
+            @keydown.left="pageNav('/linear-regression-tests')"
+            @keydown.right="pageNav('/linear-regression')"
+        />
+
+        <div class="container is-fluid">
+            <!-- <div class="container is-fluid"> -->
+                
+                <div class="notification is-info has-text-centered" >
+                    
+                <div class="columns">
+                    <div class="column is-one-fifth">
+                        <div class="button is-pulled-left is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/linear-regression-tests')" data-tooltip="Test a model">
+                            <span class="icon is-normal">
+                                <i class="fas fa-lg fa-arrow-left"></i>                                
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="column is-three-fifths">
+                        <strong><h3 class="title is-3">Datasets</h3></strong>
+                    </div>
+                    
+                    <div class="column is-one-fifth">
+                        <div class="button is-pulled-right is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/linear-regression')" data-tooltip="Train a model">
+                            <span class="icon is-normal">
+                                <i class="fas fa-lg fa-arrow-right"></i>
+                            </span>
+                        </div>
+                    </div>
+                    
+                </div>
+
             </div>
+            <div class="block"></div>
+            
             <form @submit.prevent="submitForm"> <!-- style="background-color:lightyellow;" -->
                 <div class="columns">
                     <!-- <div class="column is-pulled-right">
@@ -121,6 +153,7 @@
                                         </template>
                                     </p>
 
+
                                     <p class="control">
                                         <button class="button is-normal is-info is-inverted has-tooltip-arrow has-tooltip-info" data-tooltip="View dataset" type="button" v-on:click ="getData(dataset.filename)">
                                     
@@ -134,6 +167,7 @@
 
                                         </button>
                                     </p>
+
 
                                     <p class="control">
                                         <button class="button is-normal is-link has-tooltip-arrow has-tooltip-info" data-tooltip="Download dataset" type="button" v-on:click ="getDatasetData(dataset.filename)">
@@ -167,7 +201,7 @@
                                         
                                         <button class="button is-normal is-inverse has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" v-on:click ="inputTestset = true; tempTrainFilename = dataset.filename;">
                                         
-                                            <input class="file-input" id="myTestFile" type="file" accept=".csv" v-if="inputTestset"  v-on:input="fileValidation('myTestFile'); testsetUploadable = true;">
+                                            <input class="file-input" v-bind:id="dataset.filename" type="file" accept=".csv" v-if="inputTestset"  v-on:input="fileValidation(dataset.filename); testsetUploadable = true;">
                                             
                                             <span class="icon is-normal">
                                                 <i class="fas fa-chart-line"></i>
@@ -293,6 +327,8 @@
 </template>
 
 <style scoped>
+
+
     
     ::v-deep .modal-container {
         display: flex;
@@ -332,8 +368,11 @@
     import axios from 'axios'
     import {toast} from 'bulma-toast'
     import { AgGridVue } from "ag-grid-vue3"
+    import { GlobalEvents } from 'vue-global-events'
+
     export default {
         name: "LinearRegressionDatasets",
+
         data() {
             return{
                 userDetails: [],
@@ -363,12 +402,16 @@
             }
         },
         components: {
-            AgGridVue
+            AgGridVue,
+            GlobalEvents
         },
         mounted(){
             this.getAccount()
         },
         methods:{
+            pageNav(route){
+                this.$router.push(route)
+            },
             async getAccount(){
                 this.$store.commit('setIsLoading',true)
                 this.userDetails=[]
@@ -425,6 +468,7 @@
                 var formData = new FormData();
                 formData.append("dataset",file);
                 formData.append("id",this.userDetails.id);
+                formData.append("model","Linear Regression");
                 await axios
                     .post('/datasets/uploadData',formData)
                     .then(response => {
@@ -458,11 +502,12 @@
                 console.log('trainsetFilename',trainsetFilename)
                 this.uploadedTestData=false;
                 this.$store.commit('setIsLoading',true)
-                var testFile = document.getElementById("myTestFile").files[0];
+                var testFile = document.getElementById(trainsetFilename).files[0];
                 var testFormData = new FormData();
                 testFormData.append("dataset",testFile);
                 testFormData.append("id",this.userDetails.id);
                 testFormData.append("TrainingFileName", trainsetFilename);
+                testFormData.append("model","Linear Regression");
                 await axios
                     .post('/datasets/uploadTestData',testFormData)
                     .then(response => {
@@ -528,9 +573,10 @@
             async getDatasetData(filename){
                 this.$store.commit('setIsLoading',true)
                 console.log(filename)
-                console.log(this.userDetails.id)
-                const id =  this.userDetails.id
-                const data = {'UserId':id,"filename":filename}
+                console.log(this.userDetails.id);
+                const id =  this.userDetails.id;
+                const model = "Linear Regression";
+                const data = {'UserId':id,"filename":filename,"ModelName":model};
                 await axios
                 .post("/datasets/getDatasetData",data)
                 //Store the response and use it to get converted into a csv file for download
@@ -572,7 +618,8 @@
             async getData(filename){
                 this.$store.commit('setIsLoading',true)
                 const id =  this.userDetails.id
-                const data = {'UserId':id,"filename":filename}
+                const model = "Linear Regression";
+                const data = {'UserId':id,"filename":filename,"ModelName":model}
                 await axios
                 .post("/datasets/getDatasetData",data)
                 .then(response => {
@@ -658,7 +705,8 @@
                     console.log(filename)
                     console.log(this.userDetails.id)
                     const id =  this.userDetails.id
-                    const data = {'UserID':id,"Filename":filename}
+                    const model = "Linear Regression"
+                    const data = {'UserID':id,"Filename":filename,"ModelName":model}
                     await axios
                     .post("/datasets/deleteDataset",data)
                     .then(response => {
@@ -666,18 +714,16 @@
                         try {
                             resp = response.data['success']
 
-                            var Type = 'is-success';
+                            var Type = 'is-warning';
                             this.uploadedTestData=true;
-                            //this.uploadedTestFilename = `${testFile.name}`
-                            // Not sure if the next two lines are necesssary just yet
-                            // this.getUploaded(this.uploadedTestFilename) 
+                           
                             this.getUserDatasets() 
                             toast({
                                 message: resp,
                                 type: Type,
                                 dismissible: true,
                                 pauseOnHover: true,
-                                duration: 1000,
+                                duration: 2000,
                                 position: 'bottom-center',
                             }) 
                         }catch {
@@ -685,10 +731,7 @@
 
                             var Type = 'is-danger';
                             this.uploadedTestData=true;
-                            //this.uploadedTestFilename = `${testFile.name}`
-                            // Not sure if the next two lines are necesssary just yet
-                            // this.getUploaded(this.uploadedTestFilename) 
-                            // this.getUserDatasets() 
+                          
                             toast({
                                 message: resp,
                                 type: Type,
@@ -698,36 +741,7 @@
                                 position: 'bottom-center',
                             }) 
                         }
-                        
-                        // var Type;
-                        // if (resp == 'Successfully uploaded test data.'){
-                        //     Type = 'is-success';
-                        //     this.uploadedTestData=true;
-                        //     //this.uploadedTestFilename = `${testFile.name}`
-                        //     // Not sure if the next two lines are necesssary just yet
-                        //     // this.getUploaded(this.uploadedTestFilename) 
-                        //     // this.getUserDatasets() 
-                        //     toast({
-                        //         message: resp,
-                        //         type: Type,
-                        //         dismissible: true,
-                        //         pauseOnHover: true,
-                        //         duration: 1000,
-                        //         position: 'bottom-center',
-                        //     }) 
-                        // }
-                        // else{
-                        //     this.uploadedTestData =false;
-                        //     Type = 'is-danger';
-                        //     toast({
-                        //         message: resp,
-                        //         type: Type,
-                        //         dismissible: true,
-                        //         pauseOnHover: true,
-                        //         duration: 1000,
-                        //         position: 'bottom-center',
-                        //     })  
-                        // }
+
                     });
                 this.$store.commit('setIsLoading',false)
             }

@@ -5,6 +5,7 @@ from django.db.models import JSONField
 class Dataset(models.Model):
     UserId = models.IntegerField(unique=False,null=False)
     filename = models.CharField(max_length=300)
+    model = models.CharField(max_length=300,default=None)
     learningRate = models.CharField(max_length = 300,null=True)
     tol = models.CharField(max_length=300,null=True)
     data = JSONField(default=dict)
@@ -14,4 +15,4 @@ class Dataset(models.Model):
     
 
     class Meta:
-        unique_together = (('UserId', 'filename'),)
+        unique_together = (('UserId', 'filename','model'),)

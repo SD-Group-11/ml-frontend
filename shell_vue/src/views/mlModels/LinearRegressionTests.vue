@@ -1,9 +1,42 @@
-<template>
-    <div class="container is-fluid">
+<template>   
+    
+    <div class="container is-fluid " >
+        <!-- <KeyboardEvents v-on:keyup="keyboardEvent"></KeyboardEvents> -->
+        <GlobalEvents
+            @keydown.left="pageNav('/linear-regression')"
+            @keydown.right="pageNav('/linear-regression-datasets')"
+        />
+
         <div class="container is-fluid">
-            <div class="notification is-info has-text-centered" >
-                <strong><h3 class="title is-3">Linear Regression Model Tester</h3></strong>
+            <!-- <div class="container is-fluid"> -->
+                
+                <div class="notification is-info has-text-centered" >
+                    
+                <div class="columns">
+                    <div class="column is-one-fifth">
+                        <div class="button is-pulled-left is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/linear-regression')" data-tooltip="Train a model">
+                            <span class="icon is-normal">
+                                <i class="fas fa-lg fa-arrow-left"></i>                                
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="column">
+                        <strong><h3 class="title is-3">Model Testing</h3></strong>
+                    </div>
+                    
+                    <div class="column is-one-fifth">
+                        <div class="button is-pulled-right is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/linear-regression-datasets')" data-tooltip="Manage datasets">
+                            <span class="icon is-normal">
+                                <i class="fas fa-lg fa-arrow-right"></i>
+                            </span>
+                        </div>
+                    </div>
+                    
+                </div>
+
             </div>
+            <div class="block"></div>
 
             <form @submit.prevent="submitForm"> 
                 <div class="columns">
@@ -11,7 +44,7 @@
                     <!-- should be one or the other, need to sort out the logic -->
                     <!-- add the upload test data here  -->
 
-                    <div class="column is-half">
+                    <div class="column is-one-fifth">
                         <!-- Selecting trained model -->
                         <div class="field ">
                             <label class="label">Trained Model</label>
@@ -22,7 +55,7 @@
 
                         </div>
                         <!-- possibly set this to train secretly and select -->
-                        <button class="button" id="selectButton" v-on:click='checkTestingData()'>Select</button>
+                        <button style="text-align: center;" class="button has-text-black" id="selectButton" v-on:click='checkTestingData()'>Select</button>
                         </div>
 
                     </div>
@@ -40,8 +73,9 @@
                 </div>
             </div>
 
+            
             <!-- test model just like on train page : v-on:click='showTestGraphs' -->
-            <button class="button" id="testModelButton" v-on:click='showTestGraphs'>Test Model</button>
+            <button style="text-align: center;" class="button is-info has-text-black" id="testModelButton" v-on:click='showTestGraphs'><strong>Test Model</strong></button>
             <!-- <button class="button" id="testModelButton" v-on:click='checkTestingData()'>Test Model</button> -->
 
 
@@ -54,7 +88,7 @@
                     <div class="column is-half">
                         <div class="notification is-warning has-text-black has-text-left" >
                             <!-- <span><h3 v-if="showTestingGraphs">Coefficient of Determination: <span class="accuracy">{{ (testAccuracy).toFixed(2) }} </span></h3></span> -->
-                            <strong v-if="showTestingGraphs" id= "CoefOfDetermination">Coefficient of Determination: {{ (testAccuracy).toFixed(2) }}</strong>
+                            <strong v-if="showTestingGraphs">Coefficient of Determination: {{ (testAccuracy).toFixed(2) }}</strong>
                         </div>
                         
                     </div>
@@ -62,7 +96,7 @@
                         
                         <div class="notification is-warning has-text-black has-text-left" >
                             <!-- <span><h3 v-if="showTestingGraphs">Mean Squared Error: <span class="meansquared">{{ (meanSquaredError).toFixed(2) }} </span></h3></span> -->
-                            <strong id= "MSE" v-if="showTestingGraphs">Mean Squared Error: {{ (meanSquaredError).toFixed(2) }}</strong>
+                            <strong v-if="showTestingGraphs">Mean Squared Error: {{ (meanSquaredError).toFixed(2) }}</strong>
                         </div>
                     </div>
                 </div>
@@ -99,26 +133,22 @@
         <!-- TAB CONTENTS -->
         <div id="line" class="tabcontent" v-if="showTestingGraphs && numberFeatures==1">
                 <!-- testing line graph -->
-                <apexchart id="testLineGraph" type="line" :options="optionsLOBF" height=450 :series="seriesLOBF"></apexchart>
+                <apexchart type="line" :options="optionsLOBF" height=450 :series="seriesLOBF"></apexchart>
         </div>
 
         <div id="dots" class="tabcontent"  v-if="showTestingGraphs && (hideGraphs==true)">
                 <!-- testing predicted vs actual-->
-                <apexchart id="testPredVsActGraph" type="line" :options="testingOptionsPredictedVSActual" height=450 :series="testingSeriesPredictedVSActual"></apexchart>
+                <apexchart type="line" :options="testingOptionsPredictedVSActual" height=450 :series="testingSeriesPredictedVSActual"></apexchart>
         </div>
-          
-        </div>
-    </div>
 
-    
+        </div>
+
+    </div>
 </template>
 
 <style scoped>
-    .button {
-        /* #fd0b0b */
-        /* #fd1201 
-            #ff5e5e
-        */
+    /* .button {
+
         font-weight:500;
         border-color: #007EFF;
         color: rgb(0, 0, 0);
@@ -131,8 +161,7 @@
     }
     .button:hover {
         background-position: 0;
-    }
-
+    } */
     h2 {
         color: black;
         font-size: 30px;
@@ -141,28 +170,24 @@
         font-weight: 500;
         text-align: center;
     }
-
     .accuracy {
         color: #037BF7;
         font-size: 30px;
     }
+
 </style>
 
 
-
-
-
 <script>
+
+    import { GlobalEvents } from 'vue-global-events'
     import axios from 'axios'
     import Chart from 'chart.js'
     import VueApexCharts from "vue3-apexcharts";
     import {toast} from 'bulma-toast'
 
     export default {
-        name: "LinearRegressionDatasets",
-        components: {
-            apexchart: VueApexCharts,
-        },
+        name: "LinearRegressionTests",
         data() {
             return{
                 // Variables involving the files and user details
@@ -172,9 +197,7 @@
                 uploadable: false,
                 hasDatasets: false,
                 selected: '',
-
                 initialSplit: 70,
-
                 // Response data
                 trainX: [],
                 trainY: [],
@@ -188,7 +211,6 @@
                 meanSquaredError: -1,
                 intercept: 0,
                 numberFeatures: -1,
-
                 // Line of best fit chart data
                 bestFitYValues: {},   
                 seriesLOBF: [],
@@ -199,7 +221,6 @@
                 testingSeriesPredictedVSActual: [],
                 trainingOptionsPredictedVSActual: [],
                 testingOptionsPredictedVSActual: [],
-
                 // If the graphs should be displayed and if so, which ones, training or testing?
                 showTestButton: false,
                 isTraining: false,
@@ -209,29 +230,30 @@
                 hideGraphs: false,
             }
         },
+        components: {
+            GlobalEvents,
+            apexchart: VueApexCharts,
+        },
         mounted(){
             this.getAccount()
         },
         methods:{
+            pageNav(route){
+                this.$router.push(route)
+            },
             async getAccount(){
                 this.$store.commit('setIsLoading',true)
-
                 await axios
                     .get('/api/v1/users/me')
-
                     .then(response => {
                         this.userDetails=response.data
                         this.getTrainedDatasets()
                     })
-
                     .catch(error => {
                         console.log(error)
                     })
-
                 this.$store.commit('setIsLoading',false)
-
             },
-
             async checkTestingData() {
                 var filename = this.selected;
                 var model = "Linear Regression";
@@ -239,11 +261,10 @@
                 await axios
                 .post('/datasets/checkTestData',data)
                 .then(response =>{
+                    console.log(response.data)
                     if( response.data['response'] == "Test Data does not exist"){
                         console.log("no testing data")
                         // Type = 'is-danger';
-                        console.log(data)
-
                         toast({
                             message: "please upload test dataset on Manage Datasets page :D",
                             type: 'is-danger',
@@ -258,21 +279,16 @@
                     else{
                         //do all the funky stuff here
                         //re-run linear regression here
-
                         //secretly run regression:
-
                         console.log(this.userFiles)
                         console.log("SUCCESS MY GUY LETS GOOOO")
                         this.TrainModel()
-
                     }
                 })
                 .catch(error => {
                     console.log(error)
                 })
-
             },
-
             // Call this method when the user clicks Train Model 
             async TrainModel(){
                 var id = this.userDetails.id;
@@ -286,49 +302,36 @@
                 var learningRate = '';
                 var tol = '';
                 var data ={"UserId":id,"filename":filename,"learningRate":learningRate,"tol":tol}
-
                 console.log('data: ',data)
                 await axios
                 .post("/datasets/doLinearRegression",data)
-
                 .then(response =>{
                     //Michael will use response.data for his graphing 
                     console.log(response.data)
                     this.extractData(response.data);
-
                     this.isTraining = true
                     
                     this.plotPredictedVSActual(this.trainX.length, this.trainY, this.trainPredictedY)
-
                     this.showTrainingGraphs = true
                     this.isTraining = false
-
                     // Create graphs for Test dataset
                     this.isTesting = true
-
                     //If there is only one feature we can plot the line of best fit
                     if (this.numberFeatures == 1) {
                         // Since testX is received and stored as a 2D array, even if there is only one feature
                         // we need to reshape it into a 1D array to plot the line of best fit
-
                         // Reshape Test X data
                         var tempTestX = []
                         for (let i = 0; i < this.testX.length; i++) {
                             tempTestX.push(this.testX[i][0])
                         }
                         this.testX = tempTestX
-
                         this.plotLineOfBestFit(this.testX, this.testY, this.coefficients, this.intercept);
                     }
-
                     this.plotPredictedVSActual(this.testX.length, this.testY, this.testPredictedY)
-
                     // this.showTestingGraphs = true
-
                 });
-
             },
-
             async getTrainedDatasets(){
                 this.$store.commit('setIsLoading',true)
                 this.userFiles=[] 
@@ -361,8 +364,6 @@
                 })
                 this.$store.commit('setIsLoading',false)
             },
-
-
             // Used in order to show Test data charts on button click
             showTestGraphs() {
                 this.showTestingGraphs = true
@@ -372,8 +373,6 @@
                     btn.style.display = "block";
                 } 
             },
-            
-
             //Extract http response into accessible javascript data
             extractData(responseData) {
                 console.log('responseData', responseData)
@@ -382,26 +381,19 @@
                 this.trainX = Object.values(responseData['TrainX'])
                 this.trainY = Object.values(responseData['TrainY'])
                 this.trainPredictedY = Object.values(responseData['Train_PredictY'])
-
-
                 // Test data
                 this.testX = Object.values(responseData['TestX'])
                 this.testY = Object.values(responseData['TestY'])
                 this.testPredictedY = Object.values(responseData['Test_PredictY'])
-
-
                 // Train and Test accuracy
                 this.trainAccuracy = responseData['Train_accuracy']
                 this.testAccuracy = responseData['Test_accuracy']
-
-
                 //Mean Squared Error, Coefficients, Intercept and number of Features
                 this.meanSquaredError = responseData['meansquared']
                 this.coefficients = Object.values(responseData['coefficients'])[0]
                 this.intercept = Object.values(responseData['Intercept'])[0]
                 this.numberFeatures = Object.values(responseData['jsonFeatures'])[0].length -1
             },
-
             plotLineOfBestFit(xValues, yValues, m, c) {
                 //Pair together each X-value with its corresponding Y-value, thus creating a 2D array being a list of pairs.
                 var actualXYPairs = []
@@ -412,7 +404,6 @@
                 for (let i = 0; i < xValues.length; i++) {
                     actualXYPairs.push({x: xValues[i], y: yValues[i]})
                     //predictedXYPairs.push({x: xValues[i], y: (m*xValues[i]+c)})
-
                     // Find the min and max X values, used to plot the line using only 2 points instead of all,
                     // also used to set domain of chart
                     if (xValues[i] < minX) {
@@ -422,8 +413,6 @@
                         maxX = xValues[i]
                     }
                 }
-
-
                 // Series is used to plot different types of graphs on the same chart. e.g Scatter and line
                 this.seriesLOBF = [{
                     name: "Actual Values",
@@ -439,8 +428,6 @@
                     data: [{x:minX, y:(m*minX+c)}, {x:maxX, y:(m*maxX+c)}]
                     //data: predictedXYPairs
                 }]
-
-
                 // Options and settings to customise the chart
                 this.optionsLOBF = {
                     chart: {
@@ -483,9 +470,7 @@
                         decimalsInFloat: 2,
                     }
                 }
-
             },
-
             plotPredictedVSActual(xSize, yValues, yPredicated) {
                 var xyPairs = []
                 var xyPredicted = []
@@ -493,8 +478,6 @@
                     xyPairs.push({x: i, y: yValues[i]})
                     xyPredicted.push({x: i, y: yPredicated[i]})
                 }
-
-
                 // Series is used to plot different types of graphs on the same chart. e.g Scatter and line
                 var seriesPredictedVSActual = [{
                     name: "Actual Values",
@@ -508,7 +491,6 @@
                     color: '#0085FF',
                     data: xyPredicted
                 }]
-
                 // Options and settings to customise the chart
                 var optionsPredictedVSActual = {
                     chart: {
@@ -549,7 +531,6 @@
                         decimalsInFloat: 2,
                     }
                 }
-
                 // Since we cannot use the same variables for training and testing we allocate them separately
                 if (this.isTraining) {
                     this.trainingSeriesPredictedVSActual = seriesPredictedVSActual
@@ -560,8 +541,6 @@
                     this.testingOptionsPredictedVSActual = optionsPredictedVSActual
                 }
             },
-
-
             // tabs
             openTab(event, tabId){
             //get all elements w the tab content and hide it
@@ -576,13 +555,11 @@
                {
                    tablinks[i].className = tablinks[i].className.replace('is-active', '')
                }
-
             //show curr tab and add is-active to that tab
                 this.hideGraphs = true;
                 document.getElementById(tabId).style.display = 'block';
                 event.currentTarget.className += "is-active";
             },
-
             download() {
                 var element = document.createElement('a');
                 let filename = 'results.txt';

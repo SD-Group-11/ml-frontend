@@ -25,7 +25,7 @@
                     </a>
 
                     <div class="navbar-dropdown ">
-                        <a class="navbar-item is-danger">
+                        <a class="navbar-item">
                              <router-link to="/getting-started" class="navbar-item"><strong>Getting Started</strong></router-link> 
                         </a>
                         <a class="navbar-item">
@@ -49,7 +49,7 @@
 
 
                 <template v-if="$store.state.isAuthenticated">
-                    <div class="navbar-item has-dropdown is-hoverable">
+                    <!-- <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
                             <strong>Linear Regression</strong> 
                         </a>
@@ -59,7 +59,11 @@
                             <router-link to="/linear-regression-test" class="navbar-item"><strong>Test Model</strong></router-link>
                             <router-link to="/linear-regression-datasets" class="navbar-item"><strong>Manage Datasets</strong></router-link>   
                         </div>
-                    </div>
+                    </div> -->
+
+                    <a class="navbar-item ">
+                            <router-link to="/linear-regression-datasets"><strong>Linear Regression</strong></router-link>
+                    </a>
 
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
