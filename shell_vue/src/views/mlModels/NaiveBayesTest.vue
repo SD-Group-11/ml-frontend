@@ -70,9 +70,9 @@
                 </div>
             </div>
 
-            <!-- test model button U -->
+            <!-- test model button U - unsure about onclick statement-->
             <div>
-                <button style="text-align: center;" class="button is-info has-text-black"  v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false'><strong>Test Model</strong></button>
+                <button style="text-align: center;" class="button is-info is light has-text-black "  v-on:click='showTrainingResults'><strong>Test Model</strong></button>
             </div>
             <div class="block"></div>
         
@@ -594,6 +594,7 @@
                 //event.target.classList.add('is-active')
             },
 
+            // from LR testing page
             async checkTestingData() {
                 var filename = this.selected;
                 var model = "Naive Bayes";
@@ -626,8 +627,6 @@
                         console.log(this.userFiles)
                         console.log("SUCCESS MY GUY LETS GOOOO")
                         this.TrainModel()
-
-
                     }
                 })
                 .catch(error => {
