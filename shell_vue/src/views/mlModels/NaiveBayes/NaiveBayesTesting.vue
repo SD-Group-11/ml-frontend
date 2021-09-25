@@ -72,7 +72,7 @@
 
             <!-- test model button U - unsure about onclick statement-->
             <div>
-                <button style="text-align: center;" class="button is-info is light has-text-black "  v-on:click='showTrainingResults'><strong>Test Model</strong></button>
+                <button style="text-align: center;" class="button is-info is light has-text-black "  v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false'><strong>Test Model</strong></button>
             </div>
             <div class="block"></div>
         
