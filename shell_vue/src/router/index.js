@@ -16,9 +16,14 @@ import Dashboard from '../views/dashboard/Dashboard.vue'
 import MyAccount from '../views/dashboard/MyAccount.vue'
 
 import DecisionTrees from '../views/DecisionTrees.vue'
-import LinearRegression from '../views/mlModels/LinearRegression.vue'
-import LinearRegressionDatasets from '../views/mlModels/LinearRegressionDatasets.vue'
-import LinearRegressionTests from '../views/mlModels/LinearRegressionTests.vue'
+import LinearRegression from '../views/mlModels/LinearRegression/LinearRegression.vue'
+import LinearRegressionDatasets from '../views/mlModels/LinearRegression/LinearRegressionDatasets.vue'
+import LinearRegressionTests from '../views/mlModels/LinearRegression/LinearRegressionTests.vue'
+
+
+
+import NaiveBayesTraining from '../views/mlModels/NaiveBayes/NaiveBayesTraining.vue'
+import NaiveBayesDatasets from '../views/mlModels/NaiveBayes/NaiveBayesDatasets.vue'
 
 const routes = [
   {
@@ -118,6 +123,28 @@ const routes = [
       requireLogin: true,
       model: true,
       modelName: 'linReg',
+      type: 2
+    }    
+  },
+  {
+    path: '/naive-bayes-training',
+    name: 'NaiveBayesTraining',
+    component: NaiveBayesTraining,
+    meta: {
+      requireLogin: true,
+      model: true,
+      modelName: 'NaiveBayes',
+      type: 2
+    }    
+  },
+  {
+    path: '/naive-bayes-datasets',
+    name: 'NaiveBayesDatasets',
+    component: NaiveBayesDatasets,
+    meta: {
+      requireLogin: true,
+      model: true,
+      modelName: 'NaiveBayes',
       type: 2
     }    
   }
