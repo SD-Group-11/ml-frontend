@@ -204,7 +204,7 @@
                                             <input class="file-input" v-bind:id="dataset.filename" type="file" accept=".csv" v-if="inputTestset"  v-on:input="fileValidation(dataset.filename); testsetUploadable = true;">
                                             
                                             <span class="icon is-normal">
-                                                <i class="fas fa-chart-line"></i>
+                                                <i class="fas fa-upload"></i>
                                             </span>
                                             
 
