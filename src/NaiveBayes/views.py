@@ -38,6 +38,7 @@ def PerformNaiveBayes(request):
         else:
             ## need to use the dataset.data to train a model.
             results = TrainNaiveBayes(pd.read_json(dataset.data),UserId,filename)
+        
     except:
         ## if we fail to find the file and user id , return this
         ## Should almost never happen since the filename is associated with their user id.

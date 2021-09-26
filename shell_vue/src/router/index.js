@@ -20,8 +20,11 @@ import LinearRegression from '../views/mlModels/LinearRegression/LinearRegressio
 import LinearRegressionDatasets from '../views/mlModels/LinearRegression/LinearRegressionDatasets.vue'
 import LinearRegressionTests from '../views/mlModels/LinearRegression/LinearRegressionTests.vue'
 
-import NaiveBayesTraining from '../views/mlModels/NaiveBayes/NaiveBayesTraining.vue'
+
 import NaiveBayesDatasets from '../views/mlModels/NaiveBayes/NaiveBayesDatasets.vue'
+import NaiveBayesTraining from '../views/mlModels/NaiveBayes/NaiveBayesTraining.vue'
+import NaiveBayesTests from '../views/mlModels/NaiveBayes/NaiveBayesTests.vue'
+
 
 const routes = [
   {
@@ -125,17 +128,6 @@ const routes = [
     }    
   },
   {
-    path: '/naive-bayes-training',
-    name: 'NaiveBayesTraining',
-    component: NaiveBayesTraining,
-    meta: {
-      requireLogin: true,
-      model: true,
-      modelName: 'NaiveBayes',
-      type: 2
-    }    
-  },
-  {
     path: '/naive-bayes-datasets',
     name: 'NaiveBayesDatasets',
     component: NaiveBayesDatasets,
@@ -143,9 +135,32 @@ const routes = [
       requireLogin: true,
       model: true,
       modelName: 'NaiveBayes',
+      type: 0
+    }    
+  },
+  {
+    path: '/naive-bayes-training',
+    name: 'NaiveBayesTraining',
+    component: NaiveBayesTraining,
+    meta: {
+      requireLogin: true,
+      model: true,
+      modelName: 'NaiveBayes',
+      type: 1
+    }    
+  },
+  {
+    path: '/naive-bayes-tests',
+    name: 'NaiveBayesTests',
+    component: NaiveBayesTests,
+    meta: {
+      requireLogin: true,
+      model: true,
+      modelName: 'NaiveBayes',
       type: 2
     }    
   }
+
 ]
 
 const router = createRouter({
