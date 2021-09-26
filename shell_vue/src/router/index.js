@@ -16,9 +16,9 @@ import Dashboard from '../views/dashboard/Dashboard.vue'
 import MyAccount from '../views/dashboard/MyAccount.vue'
 
 import DecisionTrees from '../views/DecisionTrees.vue'
-import LinearRegression from '../views/mlModels/LinearRegression.vue'
-import LinearRegressionDatasets from '../views/mlModels/LinearRegressionDatasets.vue'
-import LinearRegressionTests from '../views/mlModels/LinearRegressionTests.vue'
+import LinearRegression from '../views/mlModels/LinearRegression/LinearRegression.vue'
+import LinearRegressionDatasets from '../views/mlModels/LinearRegression/LinearRegressionDatasets.vue'
+import LinearRegressionTests from '../views/mlModels/LinearRegression/LinearRegressionTests.vue'
 
 const routes = [
   {
