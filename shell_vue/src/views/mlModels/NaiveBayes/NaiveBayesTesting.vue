@@ -484,7 +484,7 @@
                 //create the dict that will be the data for backend
                 var data = {"UserID":id,"Filename":filename};
                 await axios
-                .post('/NaiveBayes/discardResult',data)
+                .post("/NaiveBayes/discardResults",data)
                 .then(response => {
                     // get response from backend
                     var resp = response.data['response'];
@@ -524,7 +524,7 @@
                 //create the dict that will be the data for backend
                 var data = {"UserID":id,"Filename":filename};
                 await axios
-                .post('/Naivebayes/discardResults',data)
+                .post('/NaiveBayes/discardResults',data)
                 .then(response => {
                     // get response from backend
                     var resp = response.data['response'];
@@ -619,14 +619,18 @@
                         //WORK HERE - toast message
                     }
                     else{
-                        //do all the funky stuff here
-                        //re-run linear regression here
-
-                        //secretly run regression:
+                        toast({
+                            message: "Dataset selected",
+                            type: 'is-success',
+                            dismissible: true,
+                            pauseOnHover: true,
+                            duration: 15000,
+                            position: 'bottom-center',
+                        })
 
                         console.log(this.userFiles)
                         console.log("SUCCESS MY GUY LETS GOOOO")
-                        this.TrainModel()
+
                     }
                 })
                 .catch(error => {
