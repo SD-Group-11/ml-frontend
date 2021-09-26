@@ -34,10 +34,42 @@
                     </div>
                     
                 </div>
+<!-- adding the stuff for uploading a test set
 
+                    <div class="column">
+                        <div class="field">
+                            <div class="control is-pulled-right  ml-3">
+                                <button  class="button is-medium  is-info is-outlined " id = 'uploadFile' type="submit" v-if="uploadable && testsetUploadable && uploadedName != ''" v-on:click = 'uploadTestDataset(tempTrainFilename)'><strong>Upload</strong></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="button is-normal is-inverse has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" style="width:40px;">                                         
+                        <input class="file-input" v-bind:id="dataset.filename" type="file" accept=".csv"  v-on:input="fileValidation(dataset.filename); testsetUploadable = true; tempTrainFilename = dataset.filename" >
+                                            
+                        <span class="file-icon is-normal ">
+                            <i class="fas fa-chart-line"></i>
+                         </span> 
+                    </button>
+                    
+                    -->
             </div>
             <div class="block"></div>
+                <div class="column">
+                        <div class="field">
+                            <div class="control is-pulled-right  ml-3">
+                                <button  class="button is-medium  is-info is-outlined " id = 'uploadFile' type="submit" v-if="uploadable && uploadedName != ''" v-on:click = 'uploadTestDataset(tempTrainFilename)'><strong>Upload</strong></button>
+                            </div>
+                        </div>
+                    </div>
 
+                    <button class="button is-normal is-inverse has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" style="width:40px;">                                         
+                        <input class="file-input" v-bind:id="selected" type="file" accept=".csv"  v-on:input="fileValidation(selected); tempTrainFilename = selected" >
+                                            
+                        <span class="file-icon is-normal ">
+                            <i class="fas fa-chart-line"></i>
+                         </span> 
+                    </button>
             <form @submit.prevent="submitForm"> 
                 <div class="columns">
                 
@@ -59,6 +91,8 @@
                         </div>
 
                     </div>
+
+                    
 
 
             </form>
@@ -182,7 +216,6 @@
 
     import { GlobalEvents } from 'vue-global-events'
     import axios from 'axios'
-    import Chart from 'chart.js'
     import VueApexCharts from "vue3-apexcharts";
     import {toast} from 'bulma-toast'
 
@@ -215,6 +248,7 @@
                 bestFitYValues: {},   
                 seriesLOBF: [],
                 optionsLOBF: [],
+                tempTrainFilename: '',
                 
                 // Actual VS Predicted chart data
                 trainingSeriesPredictedVSActual: [],
@@ -288,6 +322,97 @@
                 .catch(error => {
                     console.log(error)
                 })
+            },
+            async uploadTestDataset(trainsetFilename){
+                console.log('trainsetFilename',trainsetFilename)
+                this.$store.commit('setIsLoading',true)
+                var testFile = document.getElementById(trainsetFilename).files[0];
+                var testFormData = new FormData();
+                testFormData.append("dataset",testFile);
+                testFormData.append("id",this.userDetails.id);
+                testFormData.append("TrainingFileName", trainsetFilename);
+                testFormData.append("model","Linear Regression");
+                await axios
+                    .post('/datasets/uploadTestData',testFormData)
+                    .then(response => {
+                        var resp =  response.data['response'];
+                        
+                        var Type;
+                        if (resp == 'Successfully uploaded test data.'){
+                            Type = 'is-success';
+                            //this.uploadedTestFilename = `${testFile.name}`
+                            // Not sure if the next two lines are necesssary just yet
+                            // this.getUploaded(this.uploadedTestFilename) 
+                            // this.getUserDatasets() 
+                            toast({
+                                message: resp,
+                                type: Type,
+                                dismissible: true,
+                                pauseOnHover: true,
+                                duration: 1000,
+                                position: 'bottom-center',
+                            }) 
+                        }
+                        else{
+                            Type = 'is-danger';
+                            toast({
+                                message: resp,
+                                type: Type,
+                                dismissible: true,
+                                pauseOnHover: true,
+                                duration: 1000,
+                                position: 'bottom-center',
+                            })  
+                        }
+                    });
+                    this.uploadedName = '';
+                this.$store.commit('setIsLoading',false)
+            },
+
+            async fileValidation(elementID){
+                
+                try {
+                    this.$store.commit('setIsLoading',true)
+                    this.uploadable=false    
+                    var fileInput = document.getElementById(elementID).files[0];
+                    var fileName = fileInput.name;
+                    const allowedExtensions =  ['csv']
+                    const fileExtension = fileName.split(".").pop();
+                    if(!allowedExtensions.includes(fileExtension)){
+                        toast({
+                            message: 'Please upload a .csv file',
+                            type: 'is-danger',
+                            dismissible: true,
+                            pauseOnHover: true,
+                            duration: 2000,
+                            position: 'bottom-center',
+                        })
+                        fileInput.value = '';
+                        this.uploadedName = '';
+                        this.uploadable = false;
+                        this.$store.commit('setIsLoading',false)
+                    return false;
+                }
+                else{
+                    toast({
+                            message: 'File ready for upload',
+                            type: 'is-warning',
+                            dismissible: true,
+                            pauseOnHover: true,
+                            duration: 2000,
+                            position: 'bottom-center',
+                        })
+                    
+                    this.uploadedName = fileInput.name;
+                    this.uploadable = true;
+                    this.$store.commit('setIsLoading',false)
+                    return true;
+                }         
+                }catch {
+                    //Nothing should happen
+                    this.$store.commit('setIsLoading',false)
+                }
+                
             },
             // Call this method when the user clicks Train Model 
             async TrainModel(){
