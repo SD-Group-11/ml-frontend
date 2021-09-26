@@ -256,10 +256,12 @@
             },
             async checkTestingData() {
                 var filename = this.selected;
-                var data ={"UserID":this.userDetails.id,"Filename":filename}
+                var model = "Linear Regression";
+                var data ={"UserID":this.userDetails.id,"Filename":filename,"ModelName":model};
                 await axios
                 .post('/datasets/checkTestData',data)
                 .then(response =>{
+                    console.log(response.data)
                     if( response.data['response'] == "Test Data does not exist"){
                         console.log("no testing data")
                         // Type = 'is-danger';

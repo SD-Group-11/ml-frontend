@@ -70,7 +70,7 @@
                         <div class="field ">
                             <label class="label">Dataset</label>
                             <select v-model="selected" id = "files" class="select is-normal is-size-6 is-info" style="width: 100%;">
-                                <option disabled value="">Select dataset</option>
+                                <option  disabled value="">Select dataset</option>
                                 <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
                             </select>
                         </div>
@@ -381,6 +381,47 @@
 
                 });
                 this.$store.commit('setIsLoading',false)
+            },
+            // We require the UserID as well as the corresponding filename to delete the results we get from training
+            async DiscardTrainResults(){
+                var id = this.userDetails.id;
+                //get the filename from what has been selected.
+                var filename = document.getElementById("files").value ;
+                //create the dict that will be the data for backend
+                var data = {"UserID":id,"Filename":filename};
+                await axios
+                .post('/LinearRegression/discardMetrics',data)
+                .then(response => {
+                    // get response from backend
+                    var resp = response.data['response'];
+                    var Type;
+                    //indicates successful deleting of the data
+                    if(resp == "Results discarded."){
+                         Type = 'is-success';
+                         //Toast to give user indication of outcome of action
+                        toast({
+                            message: "Results successfully discarded.",
+                            type: Type,
+                            dismissible: true,
+                            pauseOnHover: true,
+                            duration: 1000,
+                            position: 'bottom-center',
+                        })  
+                    }
+                    else{
+                        // Failed to discard the data
+                         Type = 'is-danger';
+                            toast({
+                                message: resp,
+                                type: Type,
+                                dismissible: true,
+                                pauseOnHover: true,
+                                duration: 1000,
+                                position: 'bottom-center',
+                            })  
+                    }
+                })
+
             },
 
             // We require the UserID as well as the corresponding filename to delete the results we get from training

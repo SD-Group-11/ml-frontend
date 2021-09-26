@@ -234,14 +234,15 @@
 
             async checkTestingData() {
                 var filename = this.selected;
-                var data ={"UserID":this.userDetails.id,"Filename":filename}
-
+                var model = "Linear Regression";
+                var data ={"UserID":this.userDetails.id,"Filename":filename,"ModelName":model};
                 await axios
                 .post('/datasets/checkTestData',data)
                 .then(response =>{
                     if( response.data['response'] == "Test Data does not exist"){
                         console.log("no testing data")
                         // Type = 'is-danger';
+                        console.log(data)
 
                         toast({
                             message: "please upload test dataset on Manage Datasets page :D",
@@ -371,6 +372,7 @@
                     btn.style.display = "block";
                 } 
             },
+            
 
             //Extract http response into accessible javascript data
             extractData(responseData) {
@@ -421,6 +423,7 @@
                     }
                 }
 
+
                 // Series is used to plot different types of graphs on the same chart. e.g Scatter and line
                 this.seriesLOBF = [{
                     name: "Actual Values",
@@ -436,6 +439,7 @@
                     data: [{x:minX, y:(m*minX+c)}, {x:maxX, y:(m*maxX+c)}]
                     //data: predictedXYPairs
                 }]
+
 
                 // Options and settings to customise the chart
                 this.optionsLOBF = {
@@ -556,6 +560,7 @@
                     this.testingOptionsPredictedVSActual = optionsPredictedVSActual
                 }
             },
+
 
             // tabs
             openTab(event, tabId){
