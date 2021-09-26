@@ -198,23 +198,14 @@
                                     </p>
 
                                     <p class="control">
-                                        
-                                        <button class="button is-normal is-inverse has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" v-on:click ="inputTestset = true; tempTrainFilename = dataset.filename;">
-                                        
-                                            <input class="file-input" v-bind:id="dataset.filename" type="file" accept=".csv" v-if="inputTestset"  v-on:input="fileValidation(dataset.filename); testsetUploadable = true;">
-                                            
-                                            <span class="icon is-normal">
+                                        <button class="button is-normal is-inverse has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" style="width:40px">                                         
+                                            <input class="file-input" v-bind:id="dataset.filename" type="file" accept=".csv"  v-on:input="fileValidation(dataset.filename); testsetUploadable = true; tempTrainFilename = dataset.filename">
+                                               
+                                             <span class="file-icon is-normal ">
                                                 <i class="fas fa-chart-line"></i>
-                                            </span>
-                                            
-
-                                            <!-- <span><strong>Download</strong></span> -->
-                                            <!-- <span>Download</span> -->
-
-                                        </button>
-
-                                        
-                                    </p>
+                                            </span> 
+                                      </button>
+                                   </p> 
 
                                 </div>
      
@@ -383,7 +374,6 @@
                 uploaded: false,
                 uploadedTestData: false,
                 showUploadedModal: false,
-                inputTestset: false,
                 testsetUploadable: false,
                 tempTrainFilename: '',
                 
