@@ -53,7 +53,7 @@ def receiveData(request):
 
     resp = {}
     if request.method == "POST":
-        
+        print(request.body)
         dataset = str(request.body)
         ## check dataset is not empty
         if(dataset != ''):

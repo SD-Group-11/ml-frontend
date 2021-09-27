@@ -2,7 +2,7 @@
     <div class="container is-fluid">
         <GlobalEvents
             @keydown.left="pageNav('/naive-bayes-datasets')"
-            @keydown.right="pageNav('/naive-bayes-test')"
+            @keydown.right="pageNav('/naive-bayes-tests')"
         />
 
         <div class="container is-fluid">
@@ -25,7 +25,7 @@
                     </div>
                     
                     <div class="column is-one-fifth">
-                        <div class="button is-pulled-right is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/naive-bayes-test')" data-tooltip="Test a model">
+                        <div class="button is-pulled-right is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/naive-bayes-tests')" data-tooltip="Test a model">
                             <span class="icon is-normal">
                                 <i class="fas fa-lg fa-arrow-right"></i>
                             </span>
@@ -513,7 +513,7 @@
                 //create the dict that will be the data for backend
                 var data = {"UserID":id,"Filename":filename};
                 await axios
-                .post('/NaiveBayes/discardResults',data)
+                .post('/NaiveBayes/discardResult',data)
                 .then(response => {
                     // get response from backend
                     var resp = response.data['response'];
@@ -555,7 +555,7 @@
                 //create the dict that will be the data for backend
                 var data = {"UserID":id,"Filename":filename};
                 await axios
-                .post('/NaiveBayes/discardResults',data)
+                .post('/Naivebayes/discardResults',data)
                 .then(response => {
                     // get response from backend
                     var resp = response.data['response'];
