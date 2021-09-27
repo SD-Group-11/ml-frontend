@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import NaiveBayes
+from .models import NBTrainedModel
 # Register your models here.
 
-admin.site.register(NaiveBayes)
+admin.site.register(NBTrainedModel)
