@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import LinearRegression from '@/views/mlModels/LinearRegression.vue'
+import LinearRegression from '@/views/mlModels/LinearRegression/LinearRegression.vue'
 import { createStore } from 'vuex'
 import {mount} from '@vue/test-utils'
 
