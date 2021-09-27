@@ -1,8 +1,8 @@
 <template>   
     <div class="container is-fluid">
         <GlobalEvents
-            @keydown.left="pageNav('/naive-bayes-datasets')"
-            @keydown.right="pageNav('/naive-bayes-test')" 
+            @keydown.left="pageNav('/naive-bayes-training')"
+            @keydown.right="pageNav('/naive-bayes-datasets')" 
             
         />
         <!-- add carousel for test to train (to the left) -->
