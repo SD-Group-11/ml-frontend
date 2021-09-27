@@ -59,7 +59,7 @@
                     <!-- upload test data - buggy i cant get it to work 100%-->
                     <div class="column is-right" style="padding-top:36px"> 
                         
-                        <!-- <div class="file has-name is-right">
+                        <div class="file has-name is-right">
                             <label class="file-label">
                                 <input class="file-input" v-bind:id="selected" type="file" accept=".csv"  v-on:input="fileValidation(selected); tempTrainFilename = selected" >
                                         <span class="file-cta">
@@ -80,7 +80,7 @@
                             <div class="control is-pulled-right  ml-3">
                                 <button  class="button is-medium  is-info is-outlined " id = 'uploadFile' type="submit" v-if="uploadable && uploadedName != '' && selected != ''" v-on:click = 'uploadTestDataset(tempTrainFilename)'><strong>Upload</strong></button>
                             </div>
-                        </div> -->
+                        </div>
 
 
                         </div>
@@ -616,7 +616,7 @@
                 testFormData.append("dataset",testFile);
                 testFormData.append("id",this.userDetails.id);
                 testFormData.append("TrainingFileName", trainsetFilename);
-                testFormData.append("model","Linear Regression");
+                testFormData.append("model","Naive Bayes");
                 await axios
                     .post('/datasets/uploadTestData',testFormData)
                     .then(response => {
