@@ -179,25 +179,25 @@ def ROC_TO_JSON(tpr,fpr,class_names):
         ROC_curves.append(JSON_obj)
     return ROC_curves
 def f1ToJSON(class_names,f1):
-    # f1_scores = []
-    f1_scores = {}
+    f1_scores = []
+    # f1_scores = {}
     for i in range(0,len(class_names)):
         JSON = {}
         JSON["class"]=str(class_names[i])
         JSON['score'] = f1[i]
-        # f1_scores.append(JSON)
-        f1_scores[str(i)] = JSON
+        f1_scores.append(JSON)
+        # f1_scores[str(i)] = JSON
     return f1_scores
 
 def aucToJSON(class_names,auc):
-    # auc_values =[]
-    auc_values ={}
+    auc_values =[]
+    # auc_values ={}
     for i in range(0,len(class_names)):
         JSON = {}
         JSON["class"]=str(class_names[i])
         JSON['value'] = auc[i]
-        # auc_values.append(JSON)
-        auc_values[str(i)] = JSON
+        auc_values.append(JSON)
+        # auc_values[str(i)] = JSON
     return auc_values
 
 @api_view(['POST',])
@@ -314,7 +314,6 @@ def getDatasetsInfo(request):
 def UploadTrainingResults(userid,filename,trainingacc,f1Sc,auc):
     try:
         ## create new object in db and pass it all the necessary info
-        print(type(f1Sc))
         DataInstance = NBTrainedModel(UserId=userid,filename=json.dumps(filename),TrainingAccuracy=trainingacc,f1score = f1Sc,AUCScore=auc)
         print(DataInstance.UserId)
         print(DataInstance.f1score)
