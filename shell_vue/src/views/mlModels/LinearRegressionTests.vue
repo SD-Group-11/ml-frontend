@@ -34,44 +34,11 @@
                     </div>
                     
                 </div>
-<!-- adding the stuff for uploading a test set
-
-                    <div class="column">
-                        <div class="field">
-                            <div class="control is-pulled-right  ml-3">
-                                <button  class="button is-medium  is-info is-outlined " id = 'uploadFile' type="submit" v-if="uploadable && testsetUploadable && uploadedName != ''" v-on:click = 'uploadTestDataset(tempTrainFilename)'><strong>Upload</strong></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button class="button is-normal is-inverse has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" style="width:40px;">                                         
-                        <input class="file-input" v-bind:id="dataset.filename" type="file" accept=".csv"  v-on:input="fileValidation(dataset.filename); testsetUploadable = true; tempTrainFilename = dataset.filename" >
-                                            
-                        <span class="file-icon is-normal ">
-                            <i class="fas fa-chart-line"></i>
-                         </span> 
-                    </button>
-                    
-                    -->
             </div>
-            <div class="block"></div>
-                <div class="column">
-                        <div class="field">
-                            <div class="control is-pulled-right  ml-3">
-                                <button  class="button is-medium  is-info is-outlined " id = 'uploadFile' type="submit" v-if="uploadable && uploadedName != ''" v-on:click = 'uploadTestDataset(tempTrainFilename)'><strong>Upload</strong></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button class="button is-normal is-inverse has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" style="width:40px;">                                         
-                        <input class="file-input" v-bind:id="selected" type="file" accept=".csv"  v-on:input="fileValidation(selected); tempTrainFilename = selected" >
-                                            
-                        <span class="file-icon is-normal ">
-                            <i class="fas fa-chart-line"></i>
-                         </span> 
-                    </button>
+            
+               
             <form @submit.prevent="submitForm"> 
-                <div class="columns">
+                <div class="columns is-multiline">
                 
                     <!-- should be one or the other, need to sort out the logic -->
                     <!-- add the upload test data here  -->
@@ -90,7 +57,35 @@
                         <button style="text-align: center;" class="button has-text-black" id="selectButton" v-on:click='checkTestingData()'>Select</button>
                         </div>
 
+                        <div class="column is-right" style="padding-top:36px"> 
+                        
+                        <div class="file has-name is-right">
+                            <label class="file-label">
+                                <input class="file-input" v-bind:id="selected" type="file" accept=".csv"  v-on:input="fileValidation(selected); tempTrainFilename = selected" >
+                                        <span class="file-cta">
+                                            <span class="file-icon">
+                                                <i class="fas fa-chart-line"></i>
+                                            </span>
+                                        <span class="file-label">
+                                           Upload your test dataset...
+                                        </span>
+                                        </span>
+                                    <span class="file-name">
+                                    {{uploadedName}}
+                                    </span>
+                            </label>
+                        </div>
+
+                        <div class="field" style="padding-top:10px">
+                            <div class="control is-pulled-right  ml-3">
+                                <button  class="button is-medium  is-info is-outlined " id = 'uploadFile' type="submit" v-if="uploadable && uploadedName != '' && selected != ''" v-on:click = 'uploadTestDataset(tempTrainFilename)'><strong>Upload</strong></button>
+                            </div>
+                        </div>
                     </div>
+
+                    </div>
+
+                    
 
                     
 
@@ -300,7 +295,7 @@
                         console.log("no testing data")
                         // Type = 'is-danger';
                         toast({
-                            message: "please upload test dataset on Manage Datasets page :D",
+                            message: "Please upload a test dataset.",
                             type: 'is-danger',
                             dismissible: true,
                             pauseOnHover: true,
