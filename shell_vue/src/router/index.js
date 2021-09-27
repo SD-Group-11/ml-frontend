@@ -133,8 +133,8 @@ const routes = [
     meta: {
       requireLogin: true,
       model: true,
-      modelName: 'linReg',
-      type: 2
+      modelName: 'naiveB',
+      type: 0
     } 
   },
   {
@@ -144,8 +144,8 @@ const routes = [
     meta: {
       requireLogin: true,
       model: true,
-      modelName: 'linReg',
-      type: 2
+      modelName: 'naiveB',
+      type: 1
     } 
   },
 
@@ -156,7 +156,7 @@ const routes = [
     meta: {
       requireLogin: true,
       model: true,
-      modelName: 'linReg',
+      modelName: 'naiveB',
       type: 2
     } 
   }
