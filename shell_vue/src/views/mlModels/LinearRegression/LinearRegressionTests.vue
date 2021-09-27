@@ -64,7 +64,7 @@
                                 <input class="file-input" v-bind:id="selected" type="file" accept=".csv"  v-on:input="fileValidation(selected); tempTrainFilename = selected" >
                                         <span class="file-cta">
                                             <span class="file-icon">
-                                                <i class="fas fa-chart-line"></i>
+                                                <i class="fas fa-upload"></i>
                                             </span>
                                         <span class="file-label">
                                            Upload your test dataset...
@@ -299,7 +299,7 @@
                             type: 'is-danger',
                             dismissible: true,
                             pauseOnHover: true,
-                            duration: 15000,
+                            duration: 4000,
                             position: 'bottom-center',
                         })
                         //have the pop-up come here
@@ -309,6 +309,15 @@
                         //do all the funky stuff here
                         //re-run linear regression here
                         //secretly run regression:
+                        toast({
+                            message: "Dataset selected",
+                            type: 'is-success',
+                            dismissible: true,
+                            pauseOnHover: true,
+                            duration: 4000,
+                            position: 'bottom-center',
+                        })
+
                         console.log(this.userFiles)
                         console.log("SUCCESS MY GUY LETS GOOOO")
                         this.TrainModel()
