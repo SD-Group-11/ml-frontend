@@ -1,8 +1,8 @@
 from django.test import TestCase
 import pandas as pd
 # Create your tests here.
-from .models import NBTrainedModel
-from .views import TrainNaiveBayes,UploadTrainingResults
+from NaiveBayes.models import NBTrainedModel
+from NaiveBayes.views import TrainNaiveBayes,UploadTrainingResults
 from datasets.views import filterData
 from datasets.models import Dataset
 import json

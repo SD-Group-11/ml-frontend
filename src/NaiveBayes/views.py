@@ -211,7 +211,7 @@ def PerformNaiveBayes(request):
     try:
         ##get the respective dataset they want to train on
         dataset = Dataset.objects.get(UserId = UserId, filename=json.dumps(filename),model = "Naive Bayes")
-        print('testing')
+        # print('testing')
         # response['response']="success"
         # return Response(response)
         ## Note that tolerance etc won't be used for Naive Bayes
@@ -221,10 +221,10 @@ def PerformNaiveBayes(request):
             # return Response(response)
             try:
                 json_cm, f1,auc,ROC_curves = TestNaiveBayes(pd.read_json(dataset.data),pd.read_json(dataset.testData),UserId,filename)
-                print("json_cm",json_cm)
-                print("f1",f1)
-                print("auc",auc)
-                print("ROC_curves",ROC_curves)
+                # print("json_cm",json_cm)
+                # print("f1",f1)
+                # print("auc",auc)
+                # print("ROC_curves",ROC_curves)
                 response['cm'] = json_cm
                 response['f1'] = f1
                 response['auc'] =auc
@@ -315,11 +315,11 @@ def UploadTrainingResults(userid,filename,trainingacc,f1Sc,auc):
     try:
         ## create new object in db and pass it all the necessary info
         DataInstance = NBTrainedModel(UserId=userid,filename=json.dumps(filename),TrainingAccuracy=trainingacc,f1score = f1Sc,AUCScore=auc)
-        print(DataInstance.UserId)
-        print(DataInstance.f1score)
-        print(DataInstance.filename)
-        print(DataInstance.TrainingAccuracy)
-        print(DataInstance.AUCScore)
+        # print(DataInstance.UserId)
+        # print(DataInstance.f1score)
+        # print(DataInstance.filename)
+        # print(DataInstance.TrainingAccuracy)
+        # print(DataInstance.AUCScore)
         DataInstance.save()
     except:
         ## if the object already exists, get the object an update all the data. Once upated save it
