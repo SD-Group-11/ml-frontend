@@ -24,10 +24,10 @@ def TrainNaiveBayes(data,id,filename):
     ## fill in naive bayes training
     ## save the results into db
     df_copy = data
-    class_names= df_copy[df_copy.columns[-1]].unique()
-    # for i in range(0,len(class_names)):
-    #     class_names[i] = str(df_copy.columns[-1]+ " = " +class_names[i])
-    # print(class_names)
+    class_names= list(df_copy[df_copy.columns[-1]].unique())
+    target_column_name=df_copy.columns[-1]
+    for i in range(0,len(class_names)):
+        class_names[i] = target_column_name+" = "+ str(class_names[i])
     y=data.iloc[:,-1:]
     data = data.iloc[: , :-1]
     x=data
@@ -88,8 +88,11 @@ def TestNaiveBayes(data,testdata,id,filename):
     ## remember to save the results
     # return id
     # print('testing')
-    df_copy = data
-    class_names= df_copy[df_copy.columns[-1]].unique()
+    df_copy = testdata
+    class_names= list(df_copy[df_copy.columns[-1]].unique())
+    target_column_name=df_copy.columns[-1]
+    for i in range(0,len(class_names)):
+        class_names[i] = target_column_name+" = "+ str(class_names[i])
     df_copy_test = testdata
     y=data.iloc[:,-1:]
     ytest=testdata.iloc[:,-1:]
@@ -97,26 +100,53 @@ def TestNaiveBayes(data,testdata,id,filename):
     testdata=testdata.iloc[:,:-1]
     x=data
     xtest=testdata
+    x_original_size = x.shape[0]
+    print(x_original_size)
+    xtemp=x.append(xtest)
+    # x = xtemp.iloc[:x_original_size, :]
+    # print(x)
+    # xtest=xtemp.iloc[x_original_size:,:]
+    # print(xtest)
+    # print(x,xtest)
     # process data
-    x = encodeFeatures(x)
-    xtest=encodeFeatures(xtest)
-    x = findAndFillNullValues(x)
-    xtest=findAndFillNullValues(xtest)
-    
+    xtemp = encodeFeatures(xtemp)
+    xtemp = findAndFillNullValues(xtemp)
+    x = xtemp.iloc[:x_original_size, :]
+    xtest=xtemp.iloc[x_original_size:,:]
+
+    print(xtemp.shape)
+    # x = encodeFeatures(x)
+    # xtest=encodeFeatures(xtest)
+    # x = findAndFillNullValues(x)
+    # xtest=findAndFillNullValues(xtest)
     model = GaussianNB()
     model.fit(x, y)
-    
+
     # Predicting the Test set results
+    # print("mark 2")
+    # print(x.columns)
+    # print(xtest.columns)
+    # print(x.shape)
+    # print(xtest.shape)
     y_pred = model.predict(xtest)
+
+
+    print("mark 3")
 
     # Making the Confusion Matrix
     ac = accuracy_score(ytest,y_pred)
+    print("mark 4")
+
     cm = confusion_matrix(ytest, y_pred)
     f1=f1_score(ytest, y_pred, average=None)
-    json_f1 =f1ToJSON(class_names,f1)
+    print(f1)
+    json_f1 = f1ToJSON(class_names,f1)
+    print("mark 5")
 
+    try:
+        y_pred_proba = model.predict_proba(xtest)
+    except Exception as e: print(e)    
 
-    y_pred_proba = model.predict_proba(xtest)
     fpr,tpr,roc_auc = getROCData(df_copy_test,ytest,y_pred_proba)
     json_auc = aucToJSON(class_names,roc_auc)
     ROC_curves = ROC_TO_JSON(tpr,fpr,class_names)
@@ -196,6 +226,7 @@ def f1ToJSON(class_names,f1):
         JSON["class"]=str(class_names[i])
         JSON['score'] = f1[i]
         f1_scores.append(JSON)
+
     return f1_scores
 
 def aucToJSON(class_names,auc):
@@ -227,6 +258,7 @@ def PerformNaiveBayes(request):
             # response['response'] = "testing"
             # return Response(response)
             try:
+                print("mark 1")
                 json_cm, f1,auc,ROC_curves = TestNaiveBayes(pd.read_json(dataset.data),pd.read_json(dataset.testData),UserId,filename)
                 response['cm'] = json_cm
                 response['f1'] = f1
@@ -235,6 +267,7 @@ def PerformNaiveBayes(request):
                 print("from test")
                 return Response(response)
             except:
+                print("Unexpected error:", sys.exc_info()[0])
                 response['message'] ="testing failure"
                 return Response(response)
             ## add results to response and return it
