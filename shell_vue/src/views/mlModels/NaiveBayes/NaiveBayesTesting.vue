@@ -15,7 +15,7 @@
 
             <div class="columns">
                     <div class="column is-one-fifth">                        
-                        <div class="button is-pulled-left is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/naive-bayes-train')" data-tooltip="Train a model">
+                        <div class="button is-pulled-left is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/naive-bayes-training')" data-tooltip="Manage datasets">
                             <span class="icon is-normal">
                                 <i class="fas fa-lg fa-arrow-left"></i>                                
                             </span>
@@ -27,7 +27,7 @@
                     </div>
                     
                     <div class="column is-one-fifth">
-                        <div class="button is-pulled-right is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/naive-bayes-datasets')" data-tooltip="Manage datasets">
+                        <div class="button is-pulled-right is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/naive-bayes-datasets')" data-tooltip="Test a model">
                             <span class="icon is-normal">
                                 <i class="fas fa-lg fa-arrow-right"></i>
                             </span>
@@ -52,11 +52,11 @@
                             </select>
                         </div>
                         <!-- U -->
-                        <button class="button" id="selectButton" v-on:click='checkTestingData()'>Select</button>
+                      <button class="button" id="selectButton" v-on:click='checkTestingData()'>Select</button>
 
                     </div>
 
-                    <!-- upload test data - buggy i cant get it to work 100%-->
+                    <!-- upload test data -->
                     <div class="column is-right" style="padding-top:36px"> 
                         
                         <div class="file has-name is-right">
@@ -80,10 +80,9 @@
                             <div class="control is-pulled-right  ml-3">
                                 <button  class="button is-medium  is-info is-outlined " id = 'uploadFile' type="submit" v-if="uploadable && uploadedName != '' && selected != ''" v-on:click = 'uploadTestDataset(tempTrainFilename)'><strong>Upload</strong></button>
                             </div>
-                        </div>
-
-
-                        </div>
+                        </div> 
+                        <!-- here -->
+                    </div>
 
                 </div>
             </form>
@@ -116,15 +115,22 @@
             <div class="columns">
                 <div class="column is-one-third">
                     <div class="notification is-warning has-text-black has-text-left" >
-                        <strong>F1 Score: {{ (f1Socre).toFixed(2) }}</strong>
-                        
+                        <strong>F1 Scores: </strong>
+                        <li v-for="f1 in f1Score" v-bind:key="f1.class">
+                                Class {{ f1.class }}:
+                                    - {{ (f1.score).toFixed(2) }}
+                        </li>
                     </div>
                     
                 </div>
                 <div class="column is-two-thirds is-warning">
                     
                     <div class="notification is-warning has-text-black has-text-left" >
-                        <strong>AUC: {{ AUC }}</strong>
+                        <strong>AUC </strong>
+                        <li v-for="auc in AUC" v-bind:key="auc.class">
+                                Class {{ auc.class }}:
+                                    - {{ (auc.value) }}
+                        </li>
                     </div>
                 </div>
             </div>
@@ -219,9 +225,8 @@
                 uploadable: false,
                 hasDatasets: false,
                 selected: '',
-                tempTrainFilename: '',
                 // Response data
-                f1Socre:-1,
+                f1Socre:[],
                 AUC:-1,
                 numberFeatures:-1,
                 confusionMatrix:[],
@@ -332,7 +337,7 @@
                           XYPairs.push({x: lineObj.fpr_values[j], y: lineObj.tpr_values[j]})
                     }
                     var ROC_Series = {
-                        name:lineObj.class,
+                        name:"class: " + lineObj.class,
                         data:XYPairs
                     }
                     ROC_SeriesArray.push(ROC_Series)
@@ -454,8 +459,6 @@
                 })
                 this.$store.commit('setIsLoading',false)
             },
-
-
             // Call this method when the user clicks Train Model 
             async TrainModel(){
                 this.$store.commit('setIsLoading',true)
@@ -478,35 +481,6 @@
                     })
                     this.$store.commit('setIsLoading',false)
                 })
-                    //old code for LR delete this
-                    //start
-                //     //Michael will use response.data for his graphing 
-                //     console.log(response.data)
-                //     this.extractData(response.data);
-                //     this.isTraining = true
-                    
-                //     this.plotPredictedVSActual(this.trainX.length, this.trainY, this.trainPredictedY)
-                //     this.showTrainingGraphs = true
-                //     this.isTraining = false
-                //     // Create graphs for Test dataset
-                //     this.isTesting = true
-                //     //If there is only one feature we can plot the line of best fit
-                //     if (this.numberFeatures == 1) {
-                //         // Since testX is received and stored as a 2D array, even if there is only one feature
-                //         // we need to reshape it into a 1D array to plot the line of best fit
-                //         // Reshape Test X data
-                //         var tempTestX = []
-                //         for (let i = 0; i < this.testX.length; i++) {
-                //             tempTestX.push(this.testX[i][0])
-                //         }
-                //         this.testX = tempTestX
-                //         this.plotLineOfBestFit(this.testX, this.testY, this.coefficients, this.intercept);
-                //     }
-                //     this.plotPredictedVSActual(this.testX.length, this.testY, this.testPredictedY)
-                //     // this.showTestingGraphs = true
-                // });
-                // this.$store.commit('setIsLoading',false)
-                // end
             },
             // We require the UserID as well as the corresponding filename to delete the results we get from training
             async DiscardTrainResults(){
@@ -548,7 +522,6 @@
                     }
                 })
             },
-
             // We require the UserID as well as the corresponding filename to delete the results we get from training
             async DiscardTrainResults(){
                 var id = this.userDetails.id;
@@ -589,25 +562,26 @@
                     }
                 })
             },
-
             //Extract http response into accessible javascript data
             extractData(responseData) {
                 this.$store.commit('setIsLoading',true)
                 console.log('responseData', responseData)
                 
-                this.confusionMatrix =responseData['confusionMatrix']
+                this.confusionMatrix =responseData['cm']
               
                 // f1 score and AUC
-                this.f1Socre = responseData['f1Score']
-                this.AUC = responseData['AUC']
+                this.f1Score = responseData['f1']
+            
+                this.AUC = responseData['auc']
                 this.ROC = responseData['ROC']
                 this.showTrainingResults=true;
                 //number of features
                 // this.numberFeatures = Object.values(responseData['jsonFeatures'])[0].length -1
                 this.$store.commit('setIsLoading',false)
             },
+            
 
-            //test page upload button
+            //test page upload button - this
             async uploadTestDataset(trainsetFilename){
                 console.log('trainsetFilename',trainsetFilename)
                 this.$store.commit('setIsLoading',true)
@@ -653,7 +627,8 @@
                     this.uploadedName = '';
                 this.$store.commit('setIsLoading',false)
             },
-
+		
+//this
             async fileValidation(elementID){
                 
                 try {
@@ -699,7 +674,7 @@
                 }
                 
             },
-            
+
             // tabs
             openTab(event, tabId,tabBtnId){
                 this.tabsInitialized=true;
@@ -735,11 +710,11 @@
                         console.log(data)
 
                         toast({
-                            message: "Please upload test dataset",
+                            message: "please upload test dataset on Manage Datasets page",
                             type: 'is-danger',
                             dismissible: true,
                             pauseOnHover: true,
-                            duration: 4000,
+                            duration: 15000,
                             position: 'bottom-center',
                         })
                         //have the pop-up come here
@@ -751,7 +726,7 @@
                             type: 'is-success',
                             dismissible: true,
                             pauseOnHover: true,
-                            duration: 4000,
+                            duration: 15000,
                             position: 'bottom-center',
                         })
 

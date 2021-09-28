@@ -3,21 +3,210 @@ import pandas as pd
 import json
 from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
+from scipy.sparse import data
+from sklearn import metrics
 from datasets.models import Dataset
 from .models import NaiveBayes
 from rest_framework.response import Response 
+from sklearn import preprocessing
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix, accuracy_score
+from sklearn.metrics import roc_curve, auc
+import pandas as pd
+import numpy as np
+# import matplotlib.pyplot as plt
+from sklearn.metrics import f1_score
 # Create your views here.
 
 def TrainNaiveBayes(data,id,filename):
     ## fill in naive bayes training
     ## save the results into db
-    return
+    df_copy = data
+    class_names= df_copy[df_copy.columns[-1]].unique()
+    # for i in range(0,len(class_names)):
+    #     class_names[i] = str(df_copy.columns[-1]+ " = " +class_names[i])
+    # print(class_names)
+    y=data.iloc[:,-1:]
+    data = data.iloc[: , :-1]
+    x=data
+    # process data
+    x = encodeFeatures(x)
+    x = findAndFillNullValues(x)
+    # split data
+    # x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
+    # create,train and test model
+    model = GaussianNB()
+    model.fit(x, y)
+    #model.score(x_test, y_test)
+
+    # Predicting the Test set results
+    y_pred = model.predict(x)
+
+    # Making the Confusion Matrix
+    ac = accuracy_score(y,y_pred)
+    cm = confusion_matrix(y, y_pred)
+    f1=f1_score(y, y_pred, average=None)
+    json_f1 =f1ToJSON(class_names,f1)
+    # print(y_pred)
+    # print(ac)
+    # print(cm)
+    # f1=ArrToJson(f1)
+    
+
+    y_pred_proba = model.predict_proba(x)
+    fpr,tpr,roc_auc = getROCData(df_copy,y,y_pred_proba)
+    json_auc = aucToJSON(class_names,roc_auc)
+    ROC_curves = ROC_TO_JSON(tpr,fpr,class_names)
+    
+    # print(ROC_curves)
+    # print("fpr: ",fpr)
+    # print("tpr: ",tpr)
+
+    # false_positive_rate, true_positive_rate, thresholds = roc_curve(y, y_pred_proba[:,1])
+    # auc=metrics.auc(false_positive_rate,true_positive_rate)
+    # auc=ArrToJson(auc)
+    # print('false positive\n',false_positive_rate)
+    # print('true positive\n',true_positive_rate)
+    # print('thresholds\n',thresholds)
+    # plt.plot(false_positive_rate, true_positive_rate, linestyle='-')
+
+    json_cm=ConfusionToJson(class_names,cm)
+    # print(json_cm)
+    # json_fpr=ArrToJson(false_positive_rate)
+    # print(json_fpr)
+    # json_tpr=ArrToJson(true_positive_rate)
+    
+    # UploadTrainingResults(id,filename,ac,json_f1,json_auc)
+
+    return json_cm, json_f1,json_auc,ROC_curves
 
 def TestNaiveBayes(data,testdata,id,filename):
     ## fill in naive bayes training and testing 
     ## will be the same as TrainNaiveBayes except we also test because we have test data
     ## remember to save the results
-    return
+    # return id
+    # print('testing')
+    df_copy = data
+    class_names= df_copy[df_copy.columns[-1]].unique()
+    df_copy_test = testdata
+    y=data.iloc[:,-1:]
+    ytest=testdata.iloc[:,-1:]
+    data = data.iloc[: , :-1]
+    testdata=testdata.iloc[:,:-1]
+    x=data
+    xtest=testdata
+    # process data
+    x = encodeFeatures(x)
+    xtest=encodeFeatures(xtest)
+    x = findAndFillNullValues(x)
+    xtest=findAndFillNullValues(xtest)
+    
+    model = GaussianNB()
+    model.fit(x, y)
+    
+    # Predicting the Test set results
+    y_pred = model.predict(xtest)
+
+    # Making the Confusion Matrix
+    ac = accuracy_score(ytest,y_pred)
+    cm = confusion_matrix(ytest, y_pred)
+    f1=f1_score(ytest, y_pred, average=None)
+    json_f1 =f1ToJSON(class_names,f1)
+
+
+    y_pred_proba = model.predict_proba(xtest)
+    fpr,tpr,roc_auc = getROCData(df_copy_test,ytest,y_pred_proba)
+    json_auc = aucToJSON(class_names,roc_auc)
+    ROC_curves = ROC_TO_JSON(tpr,fpr,class_names)
+
+    # false_positive_rate, true_positive_rate, thresholds = roc_curve(ytest, y_pred_proba[:,1])
+    # auc=metrics.auc(false_positive_rate,true_positive_rate)
+  
+    # auc=ArrToJson(auc)
+    json_cm=ConfusionToJson(class_names,cm)
+    # json_fpr=ArrToJson(false_positive_rate)
+    # json_tpr=ArrToJson(true_positive_rate)
+    # UploadTestResults(id,filename,ac,json_f1,json_auc)
+    
+    # return "test success"
+
+    return json_cm, json_f1,json_auc,ROC_curves
+
+def getROCData(df,y, y_pred_proba):
+    y_column = df[df.columns[-1]] # get the y column so that we can 
+    y_dummies = pd.get_dummies(y_column)
+    n_classes = int(y.nunique())
+
+    # Compute ROC curve and ROC area for each class
+    fpr = dict()
+    tpr = dict()
+    roc_auc = dict()
+    for i in range(n_classes):
+        fpr[i], tpr[i], _ = roc_curve(y_dummies.iloc[:, i], y_pred_proba[:, i])
+        roc_auc[i] = auc(fpr[i], tpr[i])
+
+    return fpr, tpr, roc_auc
+
+
+def findCategoricalFeatures(df):
+    categoricalFeatures = np.array([])
+    
+    # iteritems gives a tuple of column name and series
+    # for each column in the dataframe
+    for (columnName, columnData) in df.iteritems():
+        firstValue = columnData.values[0]
+        # using isinstance()
+        # Check if variable is string 
+        res = isinstance(firstValue, str)
+        if (res):
+            categoricalFeatures = np.append(categoricalFeatures, columnName)
+    
+    return categoricalFeatures
+
+def encodeFeatures(x):
+    categoricalFeatures = findCategoricalFeatures(x)
+    for feature in categoricalFeatures:
+        dummies = pd.get_dummies(x[feature])
+        x = pd.concat([x, dummies], axis='columns')
+        x.drop(feature, axis='columns', inplace=True)
+        
+    return x
+
+def findAndFillNullValues(x):
+    nullFeatures = x.columns[x.isna().any()].tolist()
+    for feature in nullFeatures:
+        x[feature] = x[feature].fillna(round(x[feature].mean()))
+        
+    return x
+def ROC_TO_JSON(tpr,fpr,class_names):
+    ROC_curves = []
+    for i in range(0,len(class_names)):
+        JSON_obj={}
+        JSON_obj["class"] = str(class_names[i])
+        JSON_obj["fpr_values"] = fpr[i]
+        JSON_obj["tpr_values"] = tpr[i]
+        ROC_curves.append(JSON_obj)
+    return ROC_curves
+def f1ToJSON(class_names,f1):
+    f1_scores = []
+    for i in range(0,len(class_names)):
+        JSON = {}
+        JSON["class"]=str(class_names[i])
+        JSON['score'] = f1[i]
+        f1_scores.append(JSON)
+    return f1_scores
+
+def aucToJSON(class_names,auc):
+    auc_values =[]
+    for i in range(0,len(class_names)):
+        JSON = {}
+        JSON["class"]=str(class_names[i])
+        JSON['value'] = auc[i]
+        auc_values.append(JSON)
+    return auc_values
+
 @api_view(['POST',])
 @csrf_exempt
 
@@ -29,98 +218,46 @@ def PerformNaiveBayes(request):
     try:
         ##get the respective dataset they want to train on
         dataset = Dataset.objects.get(UserId = UserId, filename=json.dumps(filename),model = "Naive Bayes")
-
+        print('testing')
+        # response['response']="success"
+        # return Response(response)
         ## Note that tolerance etc won't be used for Naive Bayes
         ## If test data is available, train and test together
         if(dataset.testData != {}): 
-            results = TestNaiveBayes(pd.read_json(dataset.data),pd.read_json(dataset.testData),UserId,filename)
+            # response['response'] = "testing"
+            # return Response(response)
+            try:
+                json_cm, f1,auc,ROC_curves = TestNaiveBayes(pd.read_json(dataset.data),pd.read_json(dataset.testData),UserId,filename)
+                response['cm'] = json_cm
+                response['f1'] = f1
+                response['auc'] =auc
+                response['ROC'] = ROC_curves
+                print("from test")
+                return Response(response)
+            except:
+                response['message'] ="testing failure"
+                return Response(response)
             ## add results to response and return it
-
-              ## need to use the dataset.data to train a model.
-            results = TrainNaiveBayes(pd.read_json(dataset.data),UserId,filename)    
-            response['confusionMatrix'] = [
-                {
-                    "class":'Class 1',
-                    "predictions": [12,23,21] #array must be in same order as classes 
-                    #i.e preditctions[0] is the is the number of Class 1 datapoints that were identified as class 1 
-                    #and predictions[1] is the number of class 2 datapoints that were identified as class 2
-
-
-                },
-                {
-                    "class":'Class 2',
-                    "predictions": [53,20,10]
-
-                    
-                },
-                {
-                    "class":'Class 3',
-                    "predictions": [34,28,40]
-
-                    
-                } 
-            ]
-            response['f1Score'] = 0.1
-            response['AUC'] = 0.3  
-            #x and y points for the ROC curve
-            response['ROC'] = [
-                {
-                "class":"class 1",
-                "fpr_values":[0.0 ,0.0 ,0.0 ,0.0196078431372549 ,0.0196078431372549 ,0.0784313725490196 ,0.0784313725490196 ,0.09803921568627451 ,0.09803921568627451 ,0.11764705882352941 ,0.11764705882352941 ,0.13725490196078433 ,0.13725490196078433 ,0.1568627450980392 ,0.1568627450980392 ,0.17647058823529413 ,0.17647058823529413 ,0.3137254901960784 ,0.3137254901960784 ,0.3333333333333333 ,0.3333333333333333 ,0.35294117647058826 ,0.35294117647058826 ,0.4117647058823529 ,0.4117647058823529 ,0.45098039215686275 ,0.45098039215686275 ,0.47058823529411764 ,0.47058823529411764 ,0.5098039215686274 ,0.5098039215686274 ,0.5686274509803921 ,0.5686274509803921 ,1.0],
-                "tpr_values":[0.0 ,0.041666666666666664 ,0.125 ,0.125 ,0.25 ,0.25 ,0.2916666666666667 ,0.2916666666666667 ,0.3333333333333333 ,0.3333333333333333 ,0.4166666666666667 ,0.4166666666666667 ,0.5 ,0.5 ,0.5416666666666666 ,0.5416666666666666 ,0.5833333333333334 ,0.5833333333333334 ,0.7083333333333334 ,0.7083333333333334 ,0.75 ,0.75 ,0.7916666666666666 ,0.7916666666666666 ,0.8333333333333334 ,0.8333333333333334 ,0.875 ,0.875 ,0.9166666666666666 ,0.9166666666666666 ,0.9583333333333334 ,0.9583333333333334 ,1.0 ,1.0 ]
-                },
-                {
-                "class":"class 1",
-                "fpr_values":[0.0 ,0.0 ,0.0 ,0.022222222222222223 ,0.022222222222222223 ,0.1111111111111111 ,0.1111111111111111 ,0.17777777777777778 ,0.17777777777777778 ,0.2 ,0.2 ,0.24444444444444444 ,0.24444444444444444 ,0.26666666666666666 ,0.26666666666666666 ,0.37777777777777777 ,0.37777777777777777 ,0.4222222222222222 ,0.4222222222222222 ,0.4888888888888889 ,0.4888888888888889 ,0.5555555555555556 ,0.5555555555555556 ,0.6222222222222222 ,0.6222222222222222 ,0.6444444444444445 ,0.6444444444444445 ,0.6666666666666666 ,0.6666666666666666 ,0.7333333333333333 ,0.7333333333333333 ,0.7555555555555555 ,0.7555555555555555 ,0.8888888888888888 ,0.8888888888888888 ,1.0],
-                "tpr_values":[0.0 ,0.03333333333333333 ,0.13333333333333333 ,0.13333333333333333 ,0.16666666666666666 ,0.16666666666666666 ,0.2 ,0.2 ,0.26666666666666666 ,0.26666666666666666 ,0.3333333333333333 ,0.3333333333333333 ,0.4 ,0.4 ,0.43333333333333335 ,0.43333333333333335 ,0.5 ,0.5 ,0.5666666666666667 ,0.5666666666666667 ,0.6 ,0.6 ,0.6333333333333333 ,0.6333333333333333 ,0.7 ,0.7 ,0.7333333333333333 ,0.7333333333333333 ,0.9 ,0.9 ,0.9333333333333333 ,0.9333333333333333 ,0.9666666666666667 ,0.9666666666666667 ,1.0 ,1.0]
-                }
-            ]
         else:
             ## need to use the dataset.data to train a model.
-            results = TrainNaiveBayes(pd.read_json(dataset.data),UserId,filename)    
-            response['confusionMatrix'] = [
-                {
-                    "class":'Class 1',
-                    "predictions": [12,23,21] #array must be in same order as classes 
-                    #i.e preditctions[0] is the is the number of Class 1 datapoints that were identified as class 1 
-                    #and predictions[1] is the number of class 2 datapoints that were identified as class 2
+            # response['response'] = "training"
+            # return Response(response)
+            try:
 
-
-                },
-                {
-                    "class":'Class 2',
-                    "predictions": [53,20,10]
-
-                    
-                },
-                {
-                    "class":'Class 3',
-                    "predictions": [34,28,40]
-
-                    
-                } 
-            ]
-            response['f1Score'] = 0.1
-            response['AUC'] = 0.3  
-            #x and y points for the ROC curve
-            response['ROC'] = [
-                {
-                "class":"class 1",
-                "fpr_values":[0.0 ,0.0 ,0.0 ,0.0196078431372549 ,0.0196078431372549 ,0.0784313725490196 ,0.0784313725490196 ,0.09803921568627451 ,0.09803921568627451 ,0.11764705882352941 ,0.11764705882352941 ,0.13725490196078433 ,0.13725490196078433 ,0.1568627450980392 ,0.1568627450980392 ,0.17647058823529413 ,0.17647058823529413 ,0.3137254901960784 ,0.3137254901960784 ,0.3333333333333333 ,0.3333333333333333 ,0.35294117647058826 ,0.35294117647058826 ,0.4117647058823529 ,0.4117647058823529 ,0.45098039215686275 ,0.45098039215686275 ,0.47058823529411764 ,0.47058823529411764 ,0.5098039215686274 ,0.5098039215686274 ,0.5686274509803921 ,0.5686274509803921 ,1.0],
-                "tpr_values":[0.0 ,0.041666666666666664 ,0.125 ,0.125 ,0.25 ,0.25 ,0.2916666666666667 ,0.2916666666666667 ,0.3333333333333333 ,0.3333333333333333 ,0.4166666666666667 ,0.4166666666666667 ,0.5 ,0.5 ,0.5416666666666666 ,0.5416666666666666 ,0.5833333333333334 ,0.5833333333333334 ,0.7083333333333334 ,0.7083333333333334 ,0.75 ,0.75 ,0.7916666666666666 ,0.7916666666666666 ,0.8333333333333334 ,0.8333333333333334 ,0.875 ,0.875 ,0.9166666666666666 ,0.9166666666666666 ,0.9583333333333334 ,0.9583333333333334 ,1.0 ,1.0 ]
-                },
-                {
-                "class":"class 1",
-                "fpr_values":[0.0 ,0.0 ,0.0 ,0.022222222222222223 ,0.022222222222222223 ,0.1111111111111111 ,0.1111111111111111 ,0.17777777777777778 ,0.17777777777777778 ,0.2 ,0.2 ,0.24444444444444444 ,0.24444444444444444 ,0.26666666666666666 ,0.26666666666666666 ,0.37777777777777777 ,0.37777777777777777 ,0.4222222222222222 ,0.4222222222222222 ,0.4888888888888889 ,0.4888888888888889 ,0.5555555555555556 ,0.5555555555555556 ,0.6222222222222222 ,0.6222222222222222 ,0.6444444444444445 ,0.6444444444444445 ,0.6666666666666666 ,0.6666666666666666 ,0.7333333333333333 ,0.7333333333333333 ,0.7555555555555555 ,0.7555555555555555 ,0.8888888888888888 ,0.8888888888888888 ,1.0],
-                "tpr_values":[0.0 ,0.03333333333333333 ,0.13333333333333333 ,0.13333333333333333 ,0.16666666666666666 ,0.16666666666666666 ,0.2 ,0.2 ,0.26666666666666666 ,0.26666666666666666 ,0.3333333333333333 ,0.3333333333333333 ,0.4 ,0.4 ,0.43333333333333335 ,0.43333333333333335 ,0.5 ,0.5 ,0.5666666666666667 ,0.5666666666666667 ,0.6 ,0.6 ,0.6333333333333333 ,0.6333333333333333 ,0.7 ,0.7 ,0.7333333333333333 ,0.7333333333333333 ,0.9 ,0.9 ,0.9333333333333333 ,0.9333333333333333 ,0.9666666666666667 ,0.9666666666666667 ,1.0 ,1.0]
-                }
-            ]
-            
+                json_cm, f1,auc,ROC_curves = TrainNaiveBayes(pd.read_json(dataset.data),UserId,filename)
+                response['cm'] = json_cm
+                response['f1'] = f1
+                response['auc'] =auc
+                response['ROC'] = ROC_curves
+                return Response(response)
+            except:
+                response['message'] ="training failure"
+                return Response(response)
     except:
         ## if we fail to find the file and user id , return this
         ## Should almost never happen since the filename is associated with their user id.
         response['response'] = "Failed to locate file "
-    return Response(response)
+        return Response(response)
 
 @api_view(['POST',])   ## ensures only POST requests can be made to the api
 @csrf_exempt
@@ -172,7 +309,35 @@ def getDatasetsInfo(request):
 
 
 
+def UploadTrainingResults(userid,filename,trainingacc,f1Sc,auc):
+    try:
+        ## create new object in db and pass it all the necessary info
+        DataInstance = NaiveBayes(UserId=userid,filename=filename,TrainingAccuracy=trainingacc,f1score = f1Sc,AUCScore=auc)
+        # print(DataInstance.f1score)
+        # print(DataInstance.filename)
+        # print(DataInstance.TrainingAccuracy)
+        # print(DataInstance.AUCScore)
+        DataInstance.save()
+    except:
+        ## if the object already exists, get the object an update all the data. Once upated save it
+        obj = NaiveBayes.objects.get(UserId=userid, filename=filename)
+        obj.TrainingAccuracy = trainingacc
+        obj.f1score = f1Sc
+        obj.AUCScore=auc
+        obj.save()
 
+def UploadTestResults(userid,filename,testingacc,f1Sc,AUC):
+    try:
+        ## create new object in db and pass it all the necessary info
+        DataInstance = NaiveBayes(UserId=userid,filename=filename,TestingAccuracy=testingacc,f1score = f1Sc,AUCScore=AUC)
+        DataInstance.save()
+    except:
+        ## if the object already exists, get the object an update all the data. Once upated save it
+        obj = NaiveBayes.objects.get(UserId=userid, filename=filename)
+        obj.TestingAccuracy = testingacc
+        obj.f1score = f1Sc
+        obj.AUCScore=AUC
+        obj.save()
 
 @api_view(['POST',])
 @csrf_exempt
@@ -213,3 +378,19 @@ def discard_training_results(request):
         ## should never occur though
         resp['response'] = "Failed to delete results"
         return Response(resp)
+
+def ConfusionToJson(class_names,cm):
+    CM = []
+    for k in range(0,len(class_names)):
+        JSON = {}
+        JSON['class']=str(class_names[k])
+        JSON['predictions']=cm[:][k]
+        CM.append(JSON)
+    return CM
+
+
+def ArrToJson(x):
+    JSON = {}
+    for k in range(len(x)):
+        JSON[str(k)] = x[k]
+    return JSON
