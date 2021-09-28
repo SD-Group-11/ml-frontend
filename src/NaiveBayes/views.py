@@ -85,42 +85,81 @@ def TestNaiveBayes(data,testdata,id,filename):
     ## remember to save the results
     # return id
     # print('testing')
+    df_copy = testdata
+    class_names= list(df_copy[df_copy.columns[-1]].unique())
+    target_column_name=df_copy.columns[-1]
+    for i in range(0,len(class_names)):
+        class_names[i] = target_column_name+" = "+ str(class_names[i])
+    df_copy_test = testdata
     y=data.iloc[:,-1:]
     ytest=testdata.iloc[:,-1:]
     data = data.iloc[: , :-1]
     testdata=testdata.iloc[:,:-1]
     x=data
     xtest=testdata
+    x_original_size = x.shape[0]
+    print(x_original_size)
+    xtemp=x.append(xtest)
+    # x = xtemp.iloc[:x_original_size, :]
+    # print(x)
+    # xtest=xtemp.iloc[x_original_size:,:]
+    # print(xtest)
+    # print(x,xtest)
     # process data
-    x = encodeFeatures(x)
-    xtest=encodeFeatures(xtest)
-    x = findAndFillNullValues(x)
-    xtest=findAndFillNullValues(xtest)
+    xtemp = encodeFeatures(xtemp)
+    xtemp = findAndFillNullValues(xtemp)
+    x = xtemp.iloc[:x_original_size, :]
+    xtest=xtemp.iloc[x_original_size:,:]
 
+    print(xtemp.shape)
+    # x = encodeFeatures(x)
+    # xtest=encodeFeatures(xtest)
+    # x = findAndFillNullValues(x)
+    # xtest=findAndFillNullValues(xtest)
     model = GaussianNB()
     model.fit(x, y)
-    
+
     # Predicting the Test set results
+    # print("mark 2")
+    # print(x.columns)
+    # print(xtest.columns)
+    # print(x.shape)
+    # print(xtest.shape)
     y_pred = model.predict(xtest)
+
+
+    print("mark 3")
 
     # Making the Confusion Matrix
     ac = accuracy_score(ytest,y_pred)
-    cm = confusion_matrix(ytest, y_pred)
-    f1=f1_score(y, y_pred, average=None)
+    print("mark 4")
 
-    y_pred_proba = model.predict_proba(xtest)
+    cm = confusion_matrix(ytest, y_pred)
+    f1=f1_score(ytest, y_pred, average=None)
+    print(f1)
+    json_f1 = f1ToJSON(class_names,f1)
+    print("mark 5")
+
+    try:
+        y_pred_proba = model.predict_proba(xtest)
+    except Exception as e: print(e)    
+
+    fpr,tpr,roc_auc = getROCData(df_copy_test,ytest,y_pred_proba)
+    json_auc = aucToJSON(class_names,roc_auc)
+    ROC_curves = ROC_TO_JSON(tpr,fpr,class_names)
+
     # false_positive_rate, true_positive_rate, thresholds = roc_curve(ytest, y_pred_proba[:,1])
     # auc=metrics.auc(false_positive_rate,true_positive_rate)
   
     # auc=ArrToJson(auc)
-    json_cm=ConfusionToJson(data,cm)
+    json_cm=ConfusionToJson(class_names,cm)
     # json_fpr=ArrToJson(false_positive_rate)
     # json_tpr=ArrToJson(true_positive_rate)
-    UploadTestResults(id,filename,ac,f1,auc)
+    UploadTestResults(id,filename,ac,json_f1,json_auc)
     
     # return "test success"
 
-    return json_cm, f1,auc,json_fpr,json_tpr
+    return json_cm, json_f1,json_auc,ROC_curves
 
 def getROCData(df,y, y_pred_proba):
     y_column = df[df.columns[-1]] # get the y column so that we can 
