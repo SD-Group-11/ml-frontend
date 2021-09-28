@@ -1,4 +1,4 @@
-import LinearRegressionTest from '@/views/mlModels/LinearRegressionTest.vue'
+import LinearRegressionTest from '@/views/LinearRegressionTest.vue'
 import { createStore } from 'vuex'
 import { mount, flushPromises,  shallowMount  } from '@vue/test-utils'
 import axios from 'axios'
