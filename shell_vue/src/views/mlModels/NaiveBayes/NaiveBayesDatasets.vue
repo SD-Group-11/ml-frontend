@@ -125,32 +125,26 @@
                                     <p class="control px-1">
                                         <template v-if="dataset.Info">
                 
-                                            <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" @click="showNoReportModal = true">
+                                            <!-- <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" @click="showNoReportModal = true">
                                         
                                             
                                                 <span class="icon is-normal">
-                                                    <!-- <i class="fas fa-brain"></i> -->
                                                     <i class="fas fa-lg fa-file-medical-alt"></i>
                                                 </span>
 
-                                                <!-- <span><strong>View Model Report</strong></span> -->
-                                                <!-- <span>Model</span> -->
 
-                                            </button>
+                                            </button> -->
                                         </template>
-                                        <template v-else>
+                                        <!-- <template v-else>
                                             <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" v-on:click ="getReport(dataset.MSE, dataset.TrainAccuracy, dataset.TestAccuracy)">
                                         
                                                 <span class="icon is-normal">
-                                                    <!-- <i class="fas fa-brain"></i> -->
                                                     <i class="fas fa-lg fa-file-medical-alt"></i>
                                                 </span>
 
-                                                <!-- <span><strong>View Model Report</strong></span> -->
-                                                <!-- <span>Model</span> -->
 
                                             </button>
-                                        </template>
+                                        </template> -->
                                     </p>
 
 

@@ -135,13 +135,25 @@ const routes = [
       requireLogin: true,
       model: true,
       modelName: 'NaiveBayes',
-      type: 2
+      type: 1
     }    
   },
   {
     path: '/naive-bayes-datasets',
     name: 'NaiveBayesDatasets',
     component: NaiveBayesDatasets,
+    meta: {
+      requireLogin: true,
+      model: true,
+      modelName: 'NaiveBayes',
+      type: 0
+    }    
+  },
+
+  {
+    path: '/naive-bayes-tests',
+    name: 'NaiveBayesTests',
+    component: NaiveBayesTests,
     meta: {
       requireLogin: true,
       model: true,
