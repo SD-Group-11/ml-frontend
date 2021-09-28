@@ -237,10 +237,6 @@ def PerformNaiveBayes(request):
             ## add results to response and return it
         else:
             ## need to use the dataset.data to train a model.
-<<<<<<< HEAD
-            results = TrainNaiveBayes(pd.read_json(dataset.data),UserId,filename)
-        
-=======
             # response['response'] = "training"
             # return Response(response)
             try:
@@ -259,7 +255,6 @@ def PerformNaiveBayes(request):
             except:
                 response['message'] ="training failure"
                 return Response(response)
->>>>>>> 7de40b4ede04be2a7c8f9e1efa9f77517248d074
     except:
         ## if we fail to find the file and user id , return this
         ## Should almost never happen since the filename is associated with their user id.
