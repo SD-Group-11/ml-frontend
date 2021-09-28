@@ -1,4 +1,4 @@
-import numpy as np
+≠import numpy as np
 import pandas as pd
 import json
 from rest_framework.decorators import api_view
@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from scipy.sparse import data
 from sklearn import metrics
 from datasets.models import Dataset
-from .models import NaiveBayes
+from .models import NBTrainedModel
 from rest_framework.response import Response 
 from sklearn import preprocessing
 from sklearn.datasets import load_iris
@@ -43,7 +43,6 @@ def TrainNaiveBayes(data,id,filename):
 
     # Predicting the Test set results
     y_pred = model.predict(x)
-
     # Making the Confusion Matrix
     ac = accuracy_score(y,y_pred)
     cm = confusion_matrix(y, y_pred)
@@ -54,7 +53,6 @@ def TrainNaiveBayes(data,id,filename):
     # print(cm)
     # f1=ArrToJson(f1)
     
-
     y_pred_proba = model.predict_proba(x)
     fpr,tpr,roc_auc = getROCData(df_copy,y,y_pred_proba)
     json_auc = aucToJSON(class_names,roc_auc)
@@ -78,8 +76,8 @@ def TrainNaiveBayes(data,id,filename):
     # print(json_fpr)
     # json_tpr=ArrToJson(true_positive_rate)
     
-    # UploadTrainingResults(id,filename,ac,json_f1,json_auc)
-
+    UploadTrainingResults(id,filename,ac,json_f1,json_auc)
+    
     return json_cm, json_f1,json_auc,ROC_curves
 
 def TestNaiveBayes(data,testdata,id,filename):
@@ -158,7 +156,7 @@ def TestNaiveBayes(data,testdata,id,filename):
     json_cm=ConfusionToJson(class_names,cm)
     # json_fpr=ArrToJson(false_positive_rate)
     # json_tpr=ArrToJson(true_positive_rate)
-    # UploadTestResults(id,filename,ac,json_f1,json_auc)
+    UploadTestResults(id,filename,ac,json_f1,json_auc)
     
     # return "test success"
 
@@ -221,21 +219,24 @@ def ROC_TO_JSON(tpr,fpr,class_names):
     return ROC_curves
 def f1ToJSON(class_names,f1):
     f1_scores = []
+    # f1_scores = {}
     for i in range(0,len(class_names)):
         JSON = {}
         JSON["class"]=str(class_names[i])
         JSON['score'] = f1[i]
         f1_scores.append(JSON)
-
+        # f1_scores[str(i)] = JSON
     return f1_scores
 
 def aucToJSON(class_names,auc):
     auc_values =[]
+    # auc_values ={}
     for i in range(0,len(class_names)):
         JSON = {}
         JSON["class"]=str(class_names[i])
         JSON['value'] = auc[i]
         auc_values.append(JSON)
+        # auc_values[str(i)] = JSON
     return auc_values
 
 @api_view(['POST',])
@@ -267,7 +268,6 @@ def PerformNaiveBayes(request):
                 print("from test")
                 return Response(response)
             except:
-                print("Unexpected error:", sys.exc_info()[0])
                 response['message'] ="testing failure"
                 return Response(response)
             ## add results to response and return it
@@ -319,7 +319,7 @@ def getDatasetsInfo(request):
             dataAttributes['created'] = Obj.created ## date created which automatically filled when object is created
             try:
                 ## if we succed in finding the dataset, check if it was trained and return metrics from database
-                ModelData = NaiveBayes.objects.get(UserId=Obj.UserId, filename=Obj.filename)
+                ModelData = NBTrainedModel.objects.get(UserId=Obj.UserId, filename=Obj.filename)
                 dataAttributes['f1'] = ModelData.f1score
                 dataAttributes['AUC'] = ModelData.AUCScore
                 dataAttributes['TrainingAccuracy'] = ModelData.TrainingAccuracy
@@ -345,15 +345,16 @@ def getDatasetsInfo(request):
 def UploadTrainingResults(userid,filename,trainingacc,f1Sc,auc):
     try:
         ## create new object in db and pass it all the necessary info
-        DataInstance = NaiveBayes(UserId=userid,filename=filename,TrainingAccuracy=trainingacc,f1score = f1Sc,AUCScore=auc)
-        # print(DataInstance.f1score)
-        # print(DataInstance.filename)
-        # print(DataInstance.TrainingAccuracy)
-        # print(DataInstance.AUCScore)
+        DataInstance = NBTrainedModel(UserId=userid,filename=json.dumps(filename),TrainingAccuracy=trainingacc,f1score = f1Sc,AUCScore=auc)
+        print(DataInstance.UserId)
+        print(DataInstance.f1score)
+        print(DataInstance.filename)
+        print(DataInstance.TrainingAccuracy)
+        print(DataInstance.AUCScore)
         DataInstance.save()
     except:
         ## if the object already exists, get the object an update all the data. Once upated save it
-        obj = NaiveBayes.objects.get(UserId=userid, filename=filename)
+        obj = NBTrainedModel.objects.get(UserId=userid, filename=json.dumps(filename))
         obj.TrainingAccuracy = trainingacc
         obj.f1score = f1Sc
         obj.AUCScore=auc
@@ -362,11 +363,11 @@ def UploadTrainingResults(userid,filename,trainingacc,f1Sc,auc):
 def UploadTestResults(userid,filename,testingacc,f1Sc,AUC):
     try:
         ## create new object in db and pass it all the necessary info
-        DataInstance = NaiveBayes(UserId=userid,filename=filename,TestingAccuracy=testingacc,f1score = f1Sc,AUCScore=AUC)
+        DataInstance = NBTrainedModel(UserId=userid,filename=filename,TestingAccuracy=testingacc,f1score = f1Sc,AUCScore=AUC)
         DataInstance.save()
     except:
         ## if the object already exists, get the object an update all the data. Once upated save it
-        obj = NaiveBayes.objects.get(UserId=userid, filename=filename)
+        obj = NBTrainedModel.objects.get(UserId=userid, filename=filename)
         obj.TestingAccuracy = testingacc
         obj.f1score = f1Sc
         obj.AUCScore=AUC
@@ -382,7 +383,7 @@ def trained_datasets(request):
     try:
         i = 1
         ##get queryset of all datasets where they occur in the TrainedModel db
-        AllTrained = NaiveBayes.objects.filter(UserId=UserId)
+        AllTrained = NBTrainedModel.objects.filter(UserId=UserId)
         for Obj in AllTrained:
             response[i] = json.loads(Obj.filename)
             i+=1
@@ -402,7 +403,7 @@ def discard_training_results(request):
     resp = {}
     try:
         ## try to locate the object and if it exists delete it
-        Obj = NaiveBayes.objects.get(UserId=id,filename=json.dumps(filename))
+        Obj = NBTrainedModel.objects.get(UserId=id,filename=json.dumps(filename))
         Obj.delete()
         resp['response'] = "Results discarded."
         return Response(resp)
@@ -412,6 +413,32 @@ def discard_training_results(request):
         resp['response'] = "Failed to delete results"
         return Response(resp)
 
+@api_view(['POST',])   ## ensures only POST requests can be made to the api
+@csrf_exempt
+
+def delete_dataset(request):
+
+    UserId = request.data["UserID"]
+    filename = request.data["Filename"]
+    ModelName = request.data["ModelName"]
+    response ={}
+    try:
+        ## get dataset to be deleted in the db
+        dataset = Dataset.objects.get(UserId = UserId, filename=json.dumps(filename),model =ModelName)
+        try:
+            ## if model was trained on , get that data as well and delete it
+            Obj = NBTrainedModel.objects.get(UserId=UserId, filename=json.dumps(filename))
+            Obj.delete()
+        except:
+            pass
+        ##delete dataset
+        dataset.delete()
+        response['success'] = "Dataset Successfully deleted."
+
+        return Response(response)
+    except:
+        response['error'] = "Failed to delete dataset."
+        return Response(response)
 def ConfusionToJson(class_names,cm):
     CM = []
     for k in range(0,len(class_names)):

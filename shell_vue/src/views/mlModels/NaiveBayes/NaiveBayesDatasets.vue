@@ -708,7 +708,7 @@
                     const model = "Naive Bayes"
                     const data = {'UserID':id,"Filename":filename,"ModelName":model}
                     await axios
-                    .post("/datasets/deleteDataset",data)
+                    .post("/NaiveBayes/deleteDataset",data)
                     .then(response => {
                         var resp
                         try {

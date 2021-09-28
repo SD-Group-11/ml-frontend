@@ -4,7 +4,8 @@ from .views import(
     trained_datasets,
     discard_training_results,
     getDatasetsInfo,
-    PerformNaiveBayes
+    PerformNaiveBayes,
+    delete_dataset
 ) 
 
 app_name ='NaiveBayes'
@@ -13,5 +14,6 @@ urlpatterns =[
     path('trainedDatasets',trained_datasets),
     path('discardResults',discard_training_results),
     path('getDatasetsInfo',getDatasetsInfo),
-    path('PerformNaiveBayes',PerformNaiveBayes)
+    path('PerformNaiveBayes',PerformNaiveBayes),
+    path('deleteDataset',delete_dataset)
 ]
