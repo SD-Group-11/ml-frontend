@@ -83,15 +83,22 @@
             <div class="columns">
                 <div class="column is-one-third">
                     <div class="notification is-warning has-text-black has-text-left" >
-                        <strong>F1 Score: {{ (f1Socre).toFixed(2) }}</strong>
-                        
+                        <strong>F1 Scores: </strong>
+                        <li v-for="f1 in f1Score" v-bind:key="f1.class">
+                                Class {{ f1.class }}:
+                                    - {{ (f1.score).toFixed(2) }}
+                        </li>
                     </div>
                     
                 </div>
                 <div class="column is-two-thirds is-warning">
                     
                     <div class="notification is-warning has-text-black has-text-left" >
-                        <strong>AUC: {{ AUC }}</strong>
+                        <strong>AUC </strong>
+                        <li v-for="auc in AUC" v-bind:key="auc.class">
+                                Class {{ auc.class }}:
+                                    - {{ (auc.value) }}
+                        </li>
                     </div>
                 </div>
             </div>
@@ -190,7 +197,7 @@
                 hasDatasets: false,
                 selected: '',
                 // Response data
-                f1Socre:-1,
+                f1Score:[],
                 AUC:-1,
                 numberFeatures:-1,
                 confusionMatrix:[],
@@ -306,7 +313,7 @@
                           XYPairs.push({x: lineObj.fpr_values[j], y: lineObj.tpr_values[j]})
                     }
                     var ROC_Series = {
-                        name:lineObj.class,
+                        name:"class: " + lineObj.class,
                         data:XYPairs
                     }
                     ROC_SeriesArray.push(ROC_Series)
@@ -464,46 +471,6 @@
                     this.$store.commit('setIsLoading',false)
 
                 })
-
-                    //old code for LR delete this
-                    //start
-                //     //Michael will use response.data for his graphing 
-                //     console.log(response.data)
-                //     this.extractData(response.data);
-
-                //     this.isTraining = true
-
-                    
-                //     this.plotPredictedVSActual(this.trainX.length, this.trainY, this.trainPredictedY)
-
-                //     this.showTrainingGraphs = true
-                //     this.isTraining = false
-
-                //     // Create graphs for Test dataset
-                //     this.isTesting = true
-
-                //     //If there is only one feature we can plot the line of best fit
-                //     if (this.numberFeatures == 1) {
-                //         // Since testX is received and stored as a 2D array, even if there is only one feature
-                //         // we need to reshape it into a 1D array to plot the line of best fit
-
-                //         // Reshape Test X data
-                //         var tempTestX = []
-                //         for (let i = 0; i < this.testX.length; i++) {
-                //             tempTestX.push(this.testX[i][0])
-                //         }
-                //         this.testX = tempTestX
-
-                //         this.plotLineOfBestFit(this.testX, this.testY, this.coefficients, this.intercept);
-                //     }
-
-                //     this.plotPredictedVSActual(this.testX.length, this.testY, this.testPredictedY)
-
-                //     // this.showTestingGraphs = true
-
-                // });
-                // this.$store.commit('setIsLoading',false)
-                // end
             },
             // We require the UserID as well as the corresponding filename to delete the results we get from training
             async DiscardTrainResults(){
@@ -513,7 +480,7 @@
                 //create the dict that will be the data for backend
                 var data = {"UserID":id,"Filename":filename};
                 await axios
-                .post('/NaiveBayes/discardResult',data)
+                .post('/NaiveBayes/discardResults',data)
                 .then(response => {
                     // get response from backend
                     var resp = response.data['response'];
@@ -555,7 +522,7 @@
                 //create the dict that will be the data for backend
                 var data = {"UserID":id,"Filename":filename};
                 await axios
-                .post('/Naivebayes/discardResults',data)
+                .post('/NaiveBayes/discardResults',data)
                 .then(response => {
                     // get response from backend
                     var resp = response.data['response'];
@@ -592,11 +559,12 @@
                 this.$store.commit('setIsLoading',true)
                 console.log('responseData', responseData)
                 
-                this.confusionMatrix =responseData['confusionMatrix']
+                this.confusionMatrix =responseData['cm']
               
                 // f1 score and AUC
-                this.f1Socre = responseData['f1Score']
-                this.AUC = responseData['AUC']
+                this.f1Score = responseData['f1']
+            
+                this.AUC = responseData['auc']
                 this.ROC = responseData['ROC']
                 this.showTrainingResults=true;
                 //number of features

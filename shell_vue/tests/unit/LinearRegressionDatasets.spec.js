@@ -205,13 +205,13 @@ describe('LinearRegressionDatasets.vue', () => {
   //   await wrapper.find('#backButton').trigger('click')
   //   expect(mockrouter.push).toHaveBeenCalledWith('/linear-regression-tests')
   // })
-  // test('forward arrow redirects to training page', async () => {
-  //   const wrapper = factory()
-  //   // const backbutton = wrapper.find('#backButton')
-  //   // expect(backbutton.exists()).toBe(true)
-  //   await wrapper.find('#forwardButton').trigger('click')
-  //   expect(mockrouter.push).toHaveBeenCalledWith('/linear-regression')
-  // })
+  // // test('forward arrow redirects to training page', async () => {
+  // //   const wrapper = factory()
+  // //   // const backbutton = wrapper.find('#backButton')
+  // //   // expect(backbutton.exists()).toBe(true)
+  // //   await wrapper.find('#forwardButton').trigger('click')
+  // //   expect(mockrouter.push).toHaveBeenCalledWith('/linear-regression')
+  // // })
   test('get request for user details after mount', async () => {
       const wrapper = factory()
       await flushPromises()
