@@ -2,8 +2,10 @@
     <div class="container is-fluid">
         <GlobalEvents
             @keydown.left="pageNav('/naive-bayes-datasets')"
-            @keydown.right="pageNav('/naive-bayes-tests')"
+            @keydown.right="pageNav('/naive-bayes-tests')" 
+            
         />
+        <!-- add carousel for test to train (to the left) -->
 
         <div class="container is-fluid">
             <!-- <div class="notification is-info has-text-centered" >
@@ -21,7 +23,7 @@
                     </div>
                     
                     <div class="column">
-                        <strong><h3 class="title is-3">Model Training</h3></strong>
+                        <strong><h3 class="title is-3">Model Testing</h3></strong>
                     </div>
                     
                     <div class="column is-one-fifth">
@@ -45,11 +47,13 @@
                         <div class="field ">
                             <label class="label">Dataset</label>
                             <select v-model="selected" id = "files" class="select is-normal is-size-6 is-info" style="width: 100%;">
-                                <option  disabled value="">Select dataset</option>
+                                <option  disabled value="">Select trained model</option>
                                 <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
                             </select>
                         </div>
-                        
+                        <!-- U -->
+                      <button class="button" id="selectButton" v-on:click='checkTestingData()'>Select</button>
+
                     </div>
 
                 </div>
@@ -66,9 +70,9 @@
                 </div>
             </div>
 
-            <!-- Train model button -->
+            <!-- test model button U - unsure about onclick statement-->
             <div>
-                <button style="text-align: center;" class="button is-info has-text-black"  v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false'><strong>Train Model</strong></button>
+                <button style="text-align: center;" class="button is-info is light has-text-black "  v-on:click='showTrainingResults'><strong>Test Model</strong></button>
             </div>
             <div class="block"></div>
         
@@ -83,22 +87,15 @@
             <div class="columns">
                 <div class="column is-one-third">
                     <div class="notification is-warning has-text-black has-text-left" >
-                        <strong>F1 Scores: </strong>
-                        <li v-for="f1 in f1Score" v-bind:key="f1.class">
-                                Class {{ f1.class }}:
-                                    - {{ (f1.score).toFixed(2) }}
-                        </li>
+                        <strong>F1 Score: {{ (f1Socre).toFixed(2) }}</strong>
+                        
                     </div>
                     
                 </div>
                 <div class="column is-two-thirds is-warning">
                     
                     <div class="notification is-warning has-text-black has-text-left" >
-                        <strong>AUC </strong>
-                        <li v-for="auc in AUC" v-bind:key="auc.class">
-                                Class {{ auc.class }}:
-                                    - {{ (auc.value) }}
-                        </li>
+                        <strong>AUC: {{ AUC }}</strong>
                     </div>
                 </div>
             </div>
@@ -157,7 +154,6 @@
     .button:hover {
         background-position: 0;
     } */
-
     h2 {
         color: black;
         font-size: 30px;
@@ -166,7 +162,6 @@
         font-weight: 500;
         text-align: center;
     }
-
     .accuracy {
         color: #037BF7;
         font-size: 30px;
@@ -180,7 +175,6 @@
     import VueApexCharts from "vue3-apexcharts"
     import { GlobalEvents } from 'vue-global-events'
     import {toast} from 'bulma-toast'
-
     export default {
         name: "NaiveBayesTraining",
         components: {
@@ -197,13 +191,12 @@
                 hasDatasets: false,
                 selected: '',
                 // Response data
-                f1Score:[],
+                f1Socre:-1,
                 AUC:-1,
                 numberFeatures:-1,
                 confusionMatrix:[],
                 ROC:[],
   
-
                 
                //Apex chart data for confusion matrix and ROC
                 confusionMatrixOptions:[],
@@ -211,12 +204,10 @@
                 ROCOptions: [],
                 ROCSeries:[],
             
-
                 //booleans to control whether the confusion matrix and the ROC chart should be displayed
                 showConfusionMatrix:false,
                 showROC:false,
                 tabsInitialized:false,
-
                 //controls wether training results are displayed
                 showTrainingResults:false,
             }
@@ -224,7 +215,6 @@
         mounted(){
             this.getAccount()
             //init confusion matrix remove this line
-
         },
         methods:{
             //create confusion Matrix
@@ -253,7 +243,6 @@
                                 fontSize: '1rem'
                             }  
                         }                      
-
                     },
                     yaxis: {
                         title: {
@@ -313,7 +302,7 @@
                           XYPairs.push({x: lineObj.fpr_values[j], y: lineObj.tpr_values[j]})
                     }
                     var ROC_Series = {
-                        name:"class: " + lineObj.class,
+                        name:lineObj.class,
                         data:XYPairs
                     }
                     ROC_SeriesArray.push(ROC_Series)
@@ -353,7 +342,6 @@
                             style: {
                                 fontSize: '1.2rem'
                             }
-
                         },
                         labels: {
                             style: {
@@ -388,27 +376,21 @@
                 // ]
                 this.showROC=true;
             },
-
             pageNav(route){
                 this.$router.push(route)
             },
             async getAccount(){
                 this.$store.commit('setIsLoading',true)
-
                 await axios
                     .get('/api/v1/users/me')
-
                     .then(response => {
                         this.userDetails=response.data
                         this.getUserDatasets()
                     })
-
                     .catch(error => {
                         console.log(error)
                     })
-
                 this.$store.commit('setIsLoading',false)
-
             },
             async getUserDatasets(){
                 this.$store.commit('setIsLoading',true)
@@ -442,9 +424,6 @@
                 })
                 this.$store.commit('setIsLoading',false)
             },
-
-
-
             // Call this method when the user clicks Train Model 
             async TrainModel(){
                 this.$store.commit('setIsLoading',true)
@@ -452,11 +431,9 @@
                 //Please get the filename from the dropdown and set it here 
                 var filename = this.selected;
                 var data ={"UserId":id,"filename":filename}
-
                 console.log('data: ',data)
                 await axios
                 .post("/NaiveBayes/PerformNaiveBayes",data)
-
                 .then(response =>{
                     this.extractData(response.data)
                     this.createConfusionMatrix()
@@ -466,11 +443,38 @@
                     this.$nextTick(()=> {
                         // DOM updated
                         document.getElementById('show_CF_Btn').click();
-
                     })
                     this.$store.commit('setIsLoading',false)
-
                 })
+                    //old code for LR delete this
+                    //start
+                //     //Michael will use response.data for his graphing 
+                //     console.log(response.data)
+                //     this.extractData(response.data);
+                //     this.isTraining = true
+                    
+                //     this.plotPredictedVSActual(this.trainX.length, this.trainY, this.trainPredictedY)
+                //     this.showTrainingGraphs = true
+                //     this.isTraining = false
+                //     // Create graphs for Test dataset
+                //     this.isTesting = true
+                //     //If there is only one feature we can plot the line of best fit
+                //     if (this.numberFeatures == 1) {
+                //         // Since testX is received and stored as a 2D array, even if there is only one feature
+                //         // we need to reshape it into a 1D array to plot the line of best fit
+                //         // Reshape Test X data
+                //         var tempTestX = []
+                //         for (let i = 0; i < this.testX.length; i++) {
+                //             tempTestX.push(this.testX[i][0])
+                //         }
+                //         this.testX = tempTestX
+                //         this.plotLineOfBestFit(this.testX, this.testY, this.coefficients, this.intercept);
+                //     }
+                //     this.plotPredictedVSActual(this.testX.length, this.testY, this.testPredictedY)
+                //     // this.showTestingGraphs = true
+                // });
+                // this.$store.commit('setIsLoading',false)
+                // end
             },
             // We require the UserID as well as the corresponding filename to delete the results we get from training
             async DiscardTrainResults(){
@@ -480,7 +484,7 @@
                 //create the dict that will be the data for backend
                 var data = {"UserID":id,"Filename":filename};
                 await axios
-                .post('/NaiveBayes/discardResults',data)
+                .post('/NaiveBayes/discardResult',data)
                 .then(response => {
                     // get response from backend
                     var resp = response.data['response'];
@@ -511,9 +515,7 @@
                             })  
                     }
                 })
-
             },
-
             // We require the UserID as well as the corresponding filename to delete the results we get from training
             async DiscardTrainResults(){
                 var id = this.userDetails.id;
@@ -522,7 +524,7 @@
                 //create the dict that will be the data for backend
                 var data = {"UserID":id,"Filename":filename};
                 await axios
-                .post('/NaiveBayes/discardResults',data)
+                .post('/Naivebayes/discardResults',data)
                 .then(response => {
                     // get response from backend
                     var resp = response.data['response'];
@@ -559,21 +561,18 @@
                 this.$store.commit('setIsLoading',true)
                 console.log('responseData', responseData)
                 
-                this.confusionMatrix =responseData['cm']
+                this.confusionMatrix =responseData['confusionMatrix']
               
                 // f1 score and AUC
-                this.f1Score = responseData['f1']
-            
-                this.AUC = responseData['auc']
+                this.f1Socre = responseData['f1Score']
+                this.AUC = responseData['AUC']
                 this.ROC = responseData['ROC']
                 this.showTrainingResults=true;
                 //number of features
                 // this.numberFeatures = Object.values(responseData['jsonFeatures'])[0].length -1
                 this.$store.commit('setIsLoading',false)
             },
-
             
-
             // tabs
             openTab(event, tabId,tabBtnId){
                 this.tabsInitialized=true;
@@ -589,11 +588,51 @@
                {
                    tablinks[i].className = tablinks[i].className.replace('is-active', '')
                }
-
             //show curr tab and add is-active to that tab
                 document.getElementById(tabId).style.display = 'block'
                 document.getElementById(tabBtnId).classList.add('is-active')
                 //event.target.classList.add('is-active')
+            },
+
+            // from LR testing page
+            async checkTestingData() {
+                var filename = this.selected;
+                var model = "Naive Bayes";
+                var data ={"UserID":this.userDetails.id,"Filename":filename,"ModelName":model};
+                await axios
+                .post('/datasets/checkTestData',data)
+                .then(response =>{
+                    if( response.data['response'] == "Test Data does not exist"){
+                        console.log("no testing data")
+                        // Type = 'is-danger';
+                        console.log(data)
+
+                        toast({
+                            message: "please upload test dataset on Manage Datasets page",
+                            type: 'is-danger',
+                            dismissible: true,
+                            pauseOnHover: true,
+                            duration: 15000,
+                            position: 'bottom-center',
+                        })
+                        //have the pop-up come here
+                        //WORK HERE - toast message
+                    }
+                    else{
+                        //do all the funky stuff here
+                        //re-run linear regression here
+
+                        //secretly run regression:
+
+                        console.log(this.userFiles)
+                        console.log("SUCCESS MY GUY LETS GOOOO")
+                        this.TrainModel()
+                    }
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+
             }
         }
     }

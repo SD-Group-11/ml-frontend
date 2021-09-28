@@ -23,9 +23,11 @@ from sklearn.metrics import f1_score
 def TrainNaiveBayes(data,id,filename):
     ## fill in naive bayes training
     ## save the results into db
-    
     df_copy = data
-    class_names= df_copy[df_copy.columns[-1]].unique()
+    class_names= list(df_copy[df_copy.columns[-1]].unique())
+    target_column_name=df_copy.columns[-1]
+    for i in range(0,len(class_names)):
+        class_names[i] = target_column_name+" = "+ str(class_names[i])
     y=data.iloc[:,-1:]
     data = data.iloc[: , :-1]
     x=data
@@ -69,7 +71,6 @@ def TrainNaiveBayes(data,id,filename):
     # plt.plot(false_positive_rate, true_positive_rate, linestyle='-')
 
     json_cm=ConfusionToJson(class_names,cm)
-
     # print(json_cm)
     # json_fpr=ArrToJson(false_positive_rate)
     # print(json_fpr)
@@ -170,7 +171,6 @@ def getROCData(df,y, y_pred_proba):
     fpr = dict()
     tpr = dict()
     roc_auc = dict()
-    class_names = dict()
     for i in range(n_classes):
         fpr[i], tpr[i], _ = roc_curve(y_dummies.iloc[:, i], y_pred_proba[:, i])
         roc_auc[i] = auc(fpr[i], tpr[i])
@@ -259,16 +259,13 @@ def PerformNaiveBayes(request):
             # response['response'] = "testing"
             # return Response(response)
             try:
+                print("mark 1")
                 json_cm, f1,auc,ROC_curves = TestNaiveBayes(pd.read_json(dataset.data),pd.read_json(dataset.testData),UserId,filename)
-                print("json_cm",json_cm)
-                print("f1",f1)
-                print("auc",auc)
-                print("ROC_curves",ROC_curves)
                 response['cm'] = json_cm
                 response['f1'] = f1
                 response['auc'] =auc
-                response['ROC'] =ROC_curves
-
+                response['ROC'] = ROC_curves
+                print("from test")
                 return Response(response)
             except:
                 response['message'] ="testing failure"
@@ -281,11 +278,6 @@ def PerformNaiveBayes(request):
             try:
 
                 json_cm, f1,auc,ROC_curves = TrainNaiveBayes(pd.read_json(dataset.data),UserId,filename)
-                # print("mark 1")
-                # print("ROC_curves",ROC_curves)
-                # print("auc",auc)
-                # print("f1",f1)
-                # print("cm",cm)
                 response['cm'] = json_cm
                 response['f1'] = f1
                 response['auc'] =auc
