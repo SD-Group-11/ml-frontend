@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import LinearRegressionTest from '@/views/mlModels/LinearRegressionTest.vue'
-=======
-import NaiveBayesTests from '@/views/mlModels/NaiveBayes/NaiveBayesTesting.vue';
->>>>>>> b8ac7737dcef1c4b6d5d4e729a0eda84437706b3
+import LinearRegressionTest from '@/views/mlModels/LinearRegression/LinearRegressionTest.vue'
 import { createStore } from 'vuex'
 import { mount, flushPromises,  shallowMount  } from '@vue/test-utils'
 import axios from 'axios'
@@ -47,7 +43,6 @@ const mockrouter = {
   push: jest.fn()
 }
 
-<<<<<<< HEAD
 const series = [
     {
       "name": "Actual Values",
@@ -1319,16 +1314,11 @@ const options = {
 
 function factory(){
     return shallowMount(LinearRegressionTest,{
-=======
-function factory(){
-    return shallowMount(NaiveBayesTests,{
->>>>>>> b8ac7737dcef1c4b6d5d4e729a0eda84437706b3
       global: { 
         plugins: [store]
       },
       data(){
         return{
-<<<<<<< HEAD
             optionsLOBF: options,
             seriesLOBF: series,
             testAccuracy: 1,
@@ -1336,8 +1326,6 @@ function factory(){
             numberFeatures: 1,
             hideGraphs:true,
             meanSquaredError:1,
-=======
->>>>>>> b8ac7737dcef1c4b6d5d4e729a0eda84437706b3
         }
       }
     })
@@ -1349,7 +1337,6 @@ describe('LinearRegressionDatasets.vue', () => {
         const wrapper = factory()
         expect(wrapper.exists()).toBe(true)
       })
-<<<<<<< HEAD
     test('coefficeint of determined renders',() => {
     const wrapper = factory()
     const COD = wrapper.get("#CoefOfDetermination")
@@ -1371,8 +1358,6 @@ describe('LinearRegressionDatasets.vue', () => {
     const testLineGraph = wrapper.get("#testPredVsActGraph")
     })
 
-=======
->>>>>>> b8ac7737dcef1c4b6d5d4e729a0eda84437706b3
 
  
 

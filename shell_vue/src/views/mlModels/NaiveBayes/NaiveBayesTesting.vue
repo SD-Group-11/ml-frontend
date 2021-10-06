@@ -167,8 +167,7 @@
                 <!-- testing predicted vs actual-->
             <apexchart v-if="showROC&&tabsInitialized"  height="600" type="line" :options="ROCOptions" :series="ROCSeries"></apexchart>
         </div>
-        <!-- Discard Results Button -->
-        <button class="button is-danger is-pulled-right"  v-if="showTrainingResults" v-on:click='DiscardTrainResults'><strong>Discard Results</strong></button>
+        
  
           
     </div>
@@ -710,7 +709,7 @@
                         console.log(data)
 
                         toast({
-                            message: "please upload test dataset on Manage Datasets page",
+                            message: "please upload a test dataset",
                             type: 'is-danger',
                             dismissible: true,
                             pauseOnHover: true,
