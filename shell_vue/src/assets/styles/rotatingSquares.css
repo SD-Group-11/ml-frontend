@@ -1,0 +1,122 @@
+/*class for animation and container*/
+
+
+
+.animation {
+    display: flex;
+    align-items: center;
+    margin-left: 40%;
+    margin-top: 7%;
+}
+
+.animateContainer {
+    width: 100%;
+    height: 100%;
+    top: 150%;
+    position: absolute;
+    animation: animate 5s linear infinite;
+    transform: rotate(45deg);
+}
+
+/*creation of blocks for animation*/
+span {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    animation: rotate 5s linear infinite;
+
+}
+
+span:nth-child(1) {
+    top: 10%;
+    left: 5%;
+    background-color: #9fedd7;
+}
+
+span:nth-child(2) {
+    top: 10%;
+    right: 5%;
+    background-color: #9fedd7;
+}
+
+span:nth-child(3) {
+    top: 40%;
+    left: 5%;
+    background-color: #fce181;
+}
+
+span:nth-child(4) {
+    top: 40%;
+    right: 5%;
+    background-color: #fce181;
+}
+
+span:nth-child(5) {
+    top: 70%;
+    left: 5%;
+    background-color: #9fedd7;
+}
+
+span:nth-child(6) {
+    top: 70%;
+    right: 5%;
+    background-color: #9fedd7;
+}
+
+/*animation loops*/
+@keyframes textani {
+    0% {
+
+    }
+    50% {
+        margin-top: 100px;
+        font-size: 20px;
+    }
+    50% {
+        margin-top: 200px;
+        font-size: 30px;
+    }
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(45deg);
+    }
+    50% {
+        transform: rotate(90deg);
+        
+    }
+    75% {
+        transform: rotate(135deg);
+    }
+    100% {
+        transform: rotate(180deg);
+    }
+}
+
+@keyframes animate {
+    0% {
+        width: 80px;
+        height: 80px;
+
+    }
+    10% {
+        width: 80px;
+        height: 80px;
+    }
+    50% {
+        width: 115px;
+        height: 115px;
+    }
+    90% {
+        width: 80px;
+        height: 80px;
+    }
+    100% {
+        width: 80px;
+        height: 80px;
+    }
+}
