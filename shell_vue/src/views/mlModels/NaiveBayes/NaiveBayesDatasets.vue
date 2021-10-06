@@ -122,39 +122,33 @@
                                 <!-- <div class="buttons"> -->
                                 <div class="field has-addons">
                                     
-                                    <p class="control">
+                                    <p class="control px-1">
                                         <template v-if="dataset.Info">
                 
-                                            <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" @click="showNoReportModal = true">
+                                            <!-- <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" @click="showNoReportModal = true">
                                         
                                             
                                                 <span class="icon is-normal">
-                                                    <!-- <i class="fas fa-brain"></i> -->
                                                     <i class="fas fa-lg fa-file-medical-alt"></i>
                                                 </span>
 
-                                                <!-- <span><strong>View Model Report</strong></span> -->
-                                                <!-- <span>Model</span> -->
 
-                                            </button>
+                                            </button> -->
                                         </template>
-                                        <template v-else>
+                                        <!-- <template v-else>
                                             <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" v-on:click ="getReport(dataset.MSE, dataset.TrainAccuracy, dataset.TestAccuracy)">
                                         
                                                 <span class="icon is-normal">
-                                                    <!-- <i class="fas fa-brain"></i> -->
                                                     <i class="fas fa-lg fa-file-medical-alt"></i>
                                                 </span>
 
-                                                <!-- <span><strong>View Model Report</strong></span> -->
-                                                <!-- <span>Model</span> -->
 
                                             </button>
-                                        </template>
+                                        </template> -->
                                     </p>
 
 
-                                    <p class="control">
+                                    <p class="control px-1">
                                         <button class="button is-normal is-info is-inverted has-tooltip-arrow has-tooltip-info" data-tooltip="View dataset" type="button" v-on:click ="getData(dataset.filename)">
                                     
                                         
@@ -169,7 +163,7 @@
                                     </p>
 
 
-                                    <p class="control">
+                                    <p class="control px-1">
                                         <button class="button is-normal is-link has-tooltip-arrow has-tooltip-info" data-tooltip="Download dataset" type="button" v-on:click ="getDatasetData(dataset.filename)">
                                             
                                             <span class="icon is-normal">
@@ -183,7 +177,7 @@
                                         </button>
                                     </p>
 
-                                    <p class="control">
+                                    <p class="control px-1">
                                         <button class="button is-normal is-danger is-dark has-tooltip-arrow has-tooltip-info" data-tooltip="Delete dataset" type="button" v-on:click ="DeleteDataset(dataset.filename)">
                                             
                                             <span class="icon is-normal ">
@@ -197,14 +191,14 @@
                                         </button>
                                     </p>
 
-                                    <p class="control">
+                                    <p class="control px-1">
                                         
                                         <button class="button is-normal is-inverse has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" v-on:click ="inputTestset = true; tempTrainFilename = dataset.filename;">
                                         
                                             <input class="file-input" v-bind:id="dataset.filename" type="file" accept=".csv" v-if="inputTestset"  v-on:input="fileValidation(dataset.filename); testsetUploadable = true;">
                                             
                                             <span class="icon is-normal">
-                                                <i class="fas fa-chart-line"></i>
+                                                <i class="fas fa-upload"></i>
                                             </span>
                                             
 

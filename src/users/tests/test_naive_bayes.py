@@ -6,6 +6,7 @@ from NaiveBayes.views import TrainNaiveBayes,UploadTrainingResults
 from datasets.views import filterData
 from datasets.models import Dataset
 import json
+import numpy as np
 class NaiveBayesModel(TestCase):
 
 
@@ -89,10 +90,9 @@ class NaiveBayesModel(TestCase):
         results = TrainNaiveBayes(pd.read_json(self.dataset),self.id,self.filename)
 
         f1 = results[1]
-
         ##check that each class has a value
-        self.assertEquals(f1[0]['class'],'0')
-        self.assertEquals(f1[1]['class'],'1')
+        self.assertEquals(f1[0]['class'],'Purchased = 0')
+        self.assertEquals(f1[1]['class'],'Purchased = 1')
 
         self.assertNotEquals(f1[0]['class'],'')
 
@@ -129,8 +129,8 @@ class NaiveBayesModel(TestCase):
         auc = results[2]
 
         ##check that each class has a value
-        self.assertEquals(auc[0]['class'],'0')
-        self.assertEquals(auc[1]['class'],'1')
+        self.assertEquals(auc[0]['class'],'Purchased = 0')
+        self.assertEquals(auc[1]['class'],'Purchased = 1')
 
         self.assertNotEquals(auc[0]['class'],'')
 
@@ -183,3 +183,110 @@ class NaiveBayesModel(TestCase):
 
         ## if it works then the result is changed
         self.assertEquals(result, True)
+
+    def test_UserId(self):
+        self.obj = Dataset.objects.create(UserId = self.id, filename=self.filename,data=self.dataset,model = "Naive Bayes")
+        self.obj.save()
+        FromDb = Dataset.objects.get(UserId =self.id,filename=self.filename,model =  "Naive Bayes")
+       
+       ##Check UserId is correct
+        self.assertEquals(self.id,FromDb.UserId)
+
+        #Check incorrect id is false
+        self.assertNotEquals(self.id,-1)
+    
+    def test_filename(self):
+        self.obj = Dataset.objects.create(UserId = self.id, filename=self.filename,data=self.dataset,model = "Naive Bayes")
+        self.obj.save()
+        FromDb = Dataset.objects.get(UserId =self.id,filename=self.filename,model =  "Naive Bayes")
+
+        "Check filename is stored"
+        self.assertEquals(self.obj.filename,FromDb.filename)
+        "Only allows csv"
+        self.assertNotEquals(self.filename,"train.odt")
+    
+    def test_data_is_stored_correct(self):
+        self.obj = Dataset.objects.create(UserId = self.id, filename=self.filename,data=self.dataset,model =  "Naive Bayes")
+        self.obj.save()
+        FromDb = Dataset.objects.get(UserId =self.id,filename=self.filename,model =  "Naive Bayes")
+        x = pd.read_json(self.dataset).to_numpy()
+        y = pd.read_json(FromDb.data).to_numpy()
+        ##Check data is stored the same in db as incoming data
+        self.assertEquals(x.all(),y.all())
+        ##check that values are not swapped
+        self.assertNotEquals(x.all(),y.any())
+    
+    def test_type_of_UserId(self):
+        self.obj = Dataset.objects.create(UserId = self.id, filename=self.filename,data=self.dataset,model =  "Naive Bayes")
+        self.obj.save()
+
+        #must be int
+        self.assertEquals(type(self.id),int)
+        #cant be string
+        self.assertNotEquals(type(self.id),str)
+
+    def test_type_of_filename(self):
+        self.obj = Dataset.objects.create(UserId = self.id, filename=self.filename,data=self.dataset,model =  "Naive Bayes")
+        self.obj.save()
+
+        #must be string
+        self.assertEquals(type(self.filename),str)
+        #cant be anything else
+        self.assertNotEquals(type(self.filename),dict)
+
+    def test_type_of_dataset(self):
+        self.obj = Dataset.objects.create(UserId = self.id, filename=self.filename,data=self.dataset,model =  "Naive Bayes")
+        self.obj.save()
+
+        #must be string
+        self.assertEquals(type(self.obj.data),str)
+        #cant be anything else
+        self.assertNotEquals(type(self.dataset),dict)
+    
+    def test_type_of_nullvalues(self):
+        self.obj = Dataset.objects.create(UserId = self.id, filename=self.filename,data=self.dataset,model = "Naive Bayes")
+        self.obj.save()
+
+        #must be string
+        self.assertEquals(type(self.nullValues),np.int64)
+        #cant be anything else
+        self.assertNotEquals(type(self.nullValues),str)
+
+    def test_no_test_data(self):
+        self.obj = Dataset.objects.create(UserId = self.id, filename=self.filename,data=self.dataset,model = "Linear Regression")
+        self.obj.save()
+
+        #must be float
+        self.assertEquals(type(self.obj.testData),dict)
+        #cant be int
+        self.assertNotEquals(type(self.obj.learningRate),int)
+
+    def test_nullValues(self):
+        self.obj = Dataset.objects.create(UserId = self.id, filename=self.filename,data=self.dataset,nullValues=self.nullValues,model = "Naive Bayes")
+        self.obj.save()
+        o = Dataset.objects.get(UserId = self.id)
+
+        self.assertEquals(self.obj.nullValues,o.nullValues)
+
+        self.assertNotEquals(self.obj.nullValues,-1)
+    
+    def test_data_columns(self):
+        self.obj = Dataset.objects.create(UserId = self.id, filename=self.filename,data=self.dataset,nullValues=self.nullValues,model = "Naive Bayes")
+        self.obj.save()
+        o = Dataset.objects.get(UserId = self.id)
+
+        self.assertEquals(list(pd.read_json(self.dataset).columns),list(pd.read_json(o.data).columns))
+
+    def test_data_shape_columns(self):
+        self.obj = Dataset.objects.create(UserId = self.id, filename=self.filename,data=self.dataset,nullValues=self.nullValues,model = "Naive Bayes")
+        self.obj.save()
+        o = Dataset.objects.get(UserId = self.id)
+        self.assertEquals(pd.read_json(self.dataset).shape[0],pd.read_json(o.data).shape[0])
+        self.assertNotEquals(pd.read_json(self.dataset).shape[0],0)
+    
+    def test_data_shape_rows(self):
+        self.obj = Dataset.objects.create(UserId = self.id, filename=self.filename,data=self.dataset,nullValues=self.nullValues,model = "Naive Bayes")
+        self.obj.save()
+        o = Dataset.objects.get(UserId = self.id)
+        self.assertEquals(pd.read_json(self.dataset).shape[1],pd.read_json(o.data).shape[1])
+        self.assertNotEquals(pd.read_json(self.dataset).shape[1],0)
