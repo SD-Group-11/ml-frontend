@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'datasets',
     'LinearRegression',
     'NaiveBayes',
+    'LogisticRegression',
     
 ]
 
