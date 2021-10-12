@@ -1,11 +1,9 @@
 <template>   
     <div class="container is-fluid">
         <GlobalEvents
-            @keydown.left="pageNav('/naive-bayes-training')"
-            @keydown.right="pageNav('/naive-bayes-datasets')" 
-            
+            @keydown.left="pageNav('/logistic-regression-datasets')"
+            @keydown.right="pageNav('/logistic-regression-tests')"
         />
-        <!-- add carousel for test to train (to the left) -->
 
         <div class="container is-fluid">
             <!-- <div class="notification is-info has-text-centered" >
@@ -15,7 +13,7 @@
 
             <div class="columns">
                     <div class="column is-one-fifth">                        
-                        <div class="button is-pulled-left is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/naive-bayes-training')" data-tooltip="Manage datasets">
+                        <div class="button is-pulled-left is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/logistic-regression-datasets')" data-tooltip="Manage datasets">
                             <span class="icon is-normal">
                                 <i class="fas fa-lg fa-arrow-left"></i>                                
                             </span>
@@ -23,11 +21,11 @@
                     </div>
                     
                     <div class="column">
-                        <strong><h3 class="title is-3">Model Testing</h3></strong>
+                        <strong><h3 class="title is-3">Model Training</h3></strong>
                     </div>
                     
                     <div class="column is-one-fifth">
-                        <div class="button is-pulled-right is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/naive-bayes-datasets')" data-tooltip="Test a model">
+                        <div class="button is-pulled-right is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/logistic-regression-tests')" data-tooltip="Test a model">
                             <span class="icon is-normal">
                                 <i class="fas fa-lg fa-arrow-right"></i>
                             </span>
@@ -47,41 +45,11 @@
                         <div class="field ">
                             <label class="label">Dataset</label>
                             <select v-model="selected" id = "files" class="select is-normal is-size-6 is-info" style="width: 100%;">
-                                <option  disabled value="">Select trained model</option>
+                                <option  disabled value="">Select dataset</option>
                                 <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
                             </select>
                         </div>
-                        <!-- U -->
-                      <button class="button" id="selectButton" v-on:click='checkTestingData()'>Select</button>
-
-                    </div>
-
-                    <!-- upload test data -->
-                    <div class="column is-right" style="padding-top:36px"> 
                         
-                        <div class="file has-name is-right">
-                            <label class="file-label">
-                                <input class="file-input" v-bind:id="selected" type="file" accept=".csv"  v-on:input="fileValidation(selected); tempTrainFilename = selected" >
-                                        <span class="file-cta">
-                                            <span class="file-icon">
-                                                <i class="fas fa-upload"></i>
-                                            </span>
-                                        <span class="file-label">
-                                           Upload your test dataset...
-                                        </span>
-                                        </span>
-                                    <span class="file-name">
-                                    {{uploadedName}}
-                                    </span>
-                            </label>
-                        </div>
-
-                        <div class="field" style="padding-top:10px">
-                            <div class="control is-pulled-right  ml-3">
-                                <button  class="button is-medium  is-info is-outlined " id = 'uploadFile' type="submit" v-if="uploadable && uploadedName != '' && selected != ''" v-on:click = 'uploadTestDataset(tempTrainFilename)'><strong>Upload</strong></button>
-                            </div>
-                        </div> 
-                        <!-- here -->
                     </div>
 
                 </div>
@@ -98,9 +66,9 @@
                 </div>
             </div>
 
-            <!-- test model button U - unsure about onclick statement-->
+            <!-- Train model button -->
             <div>
-                <button style="text-align: center;" class="button is-info is light has-text-black "  v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false'><strong>Test Model</strong></button>
+                <button style="text-align: center;" class="button is-info has-text-black"  v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false'><strong>Train Model</strong></button>
             </div>
             <div class="block"></div>
         
@@ -168,8 +136,7 @@
             <apexchart v-if="showROC&&tabsInitialized"  height="600" type="line" :options="ROCOptions" :series="ROCSeries"></apexchart>
         </div>
         <!-- Discard Results Button -->
-        <!-- <button class="button is-danger is-pulled-right"  v-if="showTrainingResults" v-on:click='DiscardTrainResults'><strong>Discard Results</strong></button> -->
-        
+        <button class="button is-danger is-pulled-right"  v-if="showTrainingResults" v-on:click='DiscardTrainResults'><strong>Discard Results</strong></button>
  
           
     </div>
@@ -190,6 +157,7 @@
     .button:hover {
         background-position: 0;
     } */
+
     h2 {
         color: black;
         font-size: 30px;
@@ -198,6 +166,7 @@
         font-weight: 500;
         text-align: center;
     }
+
     .accuracy {
         color: #037BF7;
         font-size: 30px;
@@ -211,8 +180,9 @@
     import VueApexCharts from "vue3-apexcharts"
     import { GlobalEvents } from 'vue-global-events'
     import {toast} from 'bulma-toast'
+
     export default {
-        name: "NaiveBayesTraining",
+        name: "LogisticRegressionTraining",
         components: {
             apexchart: VueApexCharts,
             GlobalEvents
@@ -227,12 +197,13 @@
                 hasDatasets: false,
                 selected: '',
                 // Response data
-                f1Socre:[],
+                f1Score:[],
                 AUC:-1,
                 numberFeatures:-1,
                 confusionMatrix:[],
                 ROC:[],
   
+
                 
                //Apex chart data for confusion matrix and ROC
                 confusionMatrixOptions:[],
@@ -240,10 +211,12 @@
                 ROCOptions: [],
                 ROCSeries:[],
             
+
                 //booleans to control whether the confusion matrix and the ROC chart should be displayed
                 showConfusionMatrix:false,
                 showROC:false,
                 tabsInitialized:false,
+
                 //controls wether training results are displayed
                 showTrainingResults:false,
             }
@@ -251,6 +224,7 @@
         mounted(){
             this.getAccount()
             //init confusion matrix remove this line
+
         },
         methods:{
             //create confusion Matrix
@@ -279,6 +253,7 @@
                                 fontSize: '1rem'
                             }  
                         }                      
+
                     },
                     yaxis: {
                         title: {
@@ -378,6 +353,7 @@
                             style: {
                                 fontSize: '1.2rem'
                             }
+
                         },
                         labels: {
                             style: {
@@ -412,28 +388,34 @@
                 // ]
                 this.showROC=true;
             },
+
             pageNav(route){
                 this.$router.push(route)
             },
             async getAccount(){
                 this.$store.commit('setIsLoading',true)
+
                 await axios
                     .get('/api/v1/users/me')
+
                     .then(response => {
                         this.userDetails=response.data
                         this.getUserDatasets()
                     })
+
                     .catch(error => {
                         console.log(error)
                     })
+
                 this.$store.commit('setIsLoading',false)
+
             },
             async getUserDatasets(){
                 this.$store.commit('setIsLoading',true)
                 this.userFiles=[] 
                 var data ={"UserId":this.userDetails.id}
                 await axios
-                .post('/NaiveBayes/getDatasetsInfo',data)
+                .post('/LogisticRegression/getDatasetsInfo',data)
                 .then(response =>{
                     if(response.data['error']=="No datasets have been uploaded."){
                         console.log("has no datasets")
@@ -460,6 +442,9 @@
                 })
                 this.$store.commit('setIsLoading',false)
             },
+
+
+
             // Call this method when the user clicks Train Model 
             async TrainModel(){
                 this.$store.commit('setIsLoading',true)
@@ -467,9 +452,11 @@
                 //Please get the filename from the dropdown and set it here 
                 var filename = this.selected;
                 var data ={"UserId":id,"filename":filename}
+
                 console.log('data: ',data)
                 await axios
-                .post("/NaiveBayes/PerformNaiveBayes",data)
+                .post("/LogisticRegression/PerformLogisticRegression",data)
+
                 .then(response =>{
                     this.extractData(response.data)
                     this.createConfusionMatrix()
@@ -479,8 +466,10 @@
                     this.$nextTick(()=> {
                         // DOM updated
                         document.getElementById('show_CF_Btn').click();
+
                     })
                     this.$store.commit('setIsLoading',false)
+
                 })
             },
             // We require the UserID as well as the corresponding filename to delete the results we get from training
@@ -491,7 +480,7 @@
                 //create the dict that will be the data for backend
                 var data = {"UserID":id,"Filename":filename};
                 await axios
-                .post("/NaiveBayes/discardResults",data)
+                .post('/LogisticRegression/discardResults',data)
                 .then(response => {
                     // get response from backend
                     var resp = response.data['response'];
@@ -522,7 +511,9 @@
                             })  
                     }
                 })
+
             },
+
             // We require the UserID as well as the corresponding filename to delete the results we get from training
             async DiscardTrainResults(){
                 var id = this.userDetails.id;
@@ -531,7 +522,7 @@
                 //create the dict that will be the data for backend
                 var data = {"UserID":id,"Filename":filename};
                 await axios
-                .post('/NaiveBayes/discardResults',data)
+                .post('/LogisticRegression/discardResults',data)
                 .then(response => {
                     // get response from backend
                     var resp = response.data['response'];
@@ -580,101 +571,8 @@
                 // this.numberFeatures = Object.values(responseData['jsonFeatures'])[0].length -1
                 this.$store.commit('setIsLoading',false)
             },
-            
 
-            //test page upload button - this
-            async uploadTestDataset(trainsetFilename){
-                console.log('trainsetFilename',trainsetFilename)
-                this.$store.commit('setIsLoading',true)
-                var testFile = document.getElementById(trainsetFilename).files[0];
-                var testFormData = new FormData();
-                testFormData.append("dataset",testFile);
-                testFormData.append("id",this.userDetails.id);
-                testFormData.append("TrainingFileName", trainsetFilename);
-                testFormData.append("model","Naive Bayes");
-                await axios
-                    .post('/datasets/uploadTestData',testFormData)
-                    .then(response => {
-                        var resp =  response.data['response'];
-                        
-                        var Type;
-                        if (resp == 'Successfully uploaded test data.'){
-                            Type = 'is-success';
-                            //this.uploadedTestFilename = `${testFile.name}`
-                            // Not sure if the next two lines are necesssary just yet
-                            // this.getUploaded(this.uploadedTestFilename) 
-                            // this.getUserDatasets() 
-                            toast({
-                                message: resp,
-                                type: Type,
-                                dismissible: true,
-                                pauseOnHover: true,
-                                duration: 1000,
-                                position: 'bottom-center',
-                            }) 
-                        }
-                        else{
-                            Type = 'is-danger';
-                            toast({
-                                message: resp,
-                                type: Type,
-                                dismissible: true,
-                                pauseOnHover: true,
-                                duration: 1000,
-                                position: 'bottom-center',
-                            })  
-                        }
-                    });
-                    this.uploadedName = '';
-                this.$store.commit('setIsLoading',false)
-            },
-		
-//this
-            async fileValidation(elementID){
-                
-                try {
-                    this.$store.commit('setIsLoading',true)
-                    this.uploadable=false    
-                    var fileInput = document.getElementById(elementID).files[0];
-                    var fileName = fileInput.name;
-                    const allowedExtensions =  ['csv']
-                    const fileExtension = fileName.split(".").pop();
-                    if(!allowedExtensions.includes(fileExtension)){
-                        toast({
-                            message: 'Please upload a .csv file',
-                            type: 'is-danger',
-                            dismissible: true,
-                            pauseOnHover: true,
-                            duration: 2000,
-                            position: 'bottom-center',
-                        })
-                        fileInput.value = '';
-                        this.uploadedName = '';
-                        this.uploadable = false;
-                        this.$store.commit('setIsLoading',false)
-                    return false;
-                }
-                else{
-                    toast({
-                            message: 'File ready for upload',
-                            type: 'is-warning',
-                            dismissible: true,
-                            pauseOnHover: true,
-                            duration: 2000,
-                            position: 'bottom-center',
-                        })
-                    
-                    this.uploadedName = fileInput.name;
-                    this.uploadable = true;
-                    this.$store.commit('setIsLoading',false)
-                    return true;
-                }         
-                }catch {
-                    //Nothing should happen
-                    this.$store.commit('setIsLoading',false)
-                }
-                
-            },
+            
 
             // tabs
             openTab(event, tabId,tabBtnId){
@@ -691,55 +589,11 @@
                {
                    tablinks[i].className = tablinks[i].className.replace('is-active', '')
                }
+
             //show curr tab and add is-active to that tab
                 document.getElementById(tabId).style.display = 'block'
                 document.getElementById(tabBtnId).classList.add('is-active')
                 //event.target.classList.add('is-active')
-            },
-
-            // from LR testing page
-            async checkTestingData() {
-                var filename = this.selected;
-                var model = "Naive Bayes";
-                var data ={"UserID":this.userDetails.id,"Filename":filename,"ModelName":model};
-                await axios
-                .post('/datasets/checkTestData',data)
-                .then(response =>{
-                    if( response.data['response'] == "Test Data does not exist"){
-                        console.log("no testing data")
-                        // Type = 'is-danger';
-                        console.log(data)
-
-                        toast({
-                            message: "please upload a test dataset",
-                            type: 'is-danger',
-                            dismissible: true,
-                            pauseOnHover: true,
-                            duration: 15000,
-                            position: 'bottom-center',
-                        })
-                        //have the pop-up come here
-                        //WORK HERE - toast message
-                    }
-                    else{
-                        toast({
-                            message: "Dataset selected",
-                            type: 'is-success',
-                            dismissible: true,
-                            pauseOnHover: true,
-                            duration: 15000,
-                            position: 'bottom-center',
-                        })
-
-                        console.log(this.userFiles)
-                        console.log("SUCCESS MY GUY LETS GOOOO")
-
-                    }
-                })
-                .catch(error => {
-                    console.log(error)
-                })
-
             }
         }
     }

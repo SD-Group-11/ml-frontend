@@ -1,8 +1,8 @@
 <template>   
     <div class="container is-fluid">
         <GlobalEvents
-            @keydown.left="pageNav('/naive-bayes-training')"
-            @keydown.right="pageNav('/naive-bayes-datasets')" 
+            @keydown.left="pageNav('/logistic-regression-training')"
+            @keydown.right="pageNav('/logistic-regression-datasets')" 
             
         />
         <!-- add carousel for test to train (to the left) -->
@@ -15,7 +15,7 @@
 
             <div class="columns">
                     <div class="column is-one-fifth">                        
-                        <div class="button is-pulled-left is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/naive-bayes-training')" data-tooltip="Manage datasets">
+                        <div class="button is-pulled-left is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/logistic-regression-training')" data-tooltip="Manage datasets">
                             <span class="icon is-normal">
                                 <i class="fas fa-lg fa-arrow-left"></i>                                
                             </span>
@@ -27,7 +27,7 @@
                     </div>
                     
                     <div class="column is-one-fifth">
-                        <div class="button is-pulled-right is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/naive-bayes-datasets')" data-tooltip="Test a model">
+                        <div class="button is-pulled-right is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/logistic-regression-datasets')" data-tooltip="Test a model">
                             <span class="icon is-normal">
                                 <i class="fas fa-lg fa-arrow-right"></i>
                             </span>
@@ -168,8 +168,7 @@
             <apexchart v-if="showROC&&tabsInitialized"  height="600" type="line" :options="ROCOptions" :series="ROCSeries"></apexchart>
         </div>
         <!-- Discard Results Button -->
-        <!-- <button class="button is-danger is-pulled-right"  v-if="showTrainingResults" v-on:click='DiscardTrainResults'><strong>Discard Results</strong></button> -->
-        
+        <button class="button is-danger is-pulled-right"  v-if="showTrainingResults" v-on:click='DiscardTrainResults'><strong>Discard Results</strong></button>
  
           
     </div>
@@ -212,7 +211,7 @@
     import { GlobalEvents } from 'vue-global-events'
     import {toast} from 'bulma-toast'
     export default {
-        name: "NaiveBayesTraining",
+        name: "LogisticRegressionTraining",
         components: {
             apexchart: VueApexCharts,
             GlobalEvents
@@ -433,7 +432,7 @@
                 this.userFiles=[] 
                 var data ={"UserId":this.userDetails.id}
                 await axios
-                .post('/NaiveBayes/getDatasetsInfo',data)
+                .post('/LogisticRegression/getDatasetsInfo',data)
                 .then(response =>{
                     if(response.data['error']=="No datasets have been uploaded."){
                         console.log("has no datasets")
@@ -469,7 +468,7 @@
                 var data ={"UserId":id,"filename":filename}
                 console.log('data: ',data)
                 await axios
-                .post("/NaiveBayes/PerformNaiveBayes",data)
+                .post("/LogisticRegression/PerformLogisticRegression",data)
                 .then(response =>{
                     this.extractData(response.data)
                     this.createConfusionMatrix()
@@ -491,7 +490,7 @@
                 //create the dict that will be the data for backend
                 var data = {"UserID":id,"Filename":filename};
                 await axios
-                .post("/NaiveBayes/discardResults",data)
+                .post("/LogisticRegression/discardResults",data)
                 .then(response => {
                     // get response from backend
                     var resp = response.data['response'];
@@ -531,7 +530,7 @@
                 //create the dict that will be the data for backend
                 var data = {"UserID":id,"Filename":filename};
                 await axios
-                .post('/NaiveBayes/discardResults',data)
+                .post('/LogisticRegression/discardResults',data)
                 .then(response => {
                     // get response from backend
                     var resp = response.data['response'];
@@ -591,7 +590,7 @@
                 testFormData.append("dataset",testFile);
                 testFormData.append("id",this.userDetails.id);
                 testFormData.append("TrainingFileName", trainsetFilename);
-                testFormData.append("model","Naive Bayes");
+                testFormData.append("model","Logistic Regression");
                 await axios
                     .post('/datasets/uploadTestData',testFormData)
                     .then(response => {
@@ -700,7 +699,7 @@
             // from LR testing page
             async checkTestingData() {
                 var filename = this.selected;
-                var model = "Naive Bayes";
+                var model = "Logistic Regression";
                 var data ={"UserID":this.userDetails.id,"Filename":filename,"ModelName":model};
                 await axios
                 .post('/datasets/checkTestData',data)
@@ -711,7 +710,7 @@
                         console.log(data)
 
                         toast({
-                            message: "please upload a test dataset",
+                            message: "please upload test dataset on Manage Datasets page",
                             type: 'is-danger',
                             dismissible: true,
                             pauseOnHover: true,

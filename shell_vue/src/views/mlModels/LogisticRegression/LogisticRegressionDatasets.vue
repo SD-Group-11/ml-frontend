@@ -2,8 +2,8 @@
     <div class="container is-fluid">
 
         <GlobalEvents
-            @keydown.left="pageNav('/naive-bayes-tests')"
-            @keydown.right="pageNav('/naive-bayes-training')"
+            @keydown.left="pageNav('/logistic-regression-tests')"
+            @keydown.right="pageNav('/logistic-regression-training')"
         />
 
         <div class="container is-fluid">
@@ -13,7 +13,7 @@
                     
                 <div class="columns">
                     <div class="column is-one-fifth">
-                        <div class="button is-pulled-left is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/naive-bayes-tests')" data-tooltip="Test a model">
+                        <div class="button is-pulled-left is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/logistic-regression-tests')" data-tooltip="Test a model">
                             <span class="icon is-normal">
                                 <i class="fas fa-lg fa-arrow-left"></i>                                
                             </span>
@@ -25,7 +25,7 @@
                     </div>
                     
                     <div class="column is-one-fifth">
-                        <div class="button is-pulled-right is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/naive-bayes-training')" data-tooltip="Train a model">
+                        <div class="button is-pulled-right is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/logistic-regression-training')" data-tooltip="Train a model">
                             <span class="icon is-normal">
                                 <i class="fas fa-lg fa-arrow-right"></i>
                             </span>
@@ -125,26 +125,32 @@
                                     <p class="control px-1">
                                         <template v-if="dataset.Info">
                 
-                                            <!-- <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" @click="showNoReportModal = true">
+                                            <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" @click="showNoReportModal = true">
                                         
                                             
                                                 <span class="icon is-normal">
+                                                    <!-- <i class="fas fa-brain"></i> -->
                                                     <i class="fas fa-lg fa-file-medical-alt"></i>
                                                 </span>
 
+                                                <!-- <span><strong>View Model Report</strong></span> -->
+                                                <!-- <span>Model</span> -->
 
-                                            </button> -->
+                                            </button>
                                         </template>
-                                        <!-- <template v-else>
+                                        <template v-else>
                                             <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" v-on:click ="getReport(dataset.MSE, dataset.TrainAccuracy, dataset.TestAccuracy)">
                                         
                                                 <span class="icon is-normal">
+                                                    <!-- <i class="fas fa-brain"></i> -->
                                                     <i class="fas fa-lg fa-file-medical-alt"></i>
                                                 </span>
 
+                                                <!-- <span><strong>View Model Report</strong></span> -->
+                                                <!-- <span>Model</span> -->
 
                                             </button>
-                                        </template> -->
+                                        </template>
                                     </p>
 
 
@@ -365,7 +371,7 @@
     import { GlobalEvents } from 'vue-global-events'
 
     export default {
-        name: "NaiveBayesDatasets",
+        name: "LogisticRegressionDatasets",
 
         data() {
             return{
@@ -425,7 +431,7 @@
                 this.userFiles=[]
                 var data ={"UserId":this.userDetails.id}
                 await axios
-                .post('/NaiveBayes/getDatasetsInfo',data)
+                .post('/LogisticRegression/getDatasetsInfo',data)
                 .then(response =>{
                               
                     if(response.data['error']=="No datasets have been uploaded."){
@@ -462,7 +468,7 @@
                 var formData = new FormData();
                 formData.append("dataset",file);
                 formData.append("id",this.userDetails.id);
-                formData.append("model","Naive Bayes");
+                formData.append("model","Logistic Regression");
                 await axios
                     .post('/datasets/uploadData',formData)
                     .then(response => {
@@ -501,7 +507,7 @@
                 testFormData.append("dataset",testFile);
                 testFormData.append("id",this.userDetails.id);
                 testFormData.append("TrainingFileName", trainsetFilename);
-                testFormData.append("model","Naive Bayes");
+                testFormData.append("model","Logistic Regression");
                 await axios
                     .post('/datasets/uploadTestData',testFormData)
                     .then(response => {
@@ -548,7 +554,7 @@
                 this.uploadedSummary = []
                 var id ={"UserId":this.userDetails.id}
                 await axios
-                .post('/NaiveBayes/getDatasetsInfo',id)
+                .post('/LogisticRegression/getDatasetsInfo',id)
                 .then(response =>{
                     var number_of_datasets = Object.keys(response.data).length
                     for(var i=1;i<number_of_datasets+1;i++){
@@ -569,7 +575,7 @@
                 console.log(filename)
                 console.log(this.userDetails.id);
                 const id =  this.userDetails.id;
-                const model = "Naive Bayes";
+                const model = "Logistic Regression";
                 const data = {'UserId':id,"filename":filename,"ModelName":model};
                 await axios
                 .post("/datasets/getDatasetData",data)
@@ -612,7 +618,7 @@
             async getData(filename){
                 this.$store.commit('setIsLoading',true)
                 const id =  this.userDetails.id
-                const model = "Naive Bayes";
+                const model = "Logistic Regression";
                 const data = {'UserId':id,"filename":filename,"ModelName":model}
                 await axios
                 .post("/datasets/getDatasetData",data)
@@ -699,10 +705,10 @@
                     console.log(filename)
                     console.log(this.userDetails.id)
                     const id =  this.userDetails.id
-                    const model = "Naive Bayes"
+                    const model = "Logistic Regression"
                     const data = {'UserID':id,"Filename":filename,"ModelName":model}
                     await axios
-                    .post("/NaiveBayes/deleteDataset",data)
+                    .post("/LogisticRegression/deleteDataset",data)
                     .then(response => {
                         var resp
                         try {

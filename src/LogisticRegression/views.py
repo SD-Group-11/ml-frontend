@@ -1,28 +1,22 @@
+from django.shortcuts import render
+
+# Create your views here.
 import numpy as np
 import pandas as pd
 import json
 from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
-from scipy.sparse import data
-from sklearn import metrics
 from datasets.models import Dataset
-from .models import NBTrainedModel
+from .models import LogisticTrainedModel
 from rest_framework.response import Response 
-from sklearn import preprocessing
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
-from sklearn.naive_bayes import GaussianNB
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix, accuracy_score
 from sklearn.metrics import roc_curve, auc
-import pandas as pd
-import numpy as np
 # import matplotlib.pyplot as plt
 from sklearn.metrics import f1_score
 # Create your views here.
 
-def TrainNaiveBayes(data,id,filename):
-    ## fill in naive bayes training
-    ## save the results into db
+def TrainLogisticRegression(data,id,filename):
     df_copy = data
     class_names= list(df_copy[df_copy.columns[-1]].unique())
     target_column_name=df_copy.columns[-1]
@@ -34,12 +28,9 @@ def TrainNaiveBayes(data,id,filename):
     # process data
     x = encodeFeatures(x)
     x = findAndFillNullValues(x)
-    # split data
-    # x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
     # create,train and test model
-    model = GaussianNB()
+    model = LogisticRegression(max_iter = 1000)
     model.fit(x, y)
-    #model.score(x_test, y_test)
 
     # Predicting the Test set results
     y_pred = model.predict(x)
@@ -48,44 +39,21 @@ def TrainNaiveBayes(data,id,filename):
     cm = confusion_matrix(y, y_pred)
     f1=f1_score(y, y_pred, average=None)
     json_f1 =f1ToJSON(class_names,f1)
-    # print(y_pred)
-    # print(ac)
-    # print(cm)
-    # f1=ArrToJson(f1)
+   
     
     y_pred_proba = model.predict_proba(x)
     fpr,tpr,roc_auc = getROCData(df_copy,y,y_pred_proba)
     json_auc = aucToJSON(class_names,roc_auc)
     ROC_curves = ROC_TO_JSON(tpr,fpr,class_names)
-    
-    # print(ROC_curves)
-    # print("fpr: ",fpr)
-    # print("tpr: ",tpr)
-
-    # false_positive_rate, true_positive_rate, thresholds = roc_curve(y, y_pred_proba[:,1])
-    # auc=metrics.auc(false_positive_rate,true_positive_rate)
-    # auc=ArrToJson(auc)
-    # print('false positive\n',false_positive_rate)
-    # print('true positive\n',true_positive_rate)
-    # print('thresholds\n',thresholds)
-    # plt.plot(false_positive_rate, true_positive_rate, linestyle='-')
 
     json_cm=ConfusionToJson(class_names,cm)
-    # print(json_cm)
-    # json_fpr=ArrToJson(false_positive_rate)
-    # print(json_fpr)
-    # json_tpr=ArrToJson(true_positive_rate)
+    
     
     UploadTrainingResults(id,filename,ac,json_f1,json_auc)
     
     return json_cm, json_f1,json_auc,ROC_curves
 
-def TestNaiveBayes(data,testdata,id,filename):
-    ## fill in naive bayes training and testing 
-    ## will be the same as TrainNaiveBayes except we also test because we have test data
-    ## remember to save the results
-    # return id
-    # print('testing')
+def TestLogisticRegression(data,testdata,id,filename):
     df_copy = testdata
     class_names= list(df_copy[df_copy.columns[-1]].unique())
     target_column_name=df_copy.columns[-1]
@@ -101,45 +69,26 @@ def TestNaiveBayes(data,testdata,id,filename):
     x_original_size = x.shape[0]
     print(x_original_size)
     xtemp=x.append(xtest)
-    # x = xtemp.iloc[:x_original_size, :]
-    # print(x)
-    # xtest=xtemp.iloc[x_original_size:,:]
-    # print(xtest)
-    # print(x,xtest)
-    # process data
+    
     xtemp = encodeFeatures(xtemp)
     xtemp = findAndFillNullValues(xtemp)
     x = xtemp.iloc[:x_original_size, :]
     xtest=xtemp.iloc[x_original_size:,:]
 
-    print(xtemp.shape)
-    # x = encodeFeatures(x)
-    # xtest=encodeFeatures(xtest)
-    # x = findAndFillNullValues(x)
-    # xtest=findAndFillNullValues(xtest)
-    model = GaussianNB()
+    model = LogisticRegression(max_iter = 1000)
     model.fit(x, y)
 
-    # Predicting the Test set results
-    # print("mark 2")
-    # print(x.columns)
-    # print(xtest.columns)
-    # print(x.shape)
-    # print(xtest.shape)
     y_pred = model.predict(xtest)
 
 
-    print("mark 3")
 
     # Making the Confusion Matrix
     ac = accuracy_score(ytest,y_pred)
-    print("mark 4")
 
     cm = confusion_matrix(ytest, y_pred)
     f1=f1_score(ytest, y_pred, average=None)
     print(f1)
     json_f1 = f1ToJSON(class_names,f1)
-    print("mark 5")
 
     try:
         y_pred_proba = model.predict_proba(xtest)
@@ -148,17 +97,12 @@ def TestNaiveBayes(data,testdata,id,filename):
     fpr,tpr,roc_auc = getROCData(df_copy_test,ytest,y_pred_proba)
     json_auc = aucToJSON(class_names,roc_auc)
     ROC_curves = ROC_TO_JSON(tpr,fpr,class_names)
-
-    # false_positive_rate, true_positive_rate, thresholds = roc_curve(ytest, y_pred_proba[:,1])
-    # auc=metrics.auc(false_positive_rate,true_positive_rate)
   
     # auc=ArrToJson(auc)
+    print(cm)
     json_cm=ConfusionToJson(class_names,cm)
-    # json_fpr=ArrToJson(false_positive_rate)
-    # json_tpr=ArrToJson(true_positive_rate)
     UploadTestResults(id,filename,ac,json_f1,json_auc)
-    
-    # return "test success"
+
 
     return json_cm, json_f1,json_auc,ROC_curves
 
@@ -242,29 +186,25 @@ def aucToJSON(class_names,auc):
 @api_view(['POST',])
 @csrf_exempt
 
-def PerformNaiveBayes(request):
+def PerformLogisticRegression(request):
 
     UserId = request.data['UserId']
     filename = request.data['filename']
     response ={}
     try:
         ##get the respective dataset they want to train on
-        dataset = Dataset.objects.get(UserId = UserId, filename=json.dumps(filename),model = "Naive Bayes")
-        # print('testing')
+        dataset = Dataset.objects.get(UserId = UserId, filename=json.dumps(filename),model = "Logistic Regression")
+        print('testing')
         # response['response']="success"
         # return Response(response)
-        ## Note that tolerance etc won't be used for Naive Bayes
+        
         ## If test data is available, train and test together
         if(dataset.testData != {}): 
             # response['response'] = "testing"
             # return Response(response)
             try:
                 print("mark 1")
-                json_cm, f1,auc,ROC_curves = TestNaiveBayes(pd.read_json(dataset.data),pd.read_json(dataset.testData),UserId,filename)
-                # print("json_cm",json_cm)
-                # print("f1",f1)
-                # print("auc",auc)
-                # print("ROC_curves",ROC_curves)
+                json_cm, f1,auc,ROC_curves = TestLogisticRegression(pd.read_json(dataset.data),pd.read_json(dataset.testData),UserId,filename)
                 response['cm'] = json_cm
                 response['f1'] = f1
                 response['auc'] =auc
@@ -281,7 +221,7 @@ def PerformNaiveBayes(request):
             # return Response(response)
             try:
 
-                json_cm, f1,auc,ROC_curves = TrainNaiveBayes(pd.read_json(dataset.data),UserId,filename)
+                json_cm, f1,auc,ROC_curves = TrainLogisticRegression(pd.read_json(dataset.data),UserId,filename)
                 response['cm'] = json_cm
                 response['f1'] = f1
                 response['auc'] =auc
@@ -306,7 +246,7 @@ def getDatasetsInfo(request):
     try:
         i =0 
         ## filter for all the datasets associated with a User and linear regression
-        AllDatasets = Dataset.objects.filter(UserId=UserId,model = "Naive Bayes")
+        AllDatasets = Dataset.objects.filter(UserId=UserId,model = "Logistic Regression")
         ## loop through the returned set and get the respective info
         for Obj in AllDatasets:
                 
@@ -323,7 +263,7 @@ def getDatasetsInfo(request):
             dataAttributes['created'] = Obj.created ## date created which automatically filled when object is created
             try:
                 ## if we succed in finding the dataset, check if it was trained and return metrics from database
-                ModelData = NBTrainedModel.objects.get(UserId=Obj.UserId, filename=Obj.filename)
+                ModelData = LogisticTrainedModel.objects.get(UserId=Obj.UserId, filename=Obj.filename)
                 dataAttributes['f1'] = ModelData.f1score
                 dataAttributes['AUC'] = ModelData.AUCScore
                 dataAttributes['TrainingAccuracy'] = ModelData.TrainingAccuracy
@@ -349,16 +289,16 @@ def getDatasetsInfo(request):
 def UploadTrainingResults(userid,filename,trainingacc,f1Sc,auc):
     try:
         ## create new object in db and pass it all the necessary info
-        DataInstance = NBTrainedModel(UserId=userid,filename=json.dumps(filename),TrainingAccuracy=trainingacc,f1score = f1Sc,AUCScore=auc)
-        # print(DataInstance.UserId)
-        # print(DataInstance.f1score)
-        # print(DataInstance.filename)
-        # print(DataInstance.TrainingAccuracy)
-        # print(DataInstance.AUCScore)
+        DataInstance = LogisticTrainedModel(UserId=userid,filename=json.dumps(filename),TrainingAccuracy=trainingacc,f1score = f1Sc,AUCScore=auc)
+        print(DataInstance.UserId)
+        print(DataInstance.f1score)
+        print(DataInstance.filename)
+        print(DataInstance.TrainingAccuracy)
+        print(DataInstance.AUCScore)
         DataInstance.save()
     except:
         ## if the object already exists, get the object an update all the data. Once upated save it
-        obj = NBTrainedModel.objects.get(UserId=userid, filename=json.dumps(filename))
+        obj = LogisticTrainedModel.objects.get(UserId=userid, filename=json.dumps(filename))
         obj.TrainingAccuracy = trainingacc
         obj.f1score = f1Sc
         obj.AUCScore=auc
@@ -367,11 +307,11 @@ def UploadTrainingResults(userid,filename,trainingacc,f1Sc,auc):
 def UploadTestResults(userid,filename,testingacc,f1Sc,AUC):
     try:
         ## create new object in db and pass it all the necessary info
-        DataInstance = NBTrainedModel(UserId=userid,filename=filename,TestingAccuracy=testingacc,f1score = f1Sc,AUCScore=AUC)
+        DataInstance = LogisticTrainedModel(UserId=userid,filename=filename,TestingAccuracy=testingacc,f1score = f1Sc,AUCScore=AUC)
         DataInstance.save()
     except:
         ## if the object already exists, get the object an update all the data. Once upated save it
-        obj = NBTrainedModel.objects.get(UserId=userid, filename=filename)
+        obj = LogisticTrainedModel.objects.get(UserId=userid, filename=filename)
         obj.TestingAccuracy = testingacc
         obj.f1score = f1Sc
         obj.AUCScore=AUC
@@ -387,7 +327,7 @@ def trained_datasets(request):
     try:
         i = 1
         ##get queryset of all datasets where they occur in the TrainedModel db
-        AllTrained = NBTrainedModel.objects.filter(UserId=UserId)
+        AllTrained = LogisticTrainedModel.objects.filter(UserId=UserId)
         for Obj in AllTrained:
             response[i] = json.loads(Obj.filename)
             i+=1
@@ -407,7 +347,7 @@ def discard_training_results(request):
     resp = {}
     try:
         ## try to locate the object and if it exists delete it
-        Obj = NBTrainedModel.objects.get(UserId=id,filename=json.dumps(filename))
+        Obj = LogisticTrainedModel.objects.get(UserId=id,filename=json.dumps(filename))
         Obj.delete()
         resp['response'] = "Results discarded."
         return Response(resp)
@@ -431,7 +371,7 @@ def delete_dataset(request):
         dataset = Dataset.objects.get(UserId = UserId, filename=json.dumps(filename),model =ModelName)
         try:
             ## if model was trained on , get that data as well and delete it
-            Obj = NBTrainedModel.objects.get(UserId=UserId, filename=json.dumps(filename))
+            Obj = LogisticTrainedModel.objects.get(UserId=UserId, filename=json.dumps(filename))
             Obj.delete()
         except:
             pass
