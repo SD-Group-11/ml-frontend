@@ -28,6 +28,7 @@
     "core-js": "^3.18.2",
     "css-loader": "^3.6.0",
     "json": "^11.0.0",
+    "npm": "^8.0.0",
     "vue": "^3.2.20",
     "vue-class-component": "^8.0.0-rc.1",
     "vue-final-modal": "^3.3.1",
