@@ -47,7 +47,7 @@
                         <div class="field ">
                             <label class="label">Dataset</label>
                             <select v-model="selected" id = "files" class="select is-normal is-size-6 is-info" style="width: 100%;">
-                                <option  disabled value="">Select trained model</option>
+                                <option  disabled value="">Select training dataset</option>
                                 <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
                             </select>
                         </div>
@@ -107,7 +107,6 @@
         </div> 
 
                
-	       
                
         <!-- Training Results -->
         <div class="container is-fluid" v-if="showTrainingResults">
@@ -116,10 +115,10 @@
             <div class="columns">
                 <div class="column is-one-third">
                     <div class="notification is-warning has-text-black has-text-left" >
-                        <strong>F1 Scores: </strong>
+                        <strong>F1 Scores</strong>
                         <li v-for="f1 in f1Score" v-bind:key="f1.class">
-                                Class {{ f1.class }}:
-                                    - {{ (f1.score).toFixed(2) }}
+                                Class {{ f1.class }} :
+                                    {{ (f1.score).toFixed(2) }}
                         </li>
                     </div>
                     
@@ -127,10 +126,10 @@
                 <div class="column is-two-thirds is-warning">
                     
                     <div class="notification is-warning has-text-black has-text-left" >
-                        <strong>AUC </strong>
+                        <strong>AUC</strong>
                         <li v-for="auc in AUC" v-bind:key="auc.class">
-                                Class {{ auc.class }}:
-                                    - {{ (auc.value) }}
+                                Class {{ auc.class }} :
+                                    {{ (auc.value) }}
                         </li>
                     </div>
                 </div>
@@ -138,7 +137,6 @@
         </div>
         <div class="block"></div>
                   
-		  
         <!-- confusion Matrix for Training Data-->
         <!-- GRAPH TABS FOR TESTING -->
         <div class="tabs is-toggle is-toggle-rounded is-centered" v-if="showTrainingResults">
@@ -159,7 +157,6 @@
         </div>
 
 
-
         <!-- TAB CONTENTS -->
         <div id="confusionMatrix" class="tabcontent">
                 <!-- testing line graph -->
@@ -171,12 +168,11 @@
             <apexchart v-if="showROC&&tabsInitialized"  height="600" type="line" :options="ROCOptions" :series="ROCSeries"></apexchart>
         </div>
         <!-- Discard Results Button -->
-        <button class="button is-danger is-pulled-right"  v-if="showTrainingResults" v-on:click='DiscardTrainResults'><strong>Discard Results</strong></button>
+        <!-- <button class="button is-danger is-pulled-right"  v-if="showTrainingResults" v-on:click='DiscardTrainResults'><strong>Discard Results</strong></button> -->
  
           
     </div>
 </template>
-
 
 <style scoped>   
     /* .button {
@@ -609,10 +605,10 @@
                             // this.getUserDatasets() 
                             toast({
                                 message: resp,
-                                type: Type,
+                                type: 'is-warning',
                                 dismissible: true,
                                 pauseOnHover: true,
-                                duration: 1000,
+                                duration: 2000,
                                 position: 'bottom-center',
                             }) 
                         }
@@ -714,11 +710,11 @@
                         console.log(data)
 
                         toast({
-                            message: "please upload test dataset on Manage Datasets page",
+                            message: "Please upload a test dataset",
                             type: 'is-danger',
                             dismissible: true,
                             pauseOnHover: true,
-                            duration: 15000,
+                            duration: 3000,
                             position: 'bottom-center',
                         })
                         //have the pop-up come here
@@ -727,10 +723,10 @@
                     else{
                         toast({
                             message: "Dataset selected",
-                            type: 'is-success',
+                            type: 'is-warning',
                             dismissible: true,
                             pauseOnHover: true,
-                            duration: 15000,
+                            duration: 3000,
                             position: 'bottom-center',
                         })
 
