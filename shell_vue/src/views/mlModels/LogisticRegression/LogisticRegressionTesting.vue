@@ -107,6 +107,7 @@
         </div> 
 
                
+	       
                
         <!-- Training Results -->
         <div class="container is-fluid" v-if="showTrainingResults">
@@ -137,6 +138,7 @@
         </div>
         <div class="block"></div>
                   
+		  
         <!-- confusion Matrix for Training Data-->
         <!-- GRAPH TABS FOR TESTING -->
         <div class="tabs is-toggle is-toggle-rounded is-centered" v-if="showTrainingResults">
@@ -157,6 +159,7 @@
         </div>
 
 
+
         <!-- TAB CONTENTS -->
         <div id="confusionMatrix" class="tabcontent">
                 <!-- testing line graph -->
@@ -173,6 +176,7 @@
           
     </div>
 </template>
+
 
 <style scoped>   
     /* .button {
