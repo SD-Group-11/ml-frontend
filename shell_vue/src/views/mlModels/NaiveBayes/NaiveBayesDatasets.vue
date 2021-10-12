@@ -585,7 +585,7 @@
                         console.log(parsedJson)
                         const heading = Object.keys(parsedJson[0]).join(",")
                         const body = parsedJson.map((j) => Object.values(j).join(",")).join("\n")
-                        const csv = `${heading}\n${body}`
+                        const csv = `${heading}\n${body}\n`
                         
                         const MLFEF = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
                         

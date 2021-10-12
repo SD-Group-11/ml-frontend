@@ -174,7 +174,7 @@ const routes = [
       requireLogin: true,
       model: true,
       modelName: 'LogisticRegression',
-      type: 2
+      type: 1
     }    
   },
   {
@@ -185,7 +185,7 @@ const routes = [
       requireLogin: true,
       model: true,
       modelName: 'LogisticRegression',
-      type: 2
+      type: 0
     }    
   },
 
