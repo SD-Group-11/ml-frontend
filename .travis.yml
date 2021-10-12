@@ -11,6 +11,7 @@ matrix:
       before_script:
         - "cd shell_vue"
         - "npm install -g @vue/cli"
+        - "npm install deasync"
         - "npm install bulma"
         - "npm install bulma-toast"
         - "npm install axios"
