@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar is-warning " role="navigation" aria-label="dropdown navigation">
+    <nav class="navbar is-warning" role="navigation" aria-label="dropdown navigation">
         <div class="navbar-brand">
             <!-- <a class="navbar-item" href="http://getdrawings.com/confused-icon"> -->
             <a class="navbar-item" href="">
