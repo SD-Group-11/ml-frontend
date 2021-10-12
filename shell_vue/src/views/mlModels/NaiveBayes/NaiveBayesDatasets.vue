@@ -125,32 +125,26 @@
                                     <p class="control px-1">
                                         <template v-if="dataset.Info">
                 
-                                            <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" @click="showNoReportModal = true">
+                                            <!-- <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" @click="showNoReportModal = true">
                                         
                                             
                                                 <span class="icon is-normal">
-                                                    <!-- <i class="fas fa-brain"></i> -->
                                                     <i class="fas fa-lg fa-file-medical-alt"></i>
                                                 </span>
 
-                                                <!-- <span><strong>View Model Report</strong></span> -->
-                                                <!-- <span>Model</span> -->
 
-                                            </button>
+                                            </button> -->
                                         </template>
-                                        <template v-else>
-                                            <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" v-on:click ="getReport(dataset.F1, dataset.AUC, dataset.ROC)">
+                                        <!-- <template v-else>
+                                            <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" v-on:click ="getReport(dataset.MSE, dataset.TrainAccuracy, dataset.TestAccuracy)">
                                         
                                                 <span class="icon is-normal">
-                                                    <!-- <i class="fas fa-brain"></i> -->
                                                     <i class="fas fa-lg fa-file-medical-alt"></i>
                                                 </span>
 
-                                                <!-- <span><strong>View Model Report</strong></span> -->
-                                                <!-- <span>Model</span> -->
 
                                             </button>
-                                        </template>
+                                        </template> -->
                                     </p>
 
 
@@ -265,13 +259,13 @@
                     <div class="modal__content">
                         <div class="container mt-3">
                             <div class="notification is-info">
-                                <strong>F1 Score: </strong> {{datasetReport.F1}}
+                                <strong>Mean Squared Error: </strong> {{datasetReport.MSE}}
                             </div>
                             <div class="notification is-info">
-                                <strong>AUC: </strong> {{datasetReport.AUC}}
+                                <strong>Training Accuracy: </strong> {{datasetReport.TrainAccuracy}}
                             </div>
                             <div class="notification is-info">
-                                <strong>ROC: </strong> {{datasetReport.ROC}}
+                                <strong>Testing Accuracy: </strong> {{datasetReport.TestAccuracy}}
                             </div>
                         </div>
                         
@@ -392,9 +386,9 @@
                 showReportModal: false,
                 showNoReportModal: false,
                 datasetReport: {
-                    F1: "",
-                    AUC: "",
-                    ROC: ""
+                    MSE: "",
+                    TrainAccuracy: "",
+                    TestAccuracy: ""
                 },
                 columnDefs: [],
                 rowData: [],
@@ -468,7 +462,7 @@
                 var formData = new FormData();
                 formData.append("dataset",file);
                 formData.append("id",this.userDetails.id);
-                formData.append("ModelName","Naive Bayes");
+                formData.append("model","Naive Bayes");
                 await axios
                     .post('/datasets/uploadData',formData)
                     .then(response => {
@@ -591,8 +585,7 @@
                         console.log(parsedJson)
                         const heading = Object.keys(parsedJson[0]).join(",")
                         const body = parsedJson.map((j) => Object.values(j).join(",")).join("\n")
-                        const csv = `${heading}\n${body}\n`
-                        console.log(csv)
+                        const csv = `${heading}\n${body}`
                         
                         const MLFEF = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
                         
@@ -644,12 +637,12 @@
                 })
                 this.$store.commit('setIsLoading',false)
             },
-            async getReport(f1,auc,roc){
+            async getReport(mse,trainAccuracy,testAccuracy){
                 this.$store.commit('setIsLoading',true)
                 
-                this.datasetReport.F1 = f1
-                this.datasetReport.AUC = auc
-                this.datasetReport.ROC = roc
+                this.datasetReport.MSE = mse
+                this.datasetReport.TrainAccuracy = trainAccuracy
+                this.datasetReport.TestAccuracy = testAccuracy
                 this.showReportModal = true
                 this.$store.commit('setIsLoading',false)
             },

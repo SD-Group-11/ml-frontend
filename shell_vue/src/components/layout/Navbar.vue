@@ -62,12 +62,25 @@
                     </div> -->
 
                     <a class="navbar-item ">
-                        <router-link to="/linear-regression-datasets"><strong>Linear Regression</strong></router-link>
+                            <router-link to="/linear-regression-datasets"><strong>Linear Regression</strong></router-link>
                     </a>
 
-                    <a class="navbar-item">
-                        <router-link to="/naive-bayes-datasets"><strong>Naive Bayes</strong></router-link>
-                    </a> 
+                    <a class="navbar-item ">
+                            <router-link to="/naive-bayes-datasets"><strong>Naive Bayes</strong></router-link>
+                    </a>
+
+                    <!-- <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                            
+                            <router-link to="/naive-bayes-datasets"><strong>Naive Bayes</strong></router-link>
+                        </a> 
+                        <div class="navbar-dropdown">
+                            <a class="navbar-item">
+                                
+                                <strong>Coming Soon...</strong>
+                            </a>    
+                        </div>  
+                    </div> -->
 
 
                 </template>

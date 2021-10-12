@@ -21,6 +21,8 @@ import LinearRegressionDatasets from '../views/mlModels/LinearRegression/LinearR
 import LinearRegressionTests from '../views/mlModels/LinearRegression/LinearRegressionTests.vue'
 
 
+
+import NaiveBayesTraining from '../views/mlModels/NaiveBayes/NaiveBayesTraining.vue'
 import NaiveBayesDatasets from '../views/mlModels/NaiveBayes/NaiveBayesDatasets.vue'
 import NaiveBayesTests from '../views/mlModels/NaiveBayes/NaiveBayesTesting.vue'
 
@@ -126,17 +128,6 @@ const routes = [
     }    
   },
   {
-    path: '/naive-bayes-datasets',
-    name: 'NaiveBayesDatasets',
-    component: NaiveBayesDatasets,
-    meta: {
-      requireLogin: true,
-      model: true,
-      modelName: 'NaiveBayes',
-      type: 0
-    }    
-  },
-  {
     path: '/naive-bayes-training',
     name: 'NaiveBayesTraining',
     component: NaiveBayesTraining,
@@ -148,14 +139,14 @@ const routes = [
     }    
   },
   {
-    path: '/naive-bayes-tests',
-    name: 'NaiveBayesTests',
-    component: NaiveBayesTests,
+    path: '/naive-bayes-datasets',
+    name: 'NaiveBayesDatasets',
+    component: NaiveBayesDatasets,
     meta: {
       requireLogin: true,
       model: true,
       modelName: 'NaiveBayes',
-      type: 2
+      type: 0
     }    
   },
 
@@ -170,7 +161,6 @@ const routes = [
       type: 2
     }    
   }
-
 ]
 
 const router = createRouter({

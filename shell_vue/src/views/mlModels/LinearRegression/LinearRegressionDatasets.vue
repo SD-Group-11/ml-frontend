@@ -459,7 +459,7 @@
                 var formData = new FormData();
                 formData.append("dataset",file);
                 formData.append("id",this.userDetails.id);
-                formData.append("ModelName","Linear Regression");
+                formData.append("model","Linear Regression");
                 await axios
                     .post('/datasets/uploadData',formData)
                     .then(response => {
@@ -582,7 +582,7 @@
                         console.log(parsedJson)
                         const heading = Object.keys(parsedJson[0]).join(",")
                         const body = parsedJson.map((j) => Object.values(j).join(",")).join("\n")
-                        const csv = `${heading}\n${body}\n`
+                        const csv = `${heading}\n${body}`
                         
                         const MLFEF = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
                         
