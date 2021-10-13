@@ -282,7 +282,13 @@
 
 
 <style scoped>
+  @import "../../node_modules/bulma-o-steps/bulma-steps.css";
+
   @import '../assets/styles/homepage.css';
+
+  .steps-segment:after {
+    background-color: #00e1ff;
+  }
 
   .card {
     /* max-width: 500px; */

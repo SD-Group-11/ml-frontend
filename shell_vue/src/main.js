@@ -1,5 +1,4 @@
 import { createApp } from 'vue'
-
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -11,6 +10,7 @@ import { fab } from '@fortawesome/free-brands-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
 import { dom } from '@fortawesome/fontawesome-svg-core'
 import VueFinalModal  from 'vue-final-modal'
+
 
 library.add(fas);
 library.add(fab);

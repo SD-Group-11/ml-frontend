@@ -65,11 +65,11 @@
                             <router-link to="/linear-regression-datasets"><strong>Linear Regression</strong></router-link>
                     </a>
 
-                    <a class="navbar-item ">
+                    <a class="navbar-item">
                             <router-link to="/naive-bayes-datasets"><strong>Naive Bayes</strong></router-link>
                     </a>
 
-                      <a class="navbar-item ">
+                      <a class="navbar-item">
                             <router-link to="/logistic-regression-datasets"><strong>Logistic Regression</strong></router-link>
                     </a>
 
@@ -176,6 +176,9 @@
 </script>
 
 <style scoped>
+
+
+
 ::v-deep .modal-container{
     display: flex;
     justify-content: center;

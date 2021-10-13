@@ -122,10 +122,10 @@
                                 <!-- <div class="buttons"> -->
                                 <div class="field has-addons">
                                     
-                                    <p class="control px-1">
+                                    <!-- <p class="control px-1">
                                         <template v-if="dataset.Info">
                 
-                                            <!-- <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" @click="showNoReportModal = true">
+                                            <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" @click="showNoReportModal = true">
                                         
                                             
                                                 <span class="icon is-normal">
@@ -133,9 +133,9 @@
                                                 </span>
 
 
-                                            </button> -->
+                                            </button>
                                         </template>
-                                        <!-- <template v-else>
+                                        <template v-else>
                                             <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" v-on:click ="getReport(dataset.MSE, dataset.TrainAccuracy, dataset.TestAccuracy)">
                                         
                                                 <span class="icon is-normal">
@@ -144,8 +144,8 @@
 
 
                                             </button>
-                                        </template> -->
-                                    </p>
+                                        </template>
+                                    </p> -->
 
 
 
@@ -184,10 +184,7 @@
                                             <span class="icon is-normal ">
                                                 <i class="fas fa-trash-alt "></i>
                                             </span>
-                                            
-
-                                            <!-- <span><strong>Download</strong></span> -->
-                                            <!-- <span>Download</span> -->
+                                        
 
                                         </button>
                                     </p>
