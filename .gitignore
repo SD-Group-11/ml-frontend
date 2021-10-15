@@ -1,6 +1,5 @@
 .DS_Store
 shell_vue/node_modules/
-# shell_vue/dist/
 .vscode
 
 # local env files
