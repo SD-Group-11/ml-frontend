@@ -1,0 +1,2 @@
+$ cat .buildpacks
+shell_vue/dist=https://github.com/heroku/heroku-buildpack-nodejs.git
