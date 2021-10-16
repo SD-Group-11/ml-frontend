@@ -19,6 +19,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.0-4",
     "ag-grid-community": "^26.1.0",
     "ag-grid-vue3": "^26.1.0",
+    "apexcharts": "^3.29.0",
     "axios": "^0.22.0",
     "bulma": "^0.9.3",
     "bulma-o-steps": "^1.1.0",
