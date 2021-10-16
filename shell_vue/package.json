@@ -5,7 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit"
+    "test:unit": "vue-cli-service test:unit",
+    "postinstall": "npm run build",
+    "start": "node server.js"
   },
   "dependencies": {
     "@creativebulma/bulma-tooltip": "^1.2.0",
