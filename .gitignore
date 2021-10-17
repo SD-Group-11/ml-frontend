@@ -32,4 +32,4 @@ pnpm-debug.log*
 *.sw?
 
 #Build breakers
-*.pyc
+__pycache__/
