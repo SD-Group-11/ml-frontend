@@ -31,5 +31,5 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
-#Build breakers
+#django app
 __pycache__/
