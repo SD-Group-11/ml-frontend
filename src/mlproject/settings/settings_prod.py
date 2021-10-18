@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-in1yu^7jbhhd)o*i5dg6l!*-a)$&5l-h*m*l+t30*b!6-e!b+y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mlfe-django-app.herokuapp.com']
 
 #CORS_ORIGIN_ALLOW_ALL = True
 
