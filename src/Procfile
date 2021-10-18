@@ -1,2 +1,2 @@
-web: gunicorn <mlproject>.wsgi:application --log-file - --log-level debug
+web: gunicorn mlproject.wsgi:application --log-file - --log-level debug
 manage.py migrate
