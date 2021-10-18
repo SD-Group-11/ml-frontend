@@ -139,7 +139,7 @@ const routes = [
       requireLogin: true,
       model: true,
       modelName: 'NaiveBayes',
-      type: 1
+      type: 2
     }    
   },
   {
@@ -150,7 +150,7 @@ const routes = [
       requireLogin: true,
       model: true,
       modelName: 'NaiveBayes',
-      type: 0
+      type: 2
     }    
   },
 

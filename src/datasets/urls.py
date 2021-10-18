@@ -8,7 +8,11 @@ from .views import(
     delete_dataset,
     receive_TestData,
     getTrainedDatasets,
-    check_if_test_data_is_available
+    check_if_test_data_is_available,
+    make_dataset_public,
+    getPublicDatasetsInfo,
+    getPublicDatasetTrainData,
+    getPublicDatasetTestData,
 ) 
 
 app_name ='datasets'
@@ -21,6 +25,10 @@ urlpatterns =[
     path('deleteDataset',delete_dataset,name='deleteDataset'),
     path('uploadTestData',receive_TestData,name='receiveTestData'),
     path('getTrainedDatasets',getTrainedDatasets,name='getTrainedDatasets'),
-    path('checkTestData',check_if_test_data_is_available,name="checkTestData")
+    path('checkTestData',check_if_test_data_is_available,name="checkTestData"),
+    path('makeDatasetPublic',make_dataset_public,name="makeDatasetPublic"),
+    path('getPublicDatasetsInfo',getPublicDatasetsInfo,name="getPublicDatasets"),
+    path('getPublicDatasetTrainData',getPublicDatasetTrainData),
+    path("getPublicDatasetTestData",getPublicDatasetTestData)
     
 ]
