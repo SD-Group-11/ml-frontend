@@ -83,10 +83,10 @@
             <div class="columns">
                 <div class="column is-one-third">
                     <div class="notification is-warning has-text-black has-text-left" >
-                        <strong>F1 Scores: </strong>
+                        <strong>F1 Scores</strong>
                         <li v-for="f1 in f1Score" v-bind:key="f1.class">
-                                Class {{ f1.class }}:
-                                    - {{ (f1.score).toFixed(2) }}
+                                Class {{ f1.class }} :
+                                    {{ (f1.score).toFixed(2) }}
                         </li>
                     </div>
                     
@@ -94,10 +94,10 @@
                 <div class="column is-two-thirds is-warning">
                     
                     <div class="notification is-warning has-text-black has-text-left" >
-                        <strong>AUC </strong>
+                        <strong>AUC</strong>
                         <li v-for="auc in AUC" v-bind:key="auc.class">
-                                Class {{ auc.class }}:
-                                    - {{ (auc.value) }}
+                                Class {{ auc.class }} :
+                                    {{ (auc.value) }}
                         </li>
                     </div>
                 </div>

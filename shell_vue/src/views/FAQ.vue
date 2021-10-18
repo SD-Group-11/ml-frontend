@@ -1,7 +1,7 @@
 <template>
   <div class="container is-fluid">  
 
-
+ 
     <div class="container is-fluid p-2">
         <div class="notification is-info" >
             <strong><h3 class="title is-1">Frequently Asked Questions</h3></strong>

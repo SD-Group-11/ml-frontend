@@ -196,30 +196,30 @@ function factory(){
 
 
 describe('LinearRegressionDatasets.vue', () => {
-  //add these back when buttons have been added
+  // add these back when buttons have been added
   // test('back arrow redirects to testing page', async () => {
-
   //   const wrapper = factory()
   //   // const backbutton = wrapper.find('#backButton')
   //   // expect(backbutton.exists()).toBe(true)
   //   await wrapper.find('#backButton').trigger('click')
   //   expect(mockrouter.push).toHaveBeenCalledWith('/linear-regression-tests')
   // })
-  // // test('forward arrow redirects to training page', async () => {
-  // //   const wrapper = factory()
-  // //   // const backbutton = wrapper.find('#backButton')
-  // //   // expect(backbutton.exists()).toBe(true)
-  // //   await wrapper.find('#forwardButton').trigger('click')
-  // //   expect(mockrouter.push).toHaveBeenCalledWith('/linear-regression')
-  // // })
+  // test('forward arrow redirects to training page', async () => {
+  //   const wrapper = factory()
+  //   // const backbutton = wrapper.find('#backButton')
+  //   // expect(backbutton.exists()).toBe(true)
+  //   await wrapper.find('#forwardButton').trigger('click')
+  //   expect(mockrouter.push).toHaveBeenCalledWith('/linear-regression')
+  // })
   test('get request for user details after mount', async () => {
       const wrapper = factory()
       await flushPromises()
       expect(axios.get).toHaveBeenCalledWith('/api/v1/users/me')
 
   })
-   test('page renders',() => {
+   test('page renders',async () => {
     const wrapper = factory()
+    await flushPromises()
     expect(wrapper.exists()).toBe(true)
   })
 

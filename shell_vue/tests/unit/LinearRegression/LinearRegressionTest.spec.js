@@ -56,9 +56,10 @@ function factory(){
   }
 
 
-describe('LinearRegressionDatasets.vue', () => {
-    test('page renders',() => {
+describe('LinearRegressionDatasets.vue',() => {
+    test('page renders',async() => {
         const wrapper = factory()
+        await flushPromises()
         expect(wrapper.exists()).toBe(true)
       })
 
