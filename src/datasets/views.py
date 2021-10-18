@@ -319,3 +319,116 @@ def check_if_test_data_is_available(request):
     except:
         response['response'] = "Failed"
         return Response(response)
+
+
+@api_view(['POST',])   ## ensures only POST requests can be made to the api
+@csrf_exempt
+## View that will be requested to make a dataset public
+def make_dataset_public(request):
+    UserId = request.data["UserID"]
+    filename = request.data["Filename"]
+    ModelName = request.data["ModelName"]
+    response = {}
+    try:
+        ## get dataset object
+        Obj = Dataset.objects.get(UserId=UserId, filename=json.dumps(filename),model = ModelName)
+        ## if test data field is empty dict then return no test data
+        if(Obj.testData != {}):
+            ## If we are here then we know the dataset has test data as well
+            ## all public datasets will have userid -1
+            try:
+                publicDataset = Dataset(UserId= -1,filename = json.dumps(filename),model = Obj.model,data=Obj.data,testData = Obj.testData,nullValues = Obj.nullValues)
+                publicDataset.save()
+                response['response'] = "Your dataset is now public."
+            except:
+                response['response'] = "A public datatset with that name already exists"
+        else:
+            ## No test data available, so we dont make it public
+            response['response'] = "Please upload a test dataset as well in order to make a dataset public."
+
+        return Response(response)
+    
+    except:
+        response['response'] = "Failed to make dataset public"
+        return Response(response)
+
+    
+@api_view(['POST',])   ## ensures only POST requests can be made to the api
+@csrf_exempt
+## view to return public train data
+def getPublicDatasetTrainData(request):
+     ## just a view that gets the data in the public dataset and returns in a specific format, to populate search table in frontend 
+    filename = request.data.get('filename')
+    ModelName = request.data.get('ModelName')
+    resp = {}
+   
+    try:
+        data = Dataset.objects.get(UserId=-1, filename=json.dumps(filename),model =ModelName)
+        dataframe = pd.read_json(data.data)
+        dataframe =  dataframe.dropna()
+        jsonRowData = dataframe.to_dict(orient='records')
+        # print(json.dumps(jsonRowData))
+        resp['data'] = jsonRowData
+        return Response(resp)
+
+    except:
+        resp['error'] = "Failed to load dataset. Please try again"
+        return Response(resp)
+@api_view(['POST',])   ## ensures only POST requests can be made to the api
+@csrf_exempt
+## view to return public test data
+def getPublicDatasetTestData(request):
+     ## just a view that gets the data in the public dataset and returns in a specific format, to populate search table in frontend 
+    filename = request.data.get('filename')
+    ModelName = request.data.get('ModelName')
+    resp = {}
+    print(filename)
+    print(ModelName)
+    try:
+        data = Dataset.objects.get(UserId=-1, filename=json.dumps(filename),model =ModelName)
+        dataframe = pd.read_json(data.testData)
+        dataframe =  dataframe.dropna()
+        jsonRowData = dataframe.to_dict(orient='records')
+        # print(json.dumps(jsonRowData))
+        resp['data'] = jsonRowData
+        return Response(resp)
+
+    except:
+        resp['error'] = "Failed to load dataset. Please try again"
+        return Response(resp)
+@api_view(['POST',])   ## ensures only POST requests can be made to the api
+@csrf_exempt
+## view to get meta data about each public dataset
+def getPublicDatasetsInfo(request):
+
+    response ={}
+    try:
+        i =0 
+        ## filter for all the datasets associated with a User
+        AllDatasets = Dataset.objects.filter(UserId=-1)
+        ## loop through the returned set and get the respective info
+        for Obj in AllDatasets:
+                
+            dataAttributes = {}
+            dataset = pd.read_json(Obj.data)
+            testDataset = pd.read_json(Obj.testData)
+            i+=1
+            dataAttributes['id'] = Obj.id
+            dataAttributes['filename'] = json.loads(Obj.filename)
+            dataAttributes['Model'] = Obj.model
+            dataAttributes['datapoints'] = dataset.shape[0] ## get the number of rows
+            dataAttributes['columns'] = dataset.shape[1] ## number of columns/features
+            dataAttributes['featureNames'] = list(dataset.columns)
+            dataAttributes['nullValues'] = Obj.nullValues
+            dataAttributes['test datapoints'] = testDataset.shape[0]
+            dataAttributes['test nullValues'] = testDataset.isnull().sum().sum()
+            dataAttributes['created'] = Obj.created ## date created which automatically filled when object is created
+            response[i] = dataAttributes
+
+        return Response(response)
+
+
+    except:
+
+        response['error'] = "No datasets have been uploaded."
+        return Response(response)
