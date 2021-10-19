@@ -31,10 +31,21 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY','django-insecure-in1yu^7jbhhd)o*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
+
+
+# Set this to True to avoid transmitting the CSRF cookie over HTTP accidentally
+CSRF_COOKIE_SECURE = env('CSRF_COOKIE_SECURE')
+# Set this to True to avoid transmitting the session cookie over HTTP accidentally.
+SESSION_COOKIE_SECURE = env('SESSION_COOKIE_SECURE')
+# If True, the SecurityMiddleware redirects all non-HTTPS requests to HTTPS
+# (except for those URLs matching a regular expression listed in SECURE_REDIRECT_EXEMPT).
+SECURE_SSL_REDIRECT = env('SECURE_SSL_REDIRECT')
+
+
+
 ALLOWED_HOSTS = ['mlfe-django-app.herokuapp.com']
 
 #CORS_ORIGIN_ALLOW_ALL = True
-
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8080',
     'https://mlfe-vue-app.herokuapp.com'
@@ -109,13 +120,14 @@ TEMPLATES = [
     },
 ]
 
-# serve django static files in production 
+# Serve Django static files in production 
 
 # The absolute path to the directory where collectstatic will collect static files for deployment.
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 # The URL to use when referring to static files (where they will be served from)
 STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 WSGI_APPLICATION = 'mlproject.wsgi.application'
 
@@ -126,6 +138,7 @@ WSGI_APPLICATION = 'mlproject.wsgi.application'
 # This will be in Jeremy's doc. It just enables us to use Postgres instead of Djangos default sqlite
 
 # In production the database variables will be read from the Heroku os environment
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -139,13 +152,6 @@ DATABASES = {
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_USE_TLS = True
-# EMAIL_PORT = 587
-# EMAIL_HOST_USER = 'mlfframework@gmail.com'
-# EMAIL_HOST_PASSWORD = 'fr0nt3nd$987'
-
 EMAIL_HOST = env('EMAIL_HOST')
 EMAIL_USE_TLS = env('EMAIL_USE_TLS')
 EMAIL_PORT = env('EMAIL_PORT')
@@ -155,7 +161,7 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 AUTH_USER_MODEL = 'users.User'
 
-DOMAIN = 'localhost:8080'
+DOMAIN = 'mlfe-django-app.herokuapp.com'
 SITE_NAME = 'Machine Learning Front-End Framework'
 
 DJOSER = {
