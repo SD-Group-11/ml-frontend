@@ -77,6 +77,8 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    
     'corsheaders.middleware.CorsMiddleware',
 
     'django.middleware.common.CommonMiddleware',
@@ -85,6 +87,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
 
 ROOT_URLCONF = 'mlproject.urls'
 
@@ -111,6 +115,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR,'static')
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticFiles')
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 WSGI_APPLICATION = 'mlproject.wsgi.application'
 
