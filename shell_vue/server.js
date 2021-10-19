@@ -1,5 +1,3 @@
-// medium.com/@hiddendreamz7/deploy-vue-js-site-to-heroku-c832050f8b31
-
 const express = require('express')
 const serveStatic = require('serve-static')
 const path = require('path')
