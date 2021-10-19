@@ -89,7 +89,6 @@ MIDDLEWARE = [
 ]
 
 
-
 ROOT_URLCONF = 'mlproject.urls'
 
 
@@ -125,17 +124,7 @@ WSGI_APPLICATION = 'mlproject.wsgi.application'
 
 # This will be in Jeremy's doc. It just enables us to use Postgres instead of Djangos default sqlite
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME':'ml-frontend',
-#         'USER': 'dev',
-#         'PASSWORD': 'abc123',
-#         'HOST':'localhost',
-#         'PORT': '5432',
-#     }
-# }
-
+# In production the database variables will be read from the Heroku os environment
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
