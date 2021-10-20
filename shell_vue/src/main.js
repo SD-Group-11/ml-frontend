@@ -17,6 +17,7 @@ library.add(fab);
 library.add(far);
 dom.watch();
 
+// axios.defaults.baseURL='http://127.0.0.1:8000'
 axios.defaults.baseURL='https://mlfe-django-app.herokuapp.com'
 
 createApp(App).component('font-awesome-icon', FontAwesomeIcon).use(VueFinalModal()).use(store).use(router, axios).mount('#app')
