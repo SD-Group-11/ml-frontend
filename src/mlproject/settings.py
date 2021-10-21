@@ -149,7 +149,7 @@ DATABASES = {
     }
 }
 
-
+SENDGRID_API_KEY = env('SENDGRID_API_KEY')
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = env('EMAIL_HOST')
 EMAIL_USE_TLS = env('EMAIL_USE_TLS')
