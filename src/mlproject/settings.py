@@ -157,6 +157,7 @@ EMAIL_USE_TLS = env('EMAIL_USE_TLS')
 EMAIL_PORT = env('EMAIL_PORT')
 # EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 # EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
 
 EMAIL_HOST = 'smtp.sendgrid.net'
@@ -164,7 +165,7 @@ EMAIL_HOST_USER = 'apikey' # always use this
 EMAIL_HOST_PASSWORD = env('SENDGRID_API_KEY')
 # EMAIL_PORT = 587
 # EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'mlfframework@gmail.com'
+# DEFAULT_FROM_EMAIL = 'mlfframework@gmail.com'
 
 
 AUTH_USER_MODEL = 'users.User'
