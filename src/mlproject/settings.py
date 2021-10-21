@@ -160,12 +160,6 @@ EMAIL_HOST_PASSWORD = env('SENDGRID_API_KEY')
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
 
-# EMAIL_HOST = 'smtp.sendgrid.net'
-# EMAIL_HOST_USER = 'apikey' # always use this
-
-
-
-
 AUTH_USER_MODEL = 'users.User'
 
 # django email template setting needed for reset password link
