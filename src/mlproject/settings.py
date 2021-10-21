@@ -164,6 +164,7 @@ EMAIL_HOST_USER = 'apikey' # always use this
 EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_API_KEY') # sendgrid.com/settings/api_keys
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'mlfframework@gmail.com'
 
 
 AUTH_USER_MODEL = 'users.User'
