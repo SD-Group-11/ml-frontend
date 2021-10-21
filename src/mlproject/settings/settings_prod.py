@@ -149,18 +149,19 @@ DATABASES = {
     }
 }
 
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = env('EMAIL_HOST')
 EMAIL_USE_TLS = env('EMAIL_USE_TLS')
 EMAIL_PORT = env('EMAIL_PORT')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_PASSWORD = env('SENDGRID_API_KEY')
+DEFAULT_FROM_EMAIL = 'DEFAULT_FROM_EMAIL'
 
 
 AUTH_USER_MODEL = 'users.User'
 
-DOMAIN = 'mlfe-django-app.herokuapp.com'
+# django email template setting needed for reset password link
+DOMAIN = 'mlfe-vue-app.herokuapp.com'
 SITE_NAME = 'Machine Learning Front-End Framework'
 
 DJOSER = {
