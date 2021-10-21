@@ -34,20 +34,19 @@ DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 
 # Set this to True to avoid transmitting the CSRF cookie over HTTP accidentally
-CSRF_COOKIE_SECURE = env('CSRF_COOKIE_SECURE')
+# CSRF_COOKIE_SECURE = env('CSRF_COOKIE_SECURE')
 # Set this to True to avoid transmitting the session cookie over HTTP accidentally.
-SESSION_COOKIE_SECURE = env('SESSION_COOKIE_SECURE')
+# SESSION_COOKIE_SECURE = env('SESSION_COOKIE_SECURE')
 # If True, the SecurityMiddleware redirects all non-HTTPS requests to HTTPS
 # (except for those URLs matching a regular expression listed in SECURE_REDIRECT_EXEMPT).
-SECURE_SSL_REDIRECT = env('SECURE_SSL_REDIRECT')
+# SECURE_SSL_REDIRECT = env('SECURE_SSL_REDIRECT')
 
-
+# fix reset password link attemp #1
 
 ALLOWED_HOSTS = ['mlfe-django-app.herokuapp.com']
 
 #CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8080',
     'https://mlfe-vue-app.herokuapp.com'
 ]
 
@@ -151,12 +150,19 @@ DATABASES = {
 }
 
 
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = env('EMAIL_HOST')
+# EMAIL_USE_TLS = env('EMAIL_USE_TLS')
+# EMAIL_PORT = env('EMAIL_PORT')
+# EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = env('EMAIL_HOST')
-EMAIL_USE_TLS = env('EMAIL_USE_TLS')
-EMAIL_PORT = env('EMAIL_PORT')
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'mlfframework@gmail.com'
+EMAIL_HOST_PASSWORD = 'fr0nt3nd$987'
 
 
 AUTH_USER_MODEL = 'users.User'

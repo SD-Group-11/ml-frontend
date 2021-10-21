@@ -47,7 +47,6 @@ ALLOWED_HOSTS = ['mlfe-django-app.herokuapp.com']
 
 #CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8080',
     'https://mlfe-vue-app.herokuapp.com'
 ]
 
