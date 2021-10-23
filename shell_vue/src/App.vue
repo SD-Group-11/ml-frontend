@@ -56,6 +56,11 @@
       Navbar,
       Footer
     },
+    // watch: {
+    //   "$route" (to){
+    //     document.title = to.meta.title || "MLFE";
+    //   }
+    // },
     beforeCreate(){
       this.$store.commit('initializeStore')
       if(this.$store.state.token){
