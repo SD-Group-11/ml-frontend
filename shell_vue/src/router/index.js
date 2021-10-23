@@ -267,9 +267,9 @@ router.afterEach((to, from) => {
     }
   }
   
-  if(to.meta.title){
-    document.title = to.meta.title
-  }
+  // if(to.meta.title){
+  //   document.title = to.meta.title
+  // }
 
 })
 
