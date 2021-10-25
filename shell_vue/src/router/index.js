@@ -11,6 +11,7 @@ import LogIn from '../views/LogIn.vue'
 
 import ForgotPassword from '../views/ForgotPassword.vue'
 import ResetPassword from '../views/ResetPassword.vue'
+import PublicDatasets from '../views/PublicDatasets.vue'
 
 import Dashboard from '../views/dashboard/Dashboard.vue'
 import MyAccount from '../views/dashboard/MyAccount.vue'
@@ -89,6 +90,14 @@ const routes = [
     meta: {
       requireLogin: true
     }
+  }, 
+  {
+    path: '/public-datasets',
+    name: 'PublicDatatsets',
+    component: PublicDatasets,
+    meta: {
+      requireLogin: true,
+    }    
   },
   {
     path: '/decision-trees',
