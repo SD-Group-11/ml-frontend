@@ -26,6 +26,10 @@ import NaiveBayesTraining from '../views/mlModels/NaiveBayes/NaiveBayesTraining.
 import NaiveBayesDatasets from '../views/mlModels/NaiveBayes/NaiveBayesDatasets.vue'
 import NaiveBayesTests from '../views/mlModels/NaiveBayes/NaiveBayesTesting.vue'
 
+import LogisticRegressionTraining from '../views/mlModels/LogisticRegression/LogisticRegressionTraining.vue'
+import LogisticRegressionDatasets from '../views/mlModels/LogisticRegression/LogisticRegressionDatasets.vue'
+import LogisticRegressionTests from '../views/mlModels/LogisticRegression/LogisticRegressionTesting.vue'
+
 const routes = [
   {
     path: '/',
@@ -135,25 +139,13 @@ const routes = [
       requireLogin: true,
       model: true,
       modelName: 'NaiveBayes',
-      type: 1
+      type: 2
     }    
   },
   {
     path: '/naive-bayes-datasets',
     name: 'NaiveBayesDatasets',
     component: NaiveBayesDatasets,
-    meta: {
-      requireLogin: true,
-      model: true,
-      modelName: 'NaiveBayes',
-      type: 0
-    }    
-  },
-
-  {
-    path: '/naive-bayes-tests',
-    name: 'NaiveBayesTests',
-    component: NaiveBayesTests,
     meta: {
       requireLogin: true,
       model: true,
@@ -170,6 +162,41 @@ const routes = [
       requireLogin: true,
       model: true,
       modelName: 'NaiveBayes',
+      type: 2
+    }    
+  },
+
+  {
+    path: '/logistic-regression-training',
+    name: 'LogisticRegressionTraining',
+    component: LogisticRegressionTraining,
+    meta: {
+      requireLogin: true,
+      model: true,
+      modelName: 'LogisticRegression',
+      type: 1
+    }    
+  },
+  {
+    path: '/logistic-regression-datasets',
+    name: 'LogisticRegressionDatasets',
+    component: LogisticRegressionDatasets,
+    meta: {
+      requireLogin: true,
+      model: true,
+      modelName: 'LogisticRegression',
+      type: 0
+    }    
+  },
+
+  {
+    path: '/logistic-regression-tests',
+    name: 'LogisticRegressionTests',
+    component: LogisticRegressionTests,
+    meta: {
+      requireLogin: true,
+      model: true,
+      modelName: 'LogisticRegression',
       type: 2
     }    
   }

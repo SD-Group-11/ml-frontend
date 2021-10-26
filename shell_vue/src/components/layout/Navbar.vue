@@ -69,18 +69,11 @@
                             <router-link to="/naive-bayes-datasets"><strong>Naive Bayes</strong></router-link>
                     </a>
 
-                    <!-- <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link">
-                            
-                            <router-link to="/naive-bayes-datasets"><strong>Naive Bayes</strong></router-link>
-                        </a> 
-                        <div class="navbar-dropdown">
-                            <a class="navbar-item">
-                                
-                                <strong>Coming Soon...</strong>
-                            </a>    
-                        </div>  
-                    </div> -->
+                      <a class="navbar-item ">
+                            <router-link to="/logistic-regression-datasets"><strong>Logistic Regression</strong></router-link>
+                    </a>
+
+                   
 
 
                 </template>

@@ -1,7 +1,9 @@
-import { shallowMount } from '@vue/test-utils'
+import { flushPromises, shallowMount } from '@vue/test-utils'
 import NaiveBayesTraining from '@/views/mlModels/NaiveBayes/NaiveBayesTraining.vue'
 import { createStore } from 'vuex'
 import {mount} from '@vue/test-utils'
+import { nextTick } from 'vue'
+import axios from 'axios'
 
 const store = createStore({
     state: {
@@ -40,30 +42,51 @@ const store = createStore({
   })
 
 
+const mockAxiosGet = jest.spyOn(axios, "get")
+mockAxiosGet.mockImplementation((url) => {return Promise.resolve() })
+const mockAxiosPost = jest.spyOn(axios, "post")
+mockAxiosPost.mockImplementation((url) => {return Promise.resolve() })
 function factory(){
   return shallowMount(NaiveBayesTraining,{
     global: { 
       plugins: [store]
     },
+    mocks: {
+    },
     data(){
       return{
-        // trainingSeriesPredictedVSActual: trainingSeriesPredictedVSActual,
-        // trainingOptionsPredictedVSActual: trainingOptionsPredictedVSActual,
-        // showTrainingGraphs: true,
+        userDetails:{
+          "id":1
+        },
+        selected:"file"
+        
       }
-    }
+    },
   })
 }
-describe('LinearRegression.vue', () => {
+
+
+
+    // wrapper.vm.getAccount()
+describe('NaiveBayesTraining.vue', () => {
 
   it('page renders', () => {
     const wrapper = factory()
       expect(wrapper.exists()).toBe(true)
   })
-//   test('training graphs render when train button clicked', async () => {
-//     const wrapper = factory()
-//     //wrapper.get method means that the test case will fail if the graph is not rendered i.e does not exist
-//     const trainingGraph = wrapper.get("#trainingGraph") 
-//   })
+
+  it('check wether the correct api call is made to get the user acount info',async()=>{
+    const wrapper = factory()
+    await flushPromises()
+    expect(mockAxiosGet.mock.calls[0][0]).toBe('/api/v1/users/me')
+  })
+  it('check wether the correct api call is made to get the user datasets info',async()=>{
+    const wrapper = factory()
+    wrapper.vm.getUserDatasets()
+    await flushPromises()
+    expect(mockAxiosPost.mock.calls[0][0]).toEqual('/NaiveBayes/getDatasetsInfo',{
+      'UserId':1,
+    })
+  })
   
 })

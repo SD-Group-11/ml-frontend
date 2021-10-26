@@ -30,6 +30,8 @@ urlpatterns = [
     path('datasets/',include('datasets.urls')),
     path('LinearRegression/', include('LinearRegression.urls')),
     path('NaiveBayes/',include('NaiveBayes.urls')),
+    path('LogisticRegression/',include('LogisticRegression.urls')),
+
 
 ]
 
