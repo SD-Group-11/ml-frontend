@@ -19,22 +19,24 @@
                 <span href="#" class="steps-marker is-warning"></span>
                 <div class="steps-content">
                   <!-- <code>is-primary</code> -->
-                  <p class="is-size-4">2000</p>
-                  <p>Lorem Ipsum Dolor Sit Amet</p>
+                  <p class="is-size-4">Training dataset</p>
+                  <p>Use "Choose file" to select and upload your training dataset.</p>
                 </div>
               </li>
               <li class="steps-segment">
                 <span href="#" class="steps-marker is-warning"></span>
                 <div class="steps-content">
-                  <p class="is-size-4">2002</p>
-                  <p>Maecenas Ultrices Aliquet Velit Vitae</p>
+                  <p class="is-size-4">Associated training dataset</p>
+                  <p>Upload the test dataset that is associated with your uploaded training dataset.</p>
+                  <!-- add picture -->
                 </div>
               </li>
               <li class="steps-segment">
                 <span class="steps-marker is-warning"></span>
                 <div class="steps-content ">
-                  <p class="is-size-4">2007</p>
-                  <p>Aliquam Quis Scelerisque Mauris Nullam</p>
+                  <p class="is-size-4">Dataset Options</p>
+                  <p>View, delete, download datasets.</p>
+                  <!-- add picture -->
                 </div>
               </li>
               </ul>
