@@ -10,6 +10,8 @@ from sklearn.metrics import mean_squared_error
 from .models import TrainedModel
 from sklearn.preprocessing import StandardScaler
 
+import pickle
+
 
 # Create your views here.
 def TrainingLinearRegression(userid, filename, learningrate, tolerance, datafr):
@@ -38,6 +40,10 @@ def TrainingLinearRegression(userid, filename, learningrate, tolerance, datafr):
         sgdr=SGDRegressor(alpha=float(json.loads(learningrate)),tol=float(json.loads(tolerance)))
 
     sgdr.fit(TrainX,TrainY)
+
+    
+
+
     # Predict y values from training data
     Train_PredictY = sgdr.predict(TrainX)
    

@@ -235,7 +235,7 @@
                 testPredictedY: [],
                 trainAccuracy: -1,
                 testAccuracy: -1,
-                coefficients: 0,
+                coefficients: [],
                 meanSquaredError: -1,
                 intercept: 0,
                 numberFeatures: -1,
@@ -319,7 +319,7 @@
                         })
 
                         console.log(this.userFiles)
-                        console.log("SUCCESS MY GUY LETS GOOOO")
+                        //console.log("SUCCESS MY GUY LETS GOOOO")
                         this.TrainModel()
                     }
                 })
@@ -519,7 +519,11 @@
                 this.testAccuracy = responseData['Test_accuracy']
                 //Mean Squared Error, Coefficients, Intercept and number of Features
                 this.meanSquaredError = responseData['meansquared']
-                this.coefficients = Object.values(responseData['coefficients'])[0]
+                //this.coefficients = Object.values(responseData['coefficients'])[0]
+                this.coefficients = Object.values(responseData['coefficients'])
+
+                console.log("coefficients: " + this.coefficients)
+
                 this.intercept = Object.values(responseData['Intercept'])[0]
                 this.numberFeatures = Object.values(responseData['jsonFeatures'])[0].length -1
             },
@@ -692,7 +696,18 @@
             download() {
                 var element = document.createElement('a');
                 let filename = 'results.txt';
-                let text = "Mean Squared Error: "+String(this.meanSquaredError)+"\n"+"Coefficient of Determination: "+String(this.testAccuracy)
+                //Text to be inside results.txt
+                let text = "Training Results:\n"
+                text += "\nTrain Accuracy: " + String(this.trainAccuracy)
+                text += "\nCoefficient of Determination: "+String(this.testAccuracy)
+                text += "\nCoefficients: " + String(this.coefficients)
+
+                text += "\n\nTesting Results:\n"
+                text += "\nTest Accuracy: " + String(this.testAccuracy)
+                text += "\nMean Squared Error: "+String(this.meanSquaredError)
+                text += "\nTrue test data output values: " + String(this.testY)
+                text += "\n\nPredicted test data output values: " + String(this.testPredictedY)
+                
                 element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
                 element.setAttribute('download', filename);
                 element.style.display = 'none';

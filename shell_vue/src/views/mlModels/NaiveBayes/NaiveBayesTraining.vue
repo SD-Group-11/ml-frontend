@@ -282,6 +282,7 @@
     
                 }
                 var confusionMatrixSeries=[]
+                console.log("confusion matrix: ", this.confusionMatrix)
                 var results = this.confusionMatrix
                 for(let i=results.length-1;i>=0;i--){
                     var result = results[i];

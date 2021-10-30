@@ -143,6 +143,7 @@ def TestNaiveBayes(data,testdata,id,filename):
 
     try:
         y_pred_proba = model.predict_proba(xtest)
+        print("In TestNaiveBayes function try, after y_pred_proba")
     except Exception as e: print(e)    
 
     fpr,tpr,roc_auc = getROCData(df_copy_test,ytest,y_pred_proba)
@@ -151,14 +152,16 @@ def TestNaiveBayes(data,testdata,id,filename):
 
     # false_positive_rate, true_positive_rate, thresholds = roc_curve(ytest, y_pred_proba[:,1])
     # auc=metrics.auc(false_positive_rate,true_positive_rate)
-  
+    print("Before confusionToJson")
     # auc=ArrToJson(auc)
     json_cm=ConfusionToJson(class_names,cm)
     # json_fpr=ArrToJson(false_positive_rate)
     # json_tpr=ArrToJson(true_positive_rate)
+    print("After confusion to json")
     UploadTestResults(id,filename,ac,json_f1,json_auc)
     
     # return "test success"
+    print("End of TestNaiveBayes function")
 
     return json_cm, json_f1,json_auc,ROC_curves
 
@@ -265,9 +268,13 @@ def PerformNaiveBayes(request):
                 # print("f1",f1)
                 # print("auc",auc)
                 # print("ROC_curves",ROC_curves)
+                print("AAAAAA")
                 response['cm'] = json_cm
+                print("BBBBB")
                 response['f1'] = f1
+                print("CCCCC")
                 response['auc'] =auc
+                print("DDDDDDDD")
                 response['ROC'] = ROC_curves
                 print("from test")
                 return Response(response)
@@ -366,6 +373,7 @@ def UploadTrainingResults(userid,filename,trainingacc,f1Sc,auc):
 
 def UploadTestResults(userid,filename,testingacc,f1Sc,AUC):
     try:
+        print("In try of UploadTestResults")
         ## create new object in db and pass it all the necessary info
         DataInstance = NBTrainedModel(UserId=userid,filename=filename,TestingAccuracy=testingacc,f1score = f1Sc,AUCScore=AUC)
         DataInstance.save()
