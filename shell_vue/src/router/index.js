@@ -30,6 +30,10 @@ import LogisticRegressionTraining from '../views/mlModels/LogisticRegression/Log
 import LogisticRegressionDatasets from '../views/mlModels/LogisticRegression/LogisticRegressionDatasets.vue'
 import LogisticRegressionTests from '../views/mlModels/LogisticRegression/LogisticRegressionTesting.vue'
 
+
+
+import ModelComparison from '../views/mlModels/ModelComparison/ModelComparison.vue'
+
 const routes = [
   {
     path: '/',
@@ -199,7 +203,19 @@ const routes = [
       modelName: 'LogisticRegression',
       type: 2
     }    
+  },
+  {
+    path: '/model-comparison',
+    name: 'ModelComparison',
+    component: ModelComparison,
+    meta: {
+      requireLogin: true,
+      model: true,
+      modelName: 'ModelComparison',
+      type: 2
+    }    
   }
+
 ]
 
 const router = createRouter({
