@@ -91,7 +91,7 @@
                 <div class="steps-content">
                   <!-- <code>is-primary</code> -->
                   <p class="is-size-4">Select a trained model</p>
-                  <p>Use the dropdown to select the trained model set you want test. Testing can only be done on a trained model.</p>
+                  <p>Use the dropdown to select the trained model you want test. Testing can only be done on a trained model.</p>
                 </div>
               </li>
               <li class="steps-segment">
