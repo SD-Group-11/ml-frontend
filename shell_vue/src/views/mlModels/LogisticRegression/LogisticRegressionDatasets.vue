@@ -74,15 +74,18 @@
                                 <button  class="button is-medium  is-info is-outlined " id = 'uploadFile' type="submit" v-if="uploadable && !testsetUploadable && uploadedName != ''" v-on:click = 'Upload(false)'><strong>Upload</strong></button>
                                 <button  class="button is-medium  is-info is-outlined " id = 'uploadFile' type="submit" v-if="uploadable && testsetUploadable && uploadedName != ''" v-on:click = 'uploadTestDataset(tempTrainFilename)'><strong>Upload</strong></button>
                                 <vue-final-modal v-model="doubleUploadModal" classes="modal-container" content-class="modal-content">
-                                    <span class="modal__title">
+                                    <span class="modal__title" style="text-align: center">
                                     Would you like to upload this dataset as a Naive Bayes dataset as well?
                                     </span>
 
+                                    <br>
+                                    <br>
+                                    <br>
                                     
                                     <div  class="control">
-                                        <div class="modal__action">
-                                            <button id="positive" class="button is-medium is-info is-pulled-left" v-on:click="doubleUploadModal=false; Upload(true)"><b>I do!</b></button>
-                                            <button id="negative" class="button is-medium is-info is-pulled-right" v-on:click="doubleUploadModal=false"><b>No thanks.</b></button>
+                                       <div class="modal__action">
+                                            <button id="positive" style="width: 230px" class="button is-medium is-success is-pulled-left is-centred" v-on:click="doubleUploadModal=false; Upload(true)"><b>I do!</b></button>
+                                            <button id="negative" style="width: 230px" class="button is-medium is-danger is-pulled-right is-centred" v-on:click="doubleUploadModal=false"><b>No thanks.</b></button>
                                         </div>
                                     </div>    
                                 </vue-final-modal>
