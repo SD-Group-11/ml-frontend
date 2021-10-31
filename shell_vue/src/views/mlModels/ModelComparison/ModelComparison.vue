@@ -473,13 +473,16 @@
                         for(var i=1;i<number_of_datasets+1;i++){
                             // this.userFiles.push(response.data[i])
                             this.userLRFiles.push(response.data[i])
-                
                         }
                         //loop thiugh all the users NB datasets and check if they have a matching dataset for
                         //LR. if so add the dataset to the list of aviable datasets to compare
+                        console.log('Naive Bayes: ',this.userNBFiles)
+                        console.log('Log Regression: ',this.userLRFiles)
                         for (let index = 0; index < this.userNBFiles.length; index++) {
                             var name = this.userNBFiles[index].filename
-                            if(this.userLRFiles.some(e=>e.filename ==name)){
+                            var info = this.userNBFiles[index]?.Info
+
+                            if(this.userLRFiles.some((e) => e.filename ==name && e?.Info !== "Model not trained yet." && info !== "Model not trained yet.")){
                                 this.userFiles.push(this.userNBFiles[index])
                             }
                             else{
@@ -504,7 +507,6 @@
             // Call this method when the user clicks Train Model 
             async TrainModel(){
                 this.$store.commit('setIsLoading',true)
-        
                 var id = this.userDetails.id;
                 //Please get the filename from the dropdown and set it here 
                 var filename = this.selected;
@@ -536,46 +538,6 @@
                         document.getElementById('show_CF_Btn').click();
                     })
                     this.$store.commit('setIsLoading',false)
-                })
-            },
-            // We require the UserID as well as the corresponding filename to delete the results we get from training
-            async DiscardTrainResults(){
-                var id = this.userDetails.id;
-                //get the filename from what has been selected.
-                var filename = document.getElementById("files").value ;
-                //create the dict that will be the data for backend
-                var data = {"UserID":id,"Filename":filename};
-                await axios
-                .post("/NaiveBayes/discardResults",data)
-                .then(response => {
-                    // get response from backend
-                    var resp = response.data['response'];
-                    var Type;
-                    //indicates successful deleting of the data
-                    if(resp == "Results discarded."){
-                         Type = 'is-success';
-                         //Toast to give user indication of outcome of action
-                        toast({
-                            message: "Results successfully discarded.",
-                            type: Type,
-                            dismissible: true,
-                            pauseOnHover: true,
-                            duration: 1000,
-                            position: 'bottom-center',
-                        })  
-                    }
-                    else{
-                        // Failed to discard the data
-                         Type = 'is-danger';
-                            toast({
-                                message: resp,
-                                type: Type,
-                                dismissible: true,
-                                pauseOnHover: true,
-                                duration: 1000,
-                                position: 'bottom-center',
-                            })  
-                    }
                 })
             },
             // We require the UserID as well as the corresponding filename to delete the results we get from training
@@ -725,8 +687,7 @@
 
                 this.$store.commit('setIsLoading',false)
             },
-		
-//this
+
             async fileValidation(elementID){
                 
                 try {

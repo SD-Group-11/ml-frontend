@@ -71,8 +71,21 @@
                         <div class="field">
                             <div class="control is-pulled-right  ml-3">
                                 <!-- <button id = 'uploadFile' v-if="uploadable" type="submit" v-on:click = 'Upload' class="button is-info has-text-black"><strong>Submit</strong></button> -->
-                                <button  class="button is-medium  is-info is-outlined " id = 'uploadFile' type="submit" v-if="uploadable && !testsetUploadable && uploadedName != ''" v-on:click = 'Upload'><strong>Upload</strong></button>
+                                <button  class="button is-medium  is-info is-outlined " id = 'uploadFile' type="submit" v-if="uploadable && !testsetUploadable && uploadedName != ''" v-on:click = 'Upload(false)'><strong>Upload</strong></button>
                                 <button  class="button is-medium  is-info is-outlined " id = 'uploadFile' type="submit" v-if="uploadable && testsetUploadable && uploadedName != ''" v-on:click = 'uploadTestDataset(tempTrainFilename)'><strong>Upload</strong></button>
+                                 <vue-final-modal v-model="doubleUploadModal" classes="modal-container" content-class="modal-content">
+                                    <span class="modal__title">
+                                    Would you like to upload this dataset as a Logistic Regression dataset as well?
+                                    </span>
+
+                                    
+                                    <div  class="control">
+                                        <div class="modal__action">
+                                            <button id="positive" class="button is-medium is-info is-pulled-left is-centred" v-on:click="doubleUploadModal=false; Upload(true)"><b>I do!</b></button>
+                                            <button id="negative" class="button is-medium is-info is-pulled-right is-centred" v-on:click="doubleUploadModal=false"><b>No thanks.</b></button>
+                                        </div>
+                                    </div>    
+                                </vue-final-modal>
                             </div>
                         </div>
                     </div>
@@ -380,6 +393,7 @@
                 inputTestset: false,
                 testsetUploadable: false,
                 tempTrainFilename: '',
+                doubleUploadModal: false,
                 
                 hasDatasets: false,
                 userFiles: [],
@@ -453,7 +467,7 @@
                 })
                 this.$store.commit('setIsLoading',false)
             },
-            async Upload(){
+            async Upload(LRcheck){
                 this.uploaded=false;
                 this.$store.commit('setIsLoading',true)
                 var file = document.getElementById("myFile").files[0];
@@ -462,7 +476,11 @@
                 var formData = new FormData();
                 formData.append("dataset",file);
                 formData.append("id",this.userDetails.id);
-                formData.append("model","Naive Bayes");
+                if (LRcheck) {
+                    formData.append("model","Logistic Regression");
+                } else {
+                    formData.append("model","Naive Bayes");
+                }
                 await axios
                     .post('/datasets/uploadData',formData)
                     .then(response => {
@@ -472,6 +490,9 @@
                             Type = 'is-warning';
                             this.uploaded=true;
                             this.uploadedFilename = `${file.name}`
+                            if (!LRcheck) {
+                                this.doubleUploadModal=true
+                            }
                             this.getUploaded(this.uploadedFilename) 
                             this.getUserDatasets() 
                         }
