@@ -83,7 +83,7 @@
             <div class="columns">
 
                 <div class="column is-full is-warning ">
-                    <div class="box" style="background-color:#FFD55A;">
+                    <div class="box is-warning" style="background-color:#FFD55A;">
                         <!-- <h2 class="title is-3 has-text-centered">Enter Hyperparameters</h2> -->
                         
                     </div>
@@ -175,7 +175,9 @@
     </div>
 </template>
 
-<style scoped>   
+<style scoped> 
+
+
     /* .button {
         font-weight:500;
         border-color: #007EFF;
