@@ -21,7 +21,6 @@ import LinearRegressionDatasets from '../views/mlModels/LinearRegression/LinearR
 import LinearRegressionTests from '../views/mlModels/LinearRegression/LinearRegressionTests.vue'
 
 
-
 import NaiveBayesTraining from '../views/mlModels/NaiveBayes/NaiveBayesTraining.vue'
 import NaiveBayesDatasets from '../views/mlModels/NaiveBayes/NaiveBayesDatasets.vue'
 import NaiveBayesTests from '../views/mlModels/NaiveBayes/NaiveBayesTesting.vue'
@@ -29,6 +28,8 @@ import NaiveBayesTests from '../views/mlModels/NaiveBayes/NaiveBayesTesting.vue'
 import LogisticRegressionTraining from '../views/mlModels/LogisticRegression/LogisticRegressionTraining.vue'
 import LogisticRegressionDatasets from '../views/mlModels/LogisticRegression/LogisticRegressionDatasets.vue'
 import LogisticRegressionTests from '../views/mlModels/LogisticRegression/LogisticRegressionTesting.vue'
+
+import PublicDatasets from '../views/PublicDatasets.vue'
 
 const routes = [
   {
@@ -57,6 +58,14 @@ const routes = [
       requireLogin: false,
       title: 'Getting Started'
     }
+  },
+  {
+    path: '/public-datasets',
+    name: 'PublicDatatsets',
+    component: PublicDatasets,
+    meta: {
+      requireLogin: true,
+    }    
   },
   {
     path: '/register',

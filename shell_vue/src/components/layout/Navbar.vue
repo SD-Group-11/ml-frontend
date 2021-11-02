@@ -73,7 +73,9 @@
                             <router-link to="/logistic-regression-datasets"><strong>Logistic Regression</strong></router-link>
                     </a>
 
-                   
+                   <a class="navbar-item ">
+                            <router-link to="/public-datasets"><strong>Public Datesets</strong></router-link>
+                    </a>
 
 
                 </template>

@@ -210,6 +210,19 @@
                                         
                                     </p>
 
+                                    <p class="control px-1">
+
+                                        <button class="button is-normal is-dark has-tooltip-arrow has-tooltip-info" data-tooltip="Make Dataset Public" type="button" v-on:click ="MakeDatasetPublic(dataset.filename)">
+
+                                            <span class="icon is-normal">
+                                                <i class="fa fa-users"></i>
+                                            </span>
+
+
+                                        </button>
+
+                                    </p>
+
                                 </div>
      
                             </td>  
@@ -739,6 +752,48 @@
                     });
                 this.$store.commit('setIsLoading',false)
             }
+        },
+        async MakeDatasetPublic(filename){
+                this.$store.commit('setIsLoading',true)
+                console.log(filename)
+                console.log(this.userDetails.id)
+                const id =  this.userDetails.id
+                const model = "Naive Bayes"
+                const data = {'UserID':id,"Filename":filename,"ModelName":model}
+                await axios
+                .post("datasets/makeDatasetPublic",data)
+                .then(response => {
+                    var resp
+                    try {
+                        resp = response.data['response']
+                        var Type = 'is-warning';
+                        this.uploadedTestData=true;
+                        
+                        this.getUserDatasets() 
+                        toast({
+                            message: resp,
+                            type: Type,
+                            dismissible: true,
+                            pauseOnHover: true,
+                            duration: 2000,
+                            position: 'bottom-center',
+                        }) 
+                    }catch {
+                        resp = response.data['response']
+                        var Type = 'is-danger';
+                        this.uploadedTestData=true;
+                        
+                        toast({
+                            message: resp,
+                            type: Type,
+                            dismissible: true,
+                            pauseOnHover: true,
+                            duration: 2000,
+                            position: 'bottom-center',
+                        }) 
+                    }
+                });
+            this.$store.commit('setIsLoading',false)
         }
     }
 </script>
