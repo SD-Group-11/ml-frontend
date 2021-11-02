@@ -1,8 +1,8 @@
 <template>
 <div class="container is-fluid">
     <div class="container is-fluid p-2">
-        <div class="notification is-info" >
-            <strong><h3 class="title is-1">Public Datasets</h3></strong>
+        <div class="notification is-info has-text-centered" >
+            <strong><h3 class="title is-2">Public Datasets</h3></strong>
         </div>
     </div>
 <div class="container">
@@ -90,6 +90,20 @@
                                             
                                             <span class="icon is-normal">
                                                <i class="fas fa-chart-line"></i>
+                                            </span>
+                                            
+
+                                            <!-- <span><strong>Download</strong></span> -->
+                                            <!-- <span>Download</span> -->
+
+                                        </button>
+                                    </p>
+                                    
+                                    <p class="control px-1">
+                                        <button class="button is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="Download data" type="button" v-on:click ="downloadDataset(dataset.filename,dataset.Model)">
+                                            
+                                            <span class="icon is-normal">
+                                                <i class="fas fa-lg fa-file-download"></i>
                                             </span>
                                             
 
@@ -396,6 +410,93 @@ export default {
                         this.showDatasetTestModal = true
                     } 
                 })
+                this.$store.commit('setIsLoading',false)
+            },
+            async downloadDataset(filename, model){
+                this.$store.commit('setIsLoading',true)
+                console.log(filename)
+                console.log(this.userDetails.id);
+                const id =  this.userDetails.id;
+                const data = {'UserId':id,"filename":filename,"ModelName":model};
+                await axios
+                .post("datasets/getPublicDatasetTrainData",data)
+                //Store the response and use it to get converted into a csv file for download
+                // First implement a check that the response is not "error: Failed to load dataset. Please try again"
+                // That will happen if the backend fails to load the data of the selected file.
+                .then(response => {
+                    if(response.data['error']=="Failed to load dataset. Please try again"){
+                        console.log(response.data)
+                    }
+                    else{
+                        const parsedJson = response.data.data
+                        console.log(parsedJson)
+                        const heading = Object.keys(parsedJson[0]).join(",")
+                        const body = parsedJson.map((j) => Object.values(j).join(",")).join("\n")
+                        const csv = `${heading}\n${body}\n`
+                        
+                        const MLFEF = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
+                        const csvFilename = filename.split(".")[0] + " train data." + filename.split(".")[1] 
+
+                        
+                        if (navigator.msSaveBlob) {a
+                            navigator.msSaveBlob(MLFEF, csvFilename)
+                        }
+                        else {
+                            const link = document.createElement("a")
+                            
+                            if (link.download !== undefined) {
+                                const url = URL.createObjectURL(MLFEF)
+                                link.setAttribute("href", url)
+                                link.setAttribute("download", csvFilename)
+                                link.style.visibility = 'hidden'
+                                document.body.appendChild(link)
+                                link.click()
+                                document.body.removeChild(link)
+                            }
+                        }
+                    } 
+                })
+
+                await axios
+                .post("datasets/getPublicDatasetTestData",data)
+                //Store the response and use it to get converted into a csv file for download
+                // First implement a check that the response is not "error: Failed to load dataset. Please try again"
+                // That will happen if the backend fails to load the data of the selected file.
+                .then(response => {
+                    if(response.data['error']=="Failed to load dataset. Please try again"){
+                        console.log(response.data)
+                    }
+                    else{
+                        const parsedJson = response.data.data
+                        console.log(parsedJson)
+                        const heading = Object.keys(parsedJson[0]).join(",")
+                        const body = parsedJson.map((j) => Object.values(j).join(",")).join("\n")
+                        const csv = `${heading}\n${body}\n`
+                        
+                        const MLFEF = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
+                        const csvFilename = filename.split(".")[0] + " test data." + filename.split(".")[1] 
+                        
+                        if (navigator.msSaveBlob) {a
+                            navigator.msSaveBlob(MLFEF, csvFilename)
+                        }
+                        else {
+                            const link = document.createElement("a")
+                            
+                            if (link.download !== undefined) {
+                                const url = URL.createObjectURL(MLFEF)
+                                link.setAttribute("href", url)
+                                link.setAttribute("download", csvFilename)
+                                link.style.visibility = 'hidden'
+                                document.body.appendChild(link)
+                                link.click()
+                                document.body.removeChild(link)
+                            }
+                        }
+                    } 
+                })
+
                 this.$store.commit('setIsLoading',false)
             }
         }
