@@ -251,7 +251,19 @@ const routes = [
       modelName: 'LogisticRegression',
       type: 2
     }    
+  },
+  {
+    path: '/model-comparison',
+    name: 'ModelComparison',
+    component: ModelComparison,
+    meta: {
+      requireLogin: true,
+      model: true,
+      modelName: 'ModelComparison',
+      type: 2
+    }    
   }
+
 ]
 
 const router = createRouter({

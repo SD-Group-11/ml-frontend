@@ -1,7 +1,17 @@
-import { shallowMount } from '@vue/test-utils'
+import { flushPromises, shallowMount } from '@vue/test-utils'
 import LinearRegression from '@/views/mlModels/LinearRegression/LinearRegression.vue'
 import { createStore } from 'vuex'
 import {mount} from '@vue/test-utils'
+import axios from 'axios'
+
+jest.mock('axios')
+
+axios.get.mockImplementation((url) => {
+  return Promise.resolve()
+})
+axios.post.mockImplementation((url) => {
+  return Promise.resolve()
+})
 
 const store = createStore({
     state: {
@@ -2518,12 +2528,14 @@ function factory(){
 }
 describe('LinearRegression.vue', () => {
 
-  it('page renders', () => {
+  it('page renders',async () => {
     const wrapper = factory()
+    await flushPromises()
       expect(wrapper.exists()).toBe(true)
   })
   test('training graphs render when train button clicked', async () => {
     const wrapper = factory()
+    await flushPromises()
     //wrapper.get method means that the test case will fail if the graph is not rendered i.e does not exist
     const trainingGraph = wrapper.get("#trainingGraph") 
   })
