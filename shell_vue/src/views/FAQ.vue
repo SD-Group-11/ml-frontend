@@ -21,21 +21,22 @@
               <div class="message-header">
                 <p>I forgot my password, how do I reset it?
                 </p>
-                
+               
                 <button class="button is-warning is-light "  @click="toggle= !toggle">
                   <span class="icon is-small">
                     <i class="fas fa-chevron-circle-down"></i>
                   </span>
                 </button>
               </div>
+              <transition name="dropdown">
               <div class="message-body" v-show='toggle'>
                 <div class="notification is-info  is-light">
                   You can reset your password from the sign-in form.
                 </div>
-                
               </div>
+              </transition>     
             </article>
-
+            
             <article class="message is-warning">
               <div class="message-header">
                 <p>I have not received an email to reset my password, what should I do?
@@ -47,12 +48,14 @@
                   </span>
                 </button>
               </div>
+              <transition name="dropdown">
               <div class="message-body" v-show='toggle1'>
                 <div class="notification is-info  is-light">
                   If you have not received an email to change your password try checking your spam folder. Otherwise please contact mlfframework@gmail.com.
 
                 </div>
                 </div>
+              </transition>
             </article>
 
 
@@ -67,12 +70,14 @@
                   </span>
                 </button>
               </div>
+              <transition name="dropdown">
               <div class="message-body" v-show='toggle2'>
                 <div class="notification is-info  is-light">
                   You are welcome to browse the site to find out what we offer but you do need an account to use the listed models.
 
                 </div>
               </div>
+              </transition>
             </article>
 
 
@@ -87,11 +92,13 @@
                   </span>
                 </button>
               </div>
+               <transition name="dropdown">
               <div class="message-body" v-show='toggle3'>
                 <div class="notification is-info  is-light">
                     Make sure that your data is correctly formatted according to the guidelines listed on the information page.
                 </div>
               </div>
+               </transition>
             </article>
 
             <article class="message is-warning">
@@ -105,6 +112,7 @@
                   </span>
                 </button>
               </div>
+               <transition name="dropdown">
               <div class="message-body" v-show='toggle4'>
                 <div class="notification is-info  is-light ml-5">
                   <ol type="1">
@@ -115,7 +123,30 @@
                   </ol>             
                 </div>
               </div>
+               </transition>
             </article>
+
+            <article class="message is-warning">
+              <div class="message-header">
+                <p> The results are not displaying when I train or test the model
+                </p>
+                
+                <button class="button is-warning is-light" @click="toggle5= !toggle5">
+                  <span class="icon is-small">
+                    <i class="fas fa-chevron-circle-down"></i>
+                  </span>
+                </button>
+              </div>
+               <transition name="dropdown">
+              <div class="message-body" v-show='toggle5'>
+                <div class="notification is-info  is-light">
+                    Make sure you have uploaded a valid dataset for the respective model
+                </div>
+              </div>
+               </transition>
+            </article>
+
+            
 
           </div>
  
@@ -137,13 +168,15 @@
                     <i class="fas fa-chevron-circle-down"></i>
                   </span>
                 </button>
-              </div>
+                </div>
+              <transition name ="dropdown">
               <div class="message-body" v-show='toggle'>
                 <div class="notification is-info  is-light">
                   You can reset your password from the sign-in form.
                 </div>
                 
               </div>
+              </transition>
             </article>
 
             <article class="message is-warning">
@@ -157,12 +190,14 @@
                   </span>
                 </button>
               </div>
+               <transition name="dropdown">
               <div class="message-body" v-show='toggle1'>
                 <div class="notification is-info  is-light">
                   If you have not received an email to change your password try checking your spam folder. Otherwise please contact mlfframework@gmail.com.
 
                 </div>
                 </div>
+               </transition>
             </article>
 
 
@@ -177,12 +212,14 @@
                   </span>
                 </button>
               </div>
+               <transition name="dropdown">
               <div class="message-body" v-show='toggle2'>
                 <div class="notification is-info  is-light">
                   You are welcome to browse the site to find out what we offer but you do need an account to use the listed models.
 
                 </div>
               </div>
+               </transition>
             </article>
           </div>
     </template>
@@ -210,6 +247,25 @@
   .message-content {
     padding: 20px;
   }
+
+
+ .dropdown-enter,
+ .dropdown-leave-to {
+  transform: scaleY(0.7);
+  opacity: 0;
+ }
+ 
+ .dropdown-enter-to,
+ .dropdown-leave {
+  opacity: 1;
+  transform: scaleY(1);
+ }
+ 
+ .dropdown-enter-active,
+ .dropdown-leave-active {
+  transition: all 0.3s ease-out;
+  transform-origin: top center;
+}
 </style>
 
 
@@ -224,6 +280,7 @@ export default {
       toggle2: false,
       toggle3: false,
       toggle4: false,
+      toggle5: false,
     }
   }
 }
