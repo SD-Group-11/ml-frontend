@@ -82,10 +82,10 @@
                                     <br>
                                     <br>
                                     
-                                    <div  class="control">
+                                    <div  class="control m-4 p-2">
                                        <div class="modal__action">
-                                            <button id="positive" style="width: 230px" class="button is-medium is-success is-pulled-left is-centred" v-on:click="doubleUploadModal=false; Upload(true)"><b>I do!</b></button>
-                                            <button id="negative" style="width: 230px" class="button is-medium is-danger is-pulled-right is-centred" v-on:click="doubleUploadModal=false"><b>No thanks.</b></button>
+                                            <button id="positive" style="width: 230px" class="button is-medium is-warning is-pulled-left is-centred" v-on:click="doubleUploadModal=false; Upload(true)"><b>Yebo :)</b></button>
+                                            <button id="negative" style="width: 230px" class="button is-medium is-info is-pulled-right is-centred" v-on:click="doubleUploadModal=false"><b>Nee :(</b></button>
                                         </div>
                                     </div>    
                                 </vue-final-modal>
@@ -138,8 +138,8 @@
                                 <!-- <div class="buttons"> -->
                                 <div class="field has-addons">
                                     
-                                    <!-- <p class="control px-1">
-                                        <template v-if="dataset.Info">
+                                    <p class="control px-1">
+                                        <!-- <template v-if="dataset.Info">
                 
                                             <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" @click="showNoReportModal = true">
                                         
@@ -149,9 +149,9 @@
                                                 </span>
 
 
-                                            </button> -->
+                                            </button>
                                         </template>
-                                        <!-- <template v-else>
+                                        <template v-else>
                                             <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" v-on:click ="getReport(dataset.MSE, dataset.TrainAccuracy, dataset.TestAccuracy)">
                                         
                                                 <span class="icon is-normal">
@@ -160,12 +160,8 @@
 
 
                                             </button>
-                                        </template>
-                                    </p> -->
-
-
-
-
+                                        </template> -->
+                                    </p>
 
 
                                     <p class="control px-1">
@@ -774,7 +770,6 @@
 
                     });
                 this.$store.commit('setIsLoading',false)
-            }
         },
         async MakeDatasetPublic(filename){
                 this.$store.commit('setIsLoading',true)
@@ -817,6 +812,8 @@
                     }
                 });
             this.$store.commit('setIsLoading',false)
+        }
+
         }
 
     }

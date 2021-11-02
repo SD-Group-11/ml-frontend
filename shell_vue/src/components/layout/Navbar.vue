@@ -73,7 +73,7 @@
                             <router-link to="/logistic-regression-datasets"><strong>Logistic Regression</strong></router-link>
                     </a>
                     <a class="navbar-item ">
-                            <router-link to="/model-comparison"><strong>Compare Models</strong></router-link>
+                            <router-link to="/model-comparison"><strong>Compare Classification Models</strong></router-link>
                     </a>
 
                    <a class="navbar-item ">

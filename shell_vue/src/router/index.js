@@ -30,6 +30,7 @@ import LogisticRegressionDatasets from '../views/mlModels/LogisticRegression/Log
 import LogisticRegressionTests from '../views/mlModels/LogisticRegression/LogisticRegressionTesting.vue'
 
 import PublicDatasets from '../views/PublicDatasets.vue'
+import ModelComparison from '../views/mlModels/ModelComparison/ModelComparison.vue'
 
 const routes = [
   {

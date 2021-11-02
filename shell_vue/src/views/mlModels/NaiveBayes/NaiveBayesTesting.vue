@@ -118,7 +118,7 @@
                         <strong>F1 Scores: </strong>
                         <li v-for="f1 in f1Score" v-bind:key="f1.class">
                                 Class {{ f1.class }}:
-                                    - {{ (f1.score).toFixed(2) }}
+                                     {{ (f1.score).toFixed(2) }}
                         </li>
                     </div>
                     
@@ -129,7 +129,7 @@
                         <strong>AUC </strong>
                         <li v-for="auc in AUC" v-bind:key="auc.class">
                                 Class {{ auc.class }}:
-                                    - {{ (auc.value) }}
+                                     {{ (auc.value) }}
                         </li>
                     </div>
                 </div>
