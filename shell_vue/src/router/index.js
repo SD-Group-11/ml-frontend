@@ -66,6 +66,7 @@ const routes = [
     component: PublicDatasets,
     meta: {
       requireLogin: true,
+      title: 'Public Datasets'
     }    
   },
   {
@@ -261,7 +262,8 @@ const routes = [
       requireLogin: true,
       model: true,
       modelName: 'ModelComparison',
-      type: 2
+      title: 'Compare Models',
+      type: 0
     }    
   }
 
