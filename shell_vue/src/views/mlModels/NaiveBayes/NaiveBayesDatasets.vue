@@ -82,10 +82,10 @@
                                     <br>
                                     <br>
 
-                                    <div  class="control">
+                                    <div  class="control m-4 p-2">
                                         <div class="modal__action">
-                                            <button id="positive" style="width: 230px" class="button is-medium is-success is-pulled-left is-centred" v-on:click="doubleUploadModal=false; Upload(true)"><b>I do!</b></button>
-                                            <button id="negative" style="width: 230px" class="button is-medium is-danger is-pulled-right is-centred" v-on:click="doubleUploadModal=false"><b>No thanks.</b></button>
+                                            <button id="positive" style="width: 230px" class="button is-medium is-warning is-pulled-left is-centred" v-on:click="doubleUploadModal=false; Upload(true)"><b>Yebo :)</b></button>
+                                            <button id="negative" style="width: 230px" class="button is-medium is-info is-pulled-right is-centred" v-on:click="doubleUploadModal=false"><b>Nee :(</b></button>
                                         </div>
                                     </div>    
                                 </vue-final-modal>
@@ -224,6 +224,19 @@
                                         </button>
 
                                         
+                                    </p>
+
+                                    <p class="control px-1">
+
+                                        <button class="button is-normal is-dark has-tooltip-arrow has-tooltip-info" data-tooltip="Make Dataset Public" type="button" v-on:click ="MakeDatasetPublic(dataset.filename)">
+
+                                            <span class="icon is-normal">
+                                                <i class="fa fa-users"></i>
+                                            </span>
+
+
+                                        </button>
+
                                     </p>
 
                                 </div>
@@ -609,7 +622,7 @@
                         console.log(parsedJson)
                         const heading = Object.keys(parsedJson[0]).join(",")
                         const body = parsedJson.map((j) => Object.values(j).join(",")).join("\n")
-                        const csv = `${heading}\n${body}`
+                        const csv = `${heading}\n${body}\n`
                         
                         const MLFEF = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
                         
@@ -760,6 +773,48 @@
                             }) 
                         }
 
+                    });
+                this.$store.commit('setIsLoading',false)
+            },
+            async MakeDatasetPublic(filename){
+                    this.$store.commit('setIsLoading',true)
+                    console.log(filename)
+                    console.log(this.userDetails.id)
+                    const id =  this.userDetails.id
+                    const model = "Naive Bayes"
+                    const data = {'UserID':id,"Filename":filename,"ModelName":model}
+                    await axios
+                    .post("datasets/makeDatasetPublic",data)
+                    .then(response => {
+                        var resp
+                        try {
+                            resp = response.data['response']
+                            var Type = 'is-warning';
+                            this.uploadedTestData=true;
+                            
+                            this.getUserDatasets() 
+                            toast({
+                                message: resp,
+                                type: Type,
+                                dismissible: true,
+                                pauseOnHover: true,
+                                duration: 2000,
+                                position: 'bottom-center',
+                            }) 
+                        }catch {
+                            resp = response.data['response']
+                            var Type = 'is-danger';
+                            this.uploadedTestData=true;
+                            
+                            toast({
+                                message: resp,
+                                type: Type,
+                                dismissible: true,
+                                pauseOnHover: true,
+                                duration: 2000,
+                                position: 'bottom-center',
+                            }) 
+                        }
                     });
                 this.$store.commit('setIsLoading',false)
             }

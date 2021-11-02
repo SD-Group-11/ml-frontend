@@ -82,10 +82,10 @@
                                     <br>
                                     <br>
                                     
-                                    <div  class="control">
+                                    <div  class="control m-4 p-2">
                                        <div class="modal__action">
-                                            <button id="positive" style="width: 230px" class="button is-medium is-success is-pulled-left is-centred" v-on:click="doubleUploadModal=false; Upload(true)"><b>I do!</b></button>
-                                            <button id="negative" style="width: 230px" class="button is-medium is-danger is-pulled-right is-centred" v-on:click="doubleUploadModal=false"><b>No thanks.</b></button>
+                                            <button id="positive" style="width: 230px" class="button is-medium is-warning is-pulled-left is-centred" v-on:click="doubleUploadModal=false; Upload(true)"><b>Yebo :)</b></button>
+                                            <button id="negative" style="width: 230px" class="button is-medium is-info is-pulled-right is-centred" v-on:click="doubleUploadModal=false"><b>Nee :(</b></button>
                                         </div>
                                     </div>    
                                 </vue-final-modal>
@@ -139,9 +139,9 @@
                                 <div class="field has-addons">
                                     
                                     <p class="control px-1">
-                                        <template v-if="dataset.Info">
+                                        <!-- <template v-if="dataset.Info">
                 
-                                            <!-- <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" @click="showNoReportModal = true">
+                                            <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" @click="showNoReportModal = true">
                                         
                                             
                                                 <span class="icon is-normal">
@@ -149,9 +149,9 @@
                                                 </span>
 
 
-                                            </button> -->
+                                            </button>
                                         </template>
-                                        <!-- <template v-else>
+                                        <template v-else>
                                             <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" v-on:click ="getReport(dataset.MSE, dataset.TrainAccuracy, dataset.TestAccuracy)">
                                         
                                                 <span class="icon is-normal">
@@ -162,8 +162,6 @@
                                             </button>
                                         </template> -->
                                     </p>
-
-
 
 
                                     <p class="control px-1">
@@ -200,10 +198,7 @@
                                             <span class="icon is-normal ">
                                                 <i class="fas fa-trash-alt "></i>
                                             </span>
-                                            
-
-                                            <!-- <span><strong>Download</strong></span> -->
-                                            <!-- <span>Download</span> -->
+                                        
 
                                         </button>
                                     </p>
@@ -225,6 +220,18 @@
                                         </button>
 
                                         
+                                    </p>
+
+                                    <p class="control px-1">
+
+                                        <button class="button is-normal is-dark has-tooltip-arrow has-tooltip-info" data-tooltip="Make Dataset Public" type="button" v-on:click ="MakeDatasetPublic(dataset.filename)">
+
+                                            <span class="icon is-normal">
+                                                <i class="fa fa-users"></i>
+                                            </span>
+
+                                        </button>
+
                                     </p>
 
                                 </div>
@@ -763,7 +770,51 @@
 
                     });
                 this.$store.commit('setIsLoading',false)
-            }
+        },
+        async MakeDatasetPublic(filename){
+                this.$store.commit('setIsLoading',true)
+                console.log(filename)
+                console.log(this.userDetails.id)
+                const id =  this.userDetails.id
+                const model = "Logistic Regression"
+                const data = {'UserID':id,"Filename":filename,"ModelName":model}
+                await axios
+                .post("datasets/makeDatasetPublic",data)
+                .then(response => {
+                    var resp
+                    try {
+                        resp = response.data['response']
+                        var Type = 'is-warning';
+                        this.uploadedTestData=true;
+                        
+                        this.getUserDatasets() 
+                        toast({
+                            message: resp,
+                            type: Type,
+                            dismissible: true,
+                            pauseOnHover: true,
+                            duration: 2000,
+                            position: 'bottom-center',
+                        }) 
+                    }catch {
+                        resp = response.data['response']
+                        var Type = 'is-danger';
+                        this.uploadedTestData=true;
+                        
+                        toast({
+                            message: resp,
+                            type: Type,
+                            dismissible: true,
+                            pauseOnHover: true,
+                            duration: 2000,
+                            position: 'bottom-center',
+                        }) 
+                    }
+                });
+            this.$store.commit('setIsLoading',false)
         }
+
+        }
+
     }
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar is-warning " role="navigation" aria-label="dropdown navigation">
+    <nav class="navbar is-warning" role="navigation" aria-label="dropdown navigation">
         <div class="navbar-brand">
             <!-- <a class="navbar-item" href="http://getdrawings.com/confused-icon"> -->
             <a class="navbar-item" href="">
@@ -65,18 +65,20 @@
                             <router-link to="/linear-regression-datasets"><strong>Linear Regression</strong></router-link>
                     </a>
 
-                    <a class="navbar-item ">
+                    <a class="navbar-item">
                             <router-link to="/naive-bayes-datasets"><strong>Naive Bayes</strong></router-link>
                     </a>
 
-                      <a class="navbar-item ">
+                      <a class="navbar-item">
                             <router-link to="/logistic-regression-datasets"><strong>Logistic Regression</strong></router-link>
                     </a>
                     <a class="navbar-item ">
-                            <router-link to="/model-comparison"><strong>Compare Models</strong></router-link>
+                            <router-link to="/model-comparison"><strong>Compare Classification Models</strong></router-link>
                     </a>
 
-                   
+                   <a class="navbar-item ">
+                            <router-link to="/public-datasets"><strong>Public Datasets</strong></router-link>
+                    </a>
 
 
                 </template>
@@ -179,6 +181,9 @@
 </script>
 
 <style scoped>
+
+
+
 ::v-deep .modal-container{
     display: flex;
     justify-content: center;

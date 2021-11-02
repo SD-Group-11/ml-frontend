@@ -121,6 +121,27 @@
                             <td class="is-actions-cell">                       
                                 <!-- <div class="buttons"> -->
                                 <div class="field has-addons">
+
+                                    <p class="control px-1">
+                                        <button class="button is-normal is-link has-tooltip-arrow has-tooltip-info" data-tooltip="Download dataset" type="button" v-on:click ="getDatasetData(dataset.filename)">
+                                            
+                                            <span class="icon is-normal">
+                                                <i class="fas fa-lg fa-file-download"></i>
+                                            </span>                                         
+
+                                        </button>
+                                    </p>
+
+                                    <p class="control px-1">
+                                        <button class="button is-normal is-info is-inverted has-tooltip-arrow has-tooltip-info" data-tooltip="View dataset" type="button" v-on:click ="getData(dataset.filename)">
+                                    
+                                        
+                                            <span class="icon is-normal">
+                                                <i class="far fa-lg fa-eye"></i>
+                                            </span>
+
+                                        </button>
+                                    </p>
                                     
                                     <p class="control px-1">
                                         <template v-if="dataset.Info">
@@ -155,58 +176,37 @@
 
 
                                     <p class="control px-1">
-                                        <button class="button is-normal is-info is-inverted has-tooltip-arrow has-tooltip-info" data-tooltip="View dataset" type="button" v-on:click ="getData(dataset.filename)">
-                                    
-                                        
-                                            <span class="icon is-normal">
-                                                <i class="far fa-lg fa-eye"></i>
-                                            </span>
-
-                                            <!-- <span><strong>View Dataset</strong></span> -->
-                                            <!-- <span>Data</span> -->
-
-                                        </button>
-                                    </p>
-
-
-                                    <p class="control px-1">
-                                        <button class="button is-normal is-link has-tooltip-arrow has-tooltip-info" data-tooltip="Download dataset" type="button" v-on:click ="getDatasetData(dataset.filename)">
-                                            
-                                            <span class="icon is-normal">
-                                                <i class="fas fa-lg fa-file-download"></i>
-                                            </span>
-                                            
-
-                                            <!-- <span><strong>Download</strong></span> -->
-                                            <!-- <span>Download</span> -->
-
-                                        </button>
-                                    </p>
-
-                                    <p class="control px-1">
-                                        <button class="button is-normal is-danger is-dark has-tooltip-arrow has-tooltip-info" data-tooltip="Delete dataset" type="button" v-on:click ="DeleteDataset(dataset.filename)">
+                                        <button class="button is-normal is-danger is-inverted has-tooltip-arrow has-tooltip-info" data-tooltip="Delete dataset" type="button" v-on:click ="DeleteDataset(dataset.filename)">
                                             
                                             <span class="icon is-normal ">
-                                                <i class="fas fa-trash-alt " style="color: #ff9999"></i>
+                                                <i class="fas fa-trash-alt"></i>
                                             </span>
-                                            
-
-                                            <!-- <span><strong>Download</strong></span> -->
-                                            <!-- <span>Download</span> -->
 
                                         </button>
                                     </p>
 
                                     <p class="control px-1">
                                         
-                                        <button class="button is-normal is-inverse has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" style="width:40px;">                                         
+                                        <button class="button is-link is-normal is-inverse has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" style="width:40px;">                                         
                                             <input class="file-input" v-bind:id="dataset.filename" type="file" accept=".csv"  v-on:input="fileValidation(dataset.filename); testsetUploadable = true; tempTrainFilename = dataset.filename" >
                                                
                                              <span class="file-icon is-normal ">
                                                 <i class="fas fa-upload"></i>
                                             </span> 
                                       </button>
-                                   </p> 
+                                   </p>
+
+                                    <p class="control px-1">
+
+                                        <button class="button is-normal is-dark has-tooltip-arrow has-tooltip-info" data-tooltip="Make Dataset Public" type="button" v-on:click ="MakeDatasetPublic(dataset.filename)">
+
+                                            <span class="icon is-normal">
+                                                <i class="fa fa-users"></i>
+                                            </span>
+
+                                        </button>
+
+                                    </p>
 
                                 </div>
      
@@ -506,7 +506,7 @@
                         
                         var Type;
                         if (resp == 'Successfully uploaded test data.'){
-                            Type = 'is-success';
+                            Type = 'is-warning';
                             this.uploadedTestData=true;
                             //this.uploadedTestFilename = `${testFile.name}`
                             // Not sure if the next two lines are necesssary just yet
@@ -582,7 +582,7 @@
                         console.log(parsedJson)
                         const heading = Object.keys(parsedJson[0]).join(",")
                         const body = parsedJson.map((j) => Object.values(j).join(",")).join("\n")
-                        const csv = `${heading}\n${body}`
+                        const csv = `${heading}\n${body}\n`
                         
                         const MLFEF = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
                         
@@ -735,7 +735,51 @@
 
                     });
                 this.$store.commit('setIsLoading',false)
+            },
+
+            async MakeDatasetPublic(filename){
+                    this.$store.commit('setIsLoading',true)
+                    console.log(filename)
+                    console.log(this.userDetails.id)
+                    const id =  this.userDetails.id
+                    const model = "Linear Regression"
+                    const data = {'UserID':id,"Filename":filename,"ModelName":model}
+                    await axios
+                    .post("datasets/makeDatasetPublic",data)
+                    .then(response => {
+                        var resp
+                        try {
+                            resp = response.data['response']
+                            var Type = 'is-warning';
+                            this.uploadedTestData=true;
+                           
+                            this.getUserDatasets() 
+                            toast({
+                                message: resp,
+                                type: Type,
+                                dismissible: true,
+                                pauseOnHover: true,
+                                duration: 3000,
+                                position: 'bottom-center',
+                            }) 
+                        }catch {
+                            resp = response.data['response']
+                            var Type = 'is-danger';
+                            this.uploadedTestData=true;
+                          
+                            toast({
+                                message: resp,
+                                type: Type,
+                                dismissible: true,
+                                pauseOnHover: true,
+                                duration: 3000,
+                                position: 'bottom-center',
+                            }) 
+                        }
+                    });
+                this.$store.commit('setIsLoading',false)
             }
+
         }
     }
 </script>
