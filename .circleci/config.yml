@@ -19,7 +19,6 @@ jobs:
             pip install pytest
             pip install pytest-cov
             pip install codecov
-            pip install cryptography
             pip install -r requirements.txt
       - save_cache:
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
