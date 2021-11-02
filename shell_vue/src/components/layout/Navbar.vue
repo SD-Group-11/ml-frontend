@@ -77,7 +77,7 @@
                     </a>
 
                    <a class="navbar-item ">
-                            <router-link to="/public-datasets"><strong>Public Datesets</strong></router-link>
+                            <router-link to="/public-datasets"><strong>Public Datasets</strong></router-link>
                     </a>
 
 
