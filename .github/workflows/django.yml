@@ -42,3 +42,5 @@ jobs:
       run: coverage run --source =. src/manage.py test src/users/ 
     - name: Upload Coverage to Codecov
       uses: codecov/codecov-action@v1
+      with:
+        token: '3389a243-26b3-44e0-b7c3-4c1ed1171f38'
