@@ -36,5 +36,7 @@ jobs:
       run: |
         cd src
         python manage.py migrate
-    - name: Run tests
-      run: coverage run --source =. src/manage.py test src/users/ 
+    - name: Generate Coverage Report
+      run: coverage run src/manage.py test src/users/ 
+    - name: Upload Coverage Report
+      uses: codecov/covedov-action@v1
