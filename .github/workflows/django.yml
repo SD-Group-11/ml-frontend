@@ -40,6 +40,11 @@ jobs:
         python manage.py migrate
     - name: Run tests
       run: coverage run --source =. src/manage.py test src/users/ 
+    - name: LOL WTF where the report at
+      run: |
+        ls
+        cd src
+        ls
     - name: Upload Coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
