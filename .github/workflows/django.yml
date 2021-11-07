@@ -32,7 +32,9 @@ jobs:
         python -m pip install pytest-cov
         python -m pip install codecov
         pip install -r requirements.txt
+    - name: Move to src folder
+      run: cd src
     - name: Run migrations
-      run: src/python manage.py migrate
+      run: python manage.py migrate
     - name: Run tests
-      run: src/manage.py test src/users/ 
+      run: python manage.py test
