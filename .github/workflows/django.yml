@@ -21,8 +21,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: '2'
     - name: Set up Python 3.6
-      uses: actions/setup-python@master
+      uses: actions/setup-python@v1
       with:
         python-version: 3.6
     - name: Install dependencies
@@ -36,7 +38,7 @@ jobs:
       run: |
         cd src
         python manage.py migrate
-    - name: Generate Coverage Report
-      run: coverage run src/manage.py test src/users/ 
-    - name: Upload Coverage Report
-      uses: codecov/covedov-action@v1
+    - name: Run tests
+      run: coverage run --source =. src/manage.py test src/users/ 
+    - name: Upload Coverage to Codecov
+      uses: codecov/codecov-action@v1
