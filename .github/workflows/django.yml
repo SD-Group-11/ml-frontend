@@ -20,9 +20,9 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: checkout@v2
     - name: Set up Python 3.6
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@master
       with:
         python-version: 3.6
     - name: Install dependencies
