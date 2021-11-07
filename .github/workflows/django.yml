@@ -37,6 +37,4 @@ jobs:
         cd src
         python manage.py migrate
     - name: Run tests
-      run: |
-        cd src
-        python manage.py test
+      run: coverage run --source =. src/manage.py test src/users/ 
