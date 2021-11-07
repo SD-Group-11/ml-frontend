@@ -1,4 +1,4 @@
-ame: MLFE backend
+name: MLFE backend
 
 on: [push]
 
