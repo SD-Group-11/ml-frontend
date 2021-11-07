@@ -37,4 +37,6 @@ jobs:
         cd src
         python manage.py migrate
     - name: Run tests
-      run: python manage.py test
+      run: |
+        cd src
+        python manage.py test
