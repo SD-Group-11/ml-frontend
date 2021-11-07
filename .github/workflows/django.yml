@@ -20,7 +20,9 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: '2'
     - name: Set up Python 3.6
       uses: actions/setup-python@v1
       with:
@@ -38,3 +40,5 @@ jobs:
         python manage.py migrate
     - name: Run tests
       run: coverage run --source =. src/manage.py test src/users/ 
+    - name: Upload Coverage to Codecov
+      uses: actions/codecov/codecov-action@v1
