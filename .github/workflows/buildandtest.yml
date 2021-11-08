@@ -41,18 +41,10 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '16.x' 
-        cache-dependency-path: shell_vue/package-lock.json
-        
-    - name: Cache dependencies
-      id: cache
-      uses: actions/cache@v2
-      with:
-        path: ./shell_vue/node_modules
-        key: modules-${{ hashFiles('./shell_vue/package-lock.json') }}
-            
+        cache-dependency-path: shell_vue/node_modules
+       
     - name: Install Node dependencies
-      if: steps.cache.outputs.cache-hit != 'true'
-      run: npm ci --ignore-scripts    
+      run: npm install --ignore-scripts    
       
     - name: Run Front-end Tests
       run: npm run test:unit
