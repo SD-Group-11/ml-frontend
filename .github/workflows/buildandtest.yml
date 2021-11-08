@@ -39,8 +39,7 @@ jobs:
       with:
         node-version: '16'
         cache: 'npm'
-        cache-dependency-path: shell_vue/package-lock.json
-    - name: Install Node Packages    
+        cache-dependency-path: shell_vue/package-lock.json   
     - run: |
         cd shell_vue
         npm install -g @vue/cli
