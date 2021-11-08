@@ -120,33 +120,64 @@
               </li>
               </ul>
         </div>
-
-
-  <!-- REUSING -->
-    <!-- <div>
-   <ul class="steps has-content-centered">
-          <li class="steps-segment is-active is-dashed">
-            <span class="steps-marker is-warning">1</span>
-            <div class="steps-content"> --> 
-              <!-- <p class="is-size-4">Step 1</p> -->
-              <!-- <p class="is-size-5">Select an algorithm</p>
-            </div>
-          </li>
-
-          <li class="steps-segment is-active is-dashed">
-            <span class="steps-marker is-warning">2</span>
-            <div class="steps-content">  -->
-              <!-- <p class="is-size-4">Step 2</p> -->
-              <!-- <p class="is-size-5">Upload a dataset</p>
-            </div>
-          </li>
-        </ul>
-  </div> -->
-
-       
-
     </div>
 
+
+        <div class="container is-fluid p-2">
+        <div class="notification is-info is-light has-text-centered" >
+            <h3 class="title is-2">Comparing Classification Models</h3>
+        </div>
+
+        <div>
+           <ul class="steps is-vertical is-hollow is-dashed ">
+              <li class="steps-segment is-active">
+                <span class="steps-marker is-warning"></span>
+                <div class="steps-content">
+                  <!-- <code>is-primary</code> -->
+                  <p class="is-size-4">Train and Test</p>
+                  <p>Train and test your chosen model on naive bayes and logistic regression as you would normally.</p>
+                </div>
+              </li>
+              
+              <li class="steps-segment">
+                <span class="steps-marker is-warning"></span>
+                <div class="steps-content">
+                  <p class="is-size-4">Compare</p>
+                  <p>Under "Compare Classification Models" select the trained model to then compare their results. You may only use a trained model for comparing.</p>
+                  <!-- add picture -->
+                </div>
+              </li>
+              </ul>
+        </div>
+    </div>
+
+
+      <div class="container is-fluid p-2">
+        <div class="notification is-info is-light has-text-centered" >
+            <h3 class="title is-2">Public Datasets</h3>
+        </div>
+
+        <div>
+           <ul class="steps is-vertical is-hollow is-dashed ">
+              <li class="steps-segment is-active">
+                <span class="steps-marker is-warning"></span>
+                <div class="steps-content">
+                  <!-- <code>is-primary</code> -->
+                  <p class="is-size-4">Uploading</p>
+                  <p>When uploading datasets to any of the models, you have the option of making them public. This will allow other users to use them.</p>
+                </div>
+              </li>
+              <li class="steps-segment">
+                <span class="steps-marker is-warning"></span>
+                <div class="steps-content">
+                  <p class="is-size-4">Downloading</p>
+                  <p>Under "Public Datasets" you will find public datasets from other users that you are free to use.</p>
+                  <!-- add picture -->
+                </div>
+              </li>
+              </ul>
+        </div>
+    </div>
     <!-- <div class="block" > </div> -->
 
 
