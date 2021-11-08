@@ -34,22 +34,28 @@ jobs:
         python -m pip install pytest-cov
         python -m pip install codecov
         pip install -r requirements.txt
+    - name: Install Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+        cache: 'npm'
+        cache-dependency-path: shell_vue/package-lock.json
+    - run: |
+        cd shell_vue
+        npm install -g @vue/cli
+        npm install deasync
+        npm install bulma"
+        npm install bulma-toast
+        npm install axios
+        npm install --save-dev codecov
+    - name: Run Front-end Tests
+      run: npm run test:unit
     - name: Run migrations
       run: |
-        cd src
+        cd ../src
         python manage.py migrate
-    - name: Run tests
-      run: coverage run src/manage.py test src/users/ && coverage report
-    - name: LOL WTF where the report at
-      run: |
-        echo files in main
-        ls
-        cd src
-        echo files in src
-        ls
-        cd users
-        echo files in users
-        ls
+    - name: Run Tests
+      run: coverage run src/manage.py test src/users/ && coverage
     - name: Upload Coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
