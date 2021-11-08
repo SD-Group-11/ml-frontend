@@ -47,7 +47,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ./shell_vue/node_modules
-        key: modules-${{ hashFiles('shell_vue/package-lock.json') }}
+        key: modules-${{ hashFiles('**/shell_vue/package-lock.json') }}
             
     - name: Install Node dependencies
       if: steps.cache.outputs.cache-hit != 'true'
