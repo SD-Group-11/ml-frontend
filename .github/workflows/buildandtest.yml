@@ -39,7 +39,7 @@ jobs:
       with:
         node-version: '16'
         cache: 'npm'
-        cache-dependency-path: shell_vue/node_modules   
+        cache-dependency-path: 'shell_vue/node_modules'   
     - run: |
         cd shell_vue
         npm install -g @vue/cli
