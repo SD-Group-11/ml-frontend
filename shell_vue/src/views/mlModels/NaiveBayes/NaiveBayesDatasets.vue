@@ -209,7 +209,7 @@
 
                                     <p class="control px-1">
                                         
-                                        <button class="button is-normal is-inverse has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" v-on:click ="inputTestset = true; tempTrainFilename = dataset.filename;">
+                                        <button class="button is-link is-normal is-inverse has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button"style="width:40px;">
                                         
                                             <input class="file-input" v-bind:id="dataset.filename" type="file" accept=".csv" v-if="inputTestset"  v-on:input="fileValidation(dataset.filename); testsetUploadable = true;">
                                             
