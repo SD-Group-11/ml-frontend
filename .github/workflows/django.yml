@@ -39,7 +39,7 @@ jobs:
         cd src
         python manage.py migrate
     - name: Run tests
-      run: coverage run --source =. src/manage.py test src/users/ && coverage report
+      run: coverage run src/manage.py test src/users/ && coverage report
     - name: LOL WTF where the report at
       run: |
         echo files in main
