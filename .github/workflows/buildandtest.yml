@@ -55,7 +55,7 @@ jobs:
       
     - name: Run migrations
       run: |
-        cd ../src
+        cd src
         python manage.py migrate
         
     - name: Run Tests
