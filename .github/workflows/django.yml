@@ -42,8 +42,13 @@ jobs:
       run: coverage run --source =. src/manage.py test src/users/ 
     - name: LOL WTF where the report at
       run: |
+        echo files in main
         ls
         cd src
+        echo files in src
+        ls
+        cd users
+        echo files in users
         ls
     - name: Upload Coverage to Codecov
       uses: codecov/codecov-action@v1
