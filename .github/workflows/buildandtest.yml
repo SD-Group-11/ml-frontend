@@ -38,7 +38,7 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '16'
-        cache: 'shell-vue/node-modules'  
+        cache: 'shell-vue/node_modules'  
     - run: |
         cd shell_vue
         npm install -g @vue/cli
