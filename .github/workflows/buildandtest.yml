@@ -43,22 +43,18 @@ jobs:
         node-version: '16.x' 
         cache-dependency-path: shell_vue/node_modules
        
-    - name: Install Node dependencies
-      run: |
-        cd shell_vue
-        npm install --ignore-scripts    
-      
     - name: Build Front-End
       run: |
         cd shell_vue
-        run: npm run build
-      
-    - name: Run Migrations
+        npm install --ignore-scripts    
+        npm run build --if-present
+  
+    - name: Run Django Migrations
       run: |
         cd src
         python manage.py migrate
         
-    - name: Run Tests
+    - name: Run Backend Tests
       run: coverage run src/manage.py test src/users/ && coverage
       
     - name: Upload Coverage to Codecov
