@@ -44,7 +44,9 @@ jobs:
         cache-dependency-path: shell_vue/node_modules
        
     - name: Install Node dependencies
-      run: npm install --ignore-scripts    
+      run: |
+        cd shell_vue
+        npm install --ignore-scripts    
       
     - name: Run Front-end Tests
       run: npm run test:unit
