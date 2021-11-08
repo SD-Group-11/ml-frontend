@@ -1,0 +1,63 @@
+name: MLFE backend
+
+on: ["push", "pull_request"]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:10.8
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+        ports:
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: '2'
+        
+    - name: Set up Python 3.6
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.6
+        
+    - name: Install Python Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install pytest
+        python -m pip install pytest-cov
+        python -m pip install codecov
+        pip install -r requirements.txt
+        
+    - name: Install Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16.x' 
+        cache-dependency-path: shell_vue/node_modules
+       
+    - name: Build Front-End
+      run: |
+        cd shell_vue
+        npm install --ignore-scripts    
+        npm run build --if-present
+  
+    - name: Run Django Migrations
+      run: |
+        cd src
+        python manage.py migrate
+        
+    - name: Run Backend Tests
+      run: coverage run src/manage.py test src/users/ && coverage
+      
+    - name: Upload Coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        token: '3389a243-26b3-44e0-b7c3-4c1ed1171f38'
