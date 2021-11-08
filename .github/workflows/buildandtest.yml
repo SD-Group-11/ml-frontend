@@ -37,8 +37,7 @@ jobs:
     - name: Install Node
       uses: actions/setup-node@v2
       with:
-        node-version: '16'
-        cache-dependency-path: 'shell-vue/node_modules'  
+        node-version: '16'  
     - run: |
         cd shell_vue
         npm install -g @vue/cli
