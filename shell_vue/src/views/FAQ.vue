@@ -29,9 +29,9 @@
                 </button>
               </div>
               <transition name="dropdown">
-              <div class="message-body" v-show='toggle'>
+              <div class="message-body" v-if ="toggle" @click="toggle =!toggle">
                 <div class="notification is-info  is-light">
-                  You can reset your password from the sign-in form.
+                 You can reset your password from the sign-in form.
                 </div>
               </div>
               </transition>     
@@ -146,7 +146,51 @@
                </transition>
             </article>
 
-            
+            <!-- new FAQ -->
+            <article class="message is-warning">
+              <div class="message-header">
+                <p> Why can't I upload my datasets to public datasets?
+                </p>
+                
+                <button class="button is-warning is-light" @click="toggle6= !toggle6">
+                  <span class="icon is-small">
+                    <i class="fas fa-chevron-circle-down"></i>
+                  </span>
+                </button>
+              </div>
+               <transition name="dropdown">
+              <div class="message-body" v-show='toggle6'>
+                <div class="notification is-info  is-light">
+                    In order or your dataset to show up as public you need to ensure that you have uploaded
+                    test data with the associated dataset
+                </div>
+              </div>
+               </transition>
+            </article>
+
+            <!-- new FAQ -->
+            <article class="message is-warning">
+              <div class="message-header">
+                <p> I don't have a dataset. How can I try out LeftFrame?
+                </p>
+                
+                <button class="button is-warning is-light" @click="toggle7= !toggle7">
+                  <span class="icon is-small">
+                    <i class="fas fa-chevron-circle-down"></i>
+                  </span>
+                </button>
+              </div>
+               <transition name="dropdown">
+              <div class="message-body" v-show='toggle7'>
+                <div class="notification is-info  is-light">
+                    If you don't have a dataset to work with and would like to try out one of the models you can simply download
+                    a dataset from the public datasets page made available to all users by other users of the site   
+                </div>
+              </div>
+               </transition>
+            </article>
+
+
 
           </div>
  
@@ -249,23 +293,31 @@
   }
 
 
- .dropdown-enter,
- .dropdown-leave-to {
-  transform: scaleY(0.7);
+
+.dropdown-enter-from{
   opacity: 0;
- }
- 
- .dropdown-enter-to,
- .dropdown-leave {
+  transform: scaleY(0.5);
+}
+.dropdown-enter-to{
   opacity: 1;
   transform: scaleY(1);
- }
- 
- .dropdown-enter-active,
- .dropdown-leave-active {
-  transition: all 0.3s ease-out;
-  transform-origin: top center;
 }
+.dropdown-enter-active{
+  transition: all 0.3s ease-in;
+}
+
+.dropdown-leave-from{
+  opacity: 1;
+  transform: scaleY(1);
+}
+.dropdown-leave-to{
+  opacity: 0;
+  transform: scaleY(0.5);
+  }
+.dropdown-leave-active{
+  transition: all 0.3s ease-out;
+}
+
 </style>
 
 
@@ -281,6 +333,8 @@ export default {
       toggle3: false,
       toggle4: false,
       toggle5: false,
+      toggle6: false,
+      toggle7: false,
     }
   }
 }
