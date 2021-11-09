@@ -39,7 +39,7 @@ const routes = [
     component: Home,
     meta: {
       requireLogin: false,
-      title: 'Welcome to MLFE'
+      title: 'Welcome to LeftFrame'
     }
   },
   {
@@ -119,7 +119,7 @@ const routes = [
     component: Dashboard,
     meta: {
       requireLogin: true,
-      title: 'MLFE Home'
+      title: 'LeftFrame Home'
     }
   },
   {
