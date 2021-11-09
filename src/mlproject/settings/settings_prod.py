@@ -43,11 +43,11 @@ SECURE_SSL_REDIRECT = env('SECURE_SSL_REDIRECT')
 
 
 
-ALLOWED_HOSTS = ['mlfe-django-app.herokuapp.com']
+ALLOWED_HOSTS = ['leftframe-django.herokuapp.com']
 
 #CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOWED_ORIGINS = [
-    'https://mlfe-vue-app.herokuapp.com'
+    'https://leftframe.herokuapp.com'
 ]
 
 REST_FRAMEWORK = {
@@ -163,8 +163,8 @@ DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 AUTH_USER_MODEL = 'users.User'
 
 # django email template setting needed for reset password link
-DOMAIN = 'mlfe-vue-app.herokuapp.com'
-SITE_NAME = 'Machine Learning Front-End Framework'
+DOMAIN = 'leftframe.herokuapp.com'
+SITE_NAME = 'LeftFrame'
 
 DJOSER = {
     'LOGIN_FIELD': 'email',

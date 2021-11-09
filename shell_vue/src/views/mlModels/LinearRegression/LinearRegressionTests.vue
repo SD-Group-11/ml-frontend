@@ -43,18 +43,18 @@
                     <!-- should be one or the other, need to sort out the logic -->
                     <!-- add the upload test data here  -->
 
-                    <div class="column is-one-fifth">
+                    <div class="column is-one-quarter">
                         <!-- Selecting trained model -->
                         <div class="field ">
                             <label class="label">Trained Model</label>
                             <select v-model="selected" id = "files" class="select is-normal is-size-6 is-info" style="width: 100%;">
                                 <option disabled value="">Select trained model</option>
-                                <option  v-for="dataset in userFiles" v-bind:key="dataset" >{{dataset}}</option>
+                                <option  v-for="dataset in userFilesNoextension" v-bind:key="dataset" >{{dataset}}</option>
                             </select>
 
                         </div>
                         <!-- possibly set this to train secretly and select -->
-                        <button style="text-align: center;" class="button has-text-black" id="selectButton" v-on:click='checkTestingData()'>Select</button>
+                        <!-- <button style="text-align: center;" class="button has-text-black" id="selectButton" v-on:click='checkTestingData()'>Select</button> -->
                         </div>
 
                         <div class="column is-right" style="padding-top:36px"> 
@@ -104,14 +104,14 @@
 
             
             <!-- test model just like on train page : v-on:click='showTestGraphs' -->
-            <button style="text-align: center;" class="button is-info has-text-black" id="testModelButton" v-on:click='showTestGraphs'><strong>Test Model</strong></button>
+            <button style="text-align: center;" class="button is-info has-text-black" id="testModelButton" v-if="selected" v-on:click='checkTestingData()'><strong>Test Model</strong></button>
             <!-- <button class="button" id="testModelButton" v-on:click='checkTestingData()'>Test Model</button> -->
 
 
         
             <!-- testing results -->
             <div class="container is-fluid" v-if="showTestingGraphs">
-                <span><h2 v-if="showTrainingGraphs">Results:<span class="accuracy"></span></h2></span>
+                <span><h2 v-if="showTestingGraphs">Results:<span class="accuracy"></span></h2></span>
                 
                 <div class="columns">
                     <div class="column is-half">
@@ -221,6 +221,7 @@
                 // Variables involving the files and user details
                 userDetails: [],
                 userFiles: [],
+                userFilesNoextension:[],
                 uploadedName: '',
                 uploadable: false,
                 hasDatasets: false,
@@ -235,7 +236,7 @@
                 testPredictedY: [],
                 trainAccuracy: -1,
                 testAccuracy: -1,
-                coefficients: [],
+                coefficients: 0,
                 meanSquaredError: -1,
                 intercept: 0,
                 numberFeatures: -1,
@@ -284,7 +285,10 @@
                 this.$store.commit('setIsLoading',false)
             },
             async checkTestingData() {
-                var filename = this.selected;
+                this.$store.commit('setIsLoading',true)
+                // var filename = this.selected + ".csv";
+                var temp = this.selected;
+                var filename = temp.split("_")[0]+".csv";
                 var model = "Linear Regression";
                 var data ={"UserID":this.userDetails.id,"Filename":filename,"ModelName":model};
                 await axios
@@ -309,32 +313,35 @@
                         //do all the funky stuff here
                         //re-run linear regression here
                         //secretly run regression:
-                        toast({
-                            message: "Dataset selected",
-                            type: 'is-success',
-                            dismissible: true,
-                            pauseOnHover: true,
-                            duration: 4000,
-                            position: 'bottom-center',
-                        })
+                        // toast({
+                        //     message: "Dataset selected",
+                        //     type: 'is-warning',
+                        //     dismissible: true,
+                        //     pauseOnHover: true,
+                        //     duration: 4000,
+                        //     position: 'bottom-center',
+                        // })
 
-                        console.log(this.userFiles)
-                        console.log("SUCCESS MY GUY LETS GOOOO")
-                        this.TrainModel()
+                        // console.log(this.userFiles)
+                        // console.log("SUCCESS MY GUY LETS GOOOO")
+                        this.TrainModel(filename)
+                        this.showTestGraphs();
                     }
                 })
+                this.$store.commit('setIsLoading',false)
                 .catch(error => {
                     console.log(error)
                 })
             },
             async uploadTestDataset(trainsetFilename){
+                var filename = trainsetFilename.split("_")[0]+".csv";
                 console.log('trainsetFilename',trainsetFilename)
                 this.$store.commit('setIsLoading',true)
                 var testFile = document.getElementById(trainsetFilename).files[0];
                 var testFormData = new FormData();
                 testFormData.append("dataset",testFile);
                 testFormData.append("id",this.userDetails.id);
-                testFormData.append("TrainingFileName", trainsetFilename);
+                testFormData.append("TrainingFileName", filename);
                 testFormData.append("model","Linear Regression");
                 await axios
                     .post('/datasets/uploadTestData',testFormData)
@@ -343,7 +350,7 @@
                         
                         var Type;
                         if (resp == 'Successfully uploaded test data.'){
-                            Type = 'is-success';
+                            Type = 'is-warning';
                             //this.uploadedTestFilename = `${testFile.name}`
                             // Not sure if the next two lines are necesssary just yet
                             // this.getUploaded(this.uploadedTestFilename) 
@@ -431,10 +438,12 @@
                 
             },
             // Call this method when the user clicks Train Model 
-            async TrainModel(){
+            async TrainModel(file){
                 var id = this.userDetails.id;
                 //Please get the filename from the dropdown and set it here 
-                var filename = this.selected;
+                var filename = file;
+
+                // var filename = this.selected;
                 // tol and learningRate must be decimal values
                 // var tol = document.getElementById("tol").value;
                 // var learningRate = document.getElementById("learningRate").value;
@@ -443,17 +452,17 @@
                 var learningRate = '';
                 var tol = '';
                 var data ={"UserId":id,"filename":filename,"learningRate":learningRate,"tol":tol}
-                console.log('data: ',data)
+                // console.log('data: ',data)
                 await axios
                 .post("/datasets/doLinearRegression",data)
                 .then(response =>{
                     //Michael will use response.data for his graphing 
-                    console.log(response.data)
+                    // console.log(response.data)
                     this.extractData(response.data);
                     this.isTraining = true
                     
                     this.plotPredictedVSActual(this.trainX.length, this.trainY, this.trainPredictedY)
-                    this.showTrainingGraphs = true
+                    this.showTestingGraphs = true
                     this.isTraining = false
                     // Create graphs for Test dataset
                     this.isTesting = true
@@ -496,6 +505,7 @@
                         var number_of_datasets = Object.keys(response.data).length
                         for(var i=1;i<number_of_datasets+1;i++){
                             this.userFiles.push(response.data[i])
+                            this.userFilesNoextension.push(response.data[i].split(".")[0]+"_LinearRegression_Model")
                         }
                         console.log(this.userFiles)
                     }
@@ -531,8 +541,7 @@
                 this.testAccuracy = responseData['Test_accuracy']
                 //Mean Squared Error, Coefficients, Intercept and number of Features
                 this.meanSquaredError = responseData['meansquared']
-                //this.coefficients = Object.values(responseData['coefficients'])[0]
-                this.coefficients = Object.values(responseData['coefficients'])
+                this.coefficients = Object.values(responseData['coefficients'])[0]
                 this.intercept = Object.values(responseData['Intercept'])[0]
                 this.numberFeatures = Object.values(responseData['jsonFeatures'])[0].length -1
             },
@@ -704,19 +713,8 @@
             },
             download() {
                 var element = document.createElement('a');
-                let filename = 'Linear_Regression_Results.txt';
-                //Text to be inside results.txt
-                let text = "Linear Regression Results\n\nTraining Results:\n"
-                text += "\nTrain Accuracy: " + String(this.trainAccuracy)
-                text += "\nCoefficient of Determination: "+String(this.testAccuracy)
-                text += "\nCoefficients: " + String(this.coefficients)
-
-                text += "\n\nTesting Results:\n"
-                text += "\nTest Accuracy: " + String(this.testAccuracy)
-                text += "\nMean Squared Error: "+String(this.meanSquaredError)
-                text += "\nTrue test data output values: " + String(this.testY)
-                text += "\n\nPredicted test data output values: " + String(this.testPredictedY)
-                
+                let filename = 'results.txt';
+                let text = "Mean Squared Error: "+String(this.meanSquaredError)+"\n"+"Coefficient of Determination: "+String(this.testAccuracy)
                 element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
                 element.setAttribute('download', filename);
                 element.style.display = 'none';

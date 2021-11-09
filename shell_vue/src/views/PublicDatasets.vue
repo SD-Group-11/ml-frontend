@@ -26,7 +26,7 @@
 
                             <td class="is-image-cell">
                                 <div class="image">
-                                    <img src="@/assets/images/confused-icon-6-yellow.png">
+                                    <img src="@/assets/images/confused-ball-public-dark-32.png">
                                 </div>
                             </td>
 
@@ -44,34 +44,10 @@
                                 <!-- <div class="buttons"> -->
                                 <div class="field has-addons">
                                     
-                                    <p class="control px-1">
-                                        <template v-if="dataset.Info">
-                
-                                            <!-- <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" @click="showNoReportModal = true">
-                                        
-                                            
-                                                <span class="icon is-normal">
-                                                    <i class="fas fa-lg fa-file-medical-alt"></i>
-                                                </span>
-
-
-                                            </button> -->
-                                        </template>
-                                        <!-- <template v-else>
-                                            <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" v-on:click ="getReport(dataset.MSE, dataset.TrainAccuracy, dataset.TestAccuracy)">
-                                        
-                                                <span class="icon is-normal">
-                                                    <i class="fas fa-lg fa-file-medical-alt"></i>
-                                                </span>
-
-
-                                            </button>
-                                        </template> -->
-                                    </p>
 
 
                                     <p class="control px-1">
-                                        <button class="button is-normal is-info is-inverted has-tooltip-arrow has-tooltip-info" data-tooltip="View training data" type="button" v-on:click ="getTrainingData(dataset.filename,dataset.Model)">
+                                        <button class="button is-normal is-info has-tooltip-arrow has-tooltip-info" data-tooltip="View training data" type="button" v-on:click ="getTrainingData(dataset.filename,dataset.Model)">
                                     
                                         
                                             <span class="icon is-normal">
@@ -86,7 +62,7 @@
 
 
                                     <p class="control px-1">
-                                        <button class="button is-normal is-link has-tooltip-arrow has-tooltip-info" data-tooltip="View test data" type="button" v-on:click ="getTestData(dataset.filename,dataset.Model)">
+                                        <button class="button is-normal is-success has-tooltip-arrow has-tooltip-info" data-tooltip="View test data" type="button" v-on:click ="getTestData(dataset.filename,dataset.Model)">
                                             
                                             <span class="icon is-normal">
                                                <i class="fas fa-chart-line"></i>
@@ -373,13 +349,13 @@ export default {
                         this.rowData=[]
                         const tableData = response.data.data
                         const tableHeadings = Object.keys(tableData[0])
-                        console.log(tableHeadings)
+                        // console.log(tableHeadings)
                         for(var i=0;i<tableHeadings.length;i++){
                            this.columnDefs.push({ field: tableHeadings[i], sortable: true, filter: true })  
                         }
                         console.log(this.columnDefs)
                         this.rowData=tableData
-                        console.log(this.rowData)
+                        // console.log(this.rowData)
                         this.showDatasetModal = true
                     } 
                 })

@@ -91,8 +91,8 @@ class NaiveBayesModel(TestCase):
         f1 = results[1]
 
         ##check that each class has a value
-        self.assertEquals(f1[0]['class'],'0')
-        self.assertEquals(f1[1]['class'],'1')
+        self.assertEquals(f1[0]['class'],'Purchased = 0')
+        self.assertEquals(f1[1]['class'],'Purchased = 1')
 
         self.assertNotEquals(f1[0]['class'],'')
 
@@ -129,8 +129,8 @@ class NaiveBayesModel(TestCase):
         auc = results[2]
 
         ##check that each class has a value
-        self.assertEquals(auc[0]['class'],'0')
-        self.assertEquals(auc[1]['class'],'1')
+        self.assertEquals(auc[0]['class'],'Purchased = 0')
+        self.assertEquals(auc[1]['class'],'Purchased = 1')
 
         self.assertNotEquals(auc[0]['class'],'')
 

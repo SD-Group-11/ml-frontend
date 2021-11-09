@@ -39,7 +39,7 @@ const routes = [
     component: Home,
     meta: {
       requireLogin: false,
-      title: 'Welcome to MLFE'
+      title: 'Welcome to LeftFrame'
     }
   },
   {
@@ -108,6 +108,10 @@ const routes = [
   {
     path: '/about',
     name: 'About',
+    meta: {
+      requireLogin: false,
+      title: 'About LeftFrame'
+    },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -119,7 +123,7 @@ const routes = [
     component: Dashboard,
     meta: {
       requireLogin: true,
-      title: 'MLFE Home'
+      title: 'LeftFrame Home'
     }
   },
   {

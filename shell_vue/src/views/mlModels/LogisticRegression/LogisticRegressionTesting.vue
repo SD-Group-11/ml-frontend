@@ -15,7 +15,7 @@
 
             <div class="columns">
                     <div class="column is-one-fifth">                        
-                        <div class="button is-pulled-left is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/logistic-regression-training')" data-tooltip="Manage datasets">
+                        <div class="button is-pulled-left is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/logistic-regression-training')" data-tooltip="Train a model">
                             <span class="icon is-normal">
                                 <i class="fas fa-lg fa-arrow-left"></i>                                
                             </span>
@@ -27,7 +27,7 @@
                     </div>
                     
                     <div class="column is-one-fifth">
-                        <div class="button is-pulled-right is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/logistic-regression-datasets')" data-tooltip="Test a model">
+                        <div class="button is-pulled-right is-medium is-rounded is-warning has-tooltip-warning" @click="$router.push('/logistic-regression-datasets')" data-tooltip="Manage datasets">
                             <span class="icon is-normal">
                                 <i class="fas fa-lg fa-arrow-right"></i>
                             </span>
@@ -42,17 +42,17 @@
 
             <form @submit.prevent="submitForm"> 
                 <div class="columns">
-                    <div class="column is-one-fifth">
+                    <div class="column is-one-quarter">
                         <!-- Selecting a dataset -->
                         <div class="field ">
                             <label class="label">Dataset</label>
                             <select v-model="selected" id = "files" class="select is-normal is-size-6 is-info" style="width: 100%;">
                                 <option  disabled value="">Select training dataset</option>
-                                <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
+                                <option  v-for="dataset in userFilesNoextension" v-bind:key="dataset" >{{dataset}}</option>
                             </select>
                         </div>
                         <!-- U -->
-                      <button class="button" id="selectButton" v-on:click='checkTestingData()'>Select</button>
+                      <!-- <button class="button" id="selectButton" v-on:click='checkTestingData()'>Select</button> -->
 
                     </div>
 
@@ -100,7 +100,7 @@
 
             <!-- test model button U - unsure about onclick statement-->
             <div>
-                <button style="text-align: center;" class="button is-info is light has-text-black "  v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false'><strong>Test Model</strong></button>
+                <button style="text-align: center;" class="button is-info is light has-text-black " v-if="selected"  v-on:click='checkTestingData(); showTestButton = true; showTestingGraphs = false'><strong>Test Model</strong></button>
             </div>
             <div class="block"></div>
         
@@ -136,6 +136,7 @@
             </div>
         </div>
         <div class="block"></div>
+
         <!-- Download results  -->
         <div class="columns is-centered">
             <div class="column">
@@ -227,6 +228,7 @@
                 // Variables involving the files and user details
                 userDetails: [],
                 userFiles: [],
+                userFilesNoextension:[],
                 uploadedName: '',
                 uploadable: false,
                 hasDatasets: false,
@@ -426,7 +428,8 @@
                     .get('/api/v1/users/me')
                     .then(response => {
                         this.userDetails=response.data
-                        this.getUserDatasets()
+                        // this.getUserDatasets()
+                        this.getTrainedDatasets()
                     })
                     .catch(error => {
                         console.log(error)
@@ -466,11 +469,11 @@
                 this.$store.commit('setIsLoading',false)
             },
             // Call this method when the user clicks Train Model 
-            async TrainModel(){
+            async TrainModel(file){
                 this.$store.commit('setIsLoading',true)
                 var id = this.userDetails.id;
                 //Please get the filename from the dropdown and set it here 
-                var filename = this.selected;
+                var filename = file;
                 var data ={"UserId":id,"filename":filename}
                 console.log('data: ',data)
                 await axios
@@ -503,7 +506,7 @@
                     var Type;
                     //indicates successful deleting of the data
                     if(resp == "Results discarded."){
-                         Type = 'is-success';
+                         Type = 'is-warning';
                          //Toast to give user indication of outcome of action
                         toast({
                             message: "Results successfully discarded.",
@@ -543,7 +546,7 @@
                     var Type;
                     //indicates successful deleting of the data
                     if(resp == "Results discarded."){
-                         Type = 'is-success';
+                         Type = 'is-warning';
                          //Toast to give user indication of outcome of action
                         toast({
                             message: "Results successfully discarded.",
@@ -589,13 +592,13 @@
 
             //test page upload button - this
             async uploadTestDataset(trainsetFilename){
-                console.log('trainsetFilename',trainsetFilename)
+                var filename = this.selected.split("_")[0]+".csv"
                 this.$store.commit('setIsLoading',true)
                 var testFile = document.getElementById(trainsetFilename).files[0];
                 var testFormData = new FormData();
                 testFormData.append("dataset",testFile);
                 testFormData.append("id",this.userDetails.id);
-                testFormData.append("TrainingFileName", trainsetFilename);
+                testFormData.append("TrainingFileName", filename);
                 testFormData.append("model","Logistic Regression");
                 await axios
                     .post('/datasets/uploadTestData',testFormData)
@@ -604,7 +607,7 @@
                         
                         var Type;
                         if (resp == 'Successfully uploaded test data.'){
-                            Type = 'is-success';
+                            Type = 'is-warning';
                             //this.uploadedTestFilename = `${testFile.name}`
                             // Not sure if the next two lines are necesssary just yet
                             // this.getUploaded(this.uploadedTestFilename) 
@@ -631,6 +634,40 @@
                         }
                     });
                     this.uploadedName = '';
+                this.$store.commit('setIsLoading',false)
+            },
+            async getTrainedDatasets(){
+                this.$store.commit('setIsLoading',true)
+                this.userFiles=[] 
+                var data ={"UserID":this.userDetails.id}
+                await axios
+                .post('/LogisticRegression/trainedDatasets',data)
+                .then(response =>{
+                    if(response.data['response']=="No trained datasets"){
+                        console.log("has no datasets")
+                        console.log(response.data)
+                        this.hasDatasets = false
+                    }
+                    else{
+                        //console.log(response.data[0])
+                        this.hasDatasets = true
+                        //idk why but accessing UserFiles out of this scope returns empty. Please check what im doing wrong
+                        // response.data though holds all the datasets of a user and their respective summary details
+                        //this.userFiles = response.data;
+                        // Tell us how many datasets are associated with the user 
+                        // you can loop from 1 to number_of_datasets+1 and use that to index response.data[i] to get a dataset and its summary
+                        var number_of_datasets = Object.keys(response.data).length
+                        for(var i=1;i<number_of_datasets+1;i++){
+                            this.userFiles.push(response.data[i])
+                            this.userFilesNoextension.push(response.data[i].split(".")[0]+"_LogisticRegression_Model")
+                        }
+                        console.log(this.userFilesNoextension)
+                        console.log(this.userFiles)
+                    }
+                })
+                .catch(error => {
+                    console.log(error)
+                })
                 this.$store.commit('setIsLoading',false)
             },
 		
@@ -716,7 +753,7 @@
 
             // from LR testing page
             async checkTestingData() {
-                var filename = this.selected;
+                var filename = this.selected.split("_")[0]+".csv";
                 var model = "Logistic Regression";
                 var data ={"UserID":this.userDetails.id,"Filename":filename,"ModelName":model};
                 await axios
@@ -739,17 +776,18 @@
                         //WORK HERE - toast message
                     }
                     else{
-                        toast({
-                            message: "Dataset selected",
-                            type: 'is-warning',
-                            dismissible: true,
-                            pauseOnHover: true,
-                            duration: 3000,
-                            position: 'bottom-center',
-                        })
+                        // toast({
+                        //     message: "Dataset selected",
+                        //     type: 'is-warning',
+                        //     dismissible: true,
+                        //     pauseOnHover: true,
+                        //     duration: 3000,
+                        //     position: 'bottom-center',
+                        // })
 
                         console.log(this.userFiles)
                         console.log("SUCCESS MY GUY LETS GOOOO")
+                        this.TrainModel(filename)
 
                     }
                 })
@@ -758,7 +796,6 @@
                 })
 
             },
-
             download() {
                 var element = document.createElement('a');
                 let filename = 'Logistic_Regression_Results.txt';
@@ -769,13 +806,11 @@
                    text += "{" + this.f1Score[i].class + ": " + this.f1Score[i].score + "}"
                    if (i < this.f1Score.length-1) text += ", "
                 }
-
                 text += "\nAUC score: "
                 for(let i=0; i<this.AUC.length; i++) {
                    text += "{" + this.AUC[i].class + ": " + this.AUC[i].value + "}"
                    if (i < this.AUC.length-1) text += ", "
                 }
-
                 text += "\nConfusion matrix: ["
                 for(let i=0; i<this.confusionMatrix.length; i++) {
                    // class : confusion matrix row
@@ -785,7 +820,6 @@
                 }
                 text += "]"
                 
-
                 
                 
                 element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -795,6 +829,8 @@
                 element.click();
                 document.body.removeChild(element);
             }
+
+
         }
     }
 </script>

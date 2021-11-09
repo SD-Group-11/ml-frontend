@@ -120,7 +120,7 @@
 
                             <td class="is-image-cell">
                                 <div class="image">
-                                    <img src="@/assets/images/confused-icon-6-yellow.png">
+                                    <img src="@/assets/images/confused-ball-outline-thick-32.png">
                                 </div>
                             </td>
 
@@ -137,35 +137,11 @@
                             <td class="is-actions-cell">                       
                                 <!-- <div class="buttons"> -->
                                 <div class="field has-addons">
-                                    
-                                    <p class="control px-1">
-                                        <!-- <template v-if="dataset.Info">
-                
-                                            <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" @click="showNoReportModal = true">
-                                        
-                                            
-                                                <span class="icon is-normal">
-                                                    <i class="fas fa-lg fa-file-medical-alt"></i>
-                                                </span>
 
-
-                                            </button>
-                                        </template>
-                                        <template v-else>
-                                            <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" v-on:click ="getReport(dataset.MSE, dataset.TrainAccuracy, dataset.TestAccuracy)">
-                                        
-                                                <span class="icon is-normal">
-                                                    <i class="fas fa-lg fa-file-medical-alt"></i>
-                                                </span>
-
-
-                                            </button>
-                                        </template> -->
-                                    </p>
 
 
                                     <p class="control px-1">
-                                        <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="Download dataset" type="button" v-on:click ="getDatasetData(dataset.filename)">
+                                        <button class="button is-normal is-success has-tooltip-arrow has-tooltip-info" data-tooltip="Download dataset" type="button" v-on:click ="getDatasetData(dataset.filename)">
                                             
                                             <span class="icon is-normal">
                                                 <i class="fas fa-lg fa-file-download"></i>
@@ -193,6 +169,21 @@
                                     </p>
 
                                     <p class="control px-1">
+                                        
+                                        <button class="button is-normal is-success is-inverse has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" style="width:40px;">
+                                        
+                                            <input class="file-input" v-bind:id="dataset.filename" type="file" accept=".csv" v-on:input="fileValidation(dataset.filename); testsetUploadable = true; tempTrainFilename = dataset.filename;">
+                                            
+                                            <span class="file-icon is-normal">
+                                                <i class="fas fa-upload"></i>
+                                            </span>
+
+
+                                        </button>
+                                        
+                                    </p>
+
+                                    <p class="control px-1">
                                         <button class="button is-normal is-danger is-inverted has-tooltip-arrow has-tooltip-info" data-tooltip="Delete dataset" type="button" v-on:click ="DeleteDataset(dataset.filename)">
                                             
                                             <span class="icon is-normal ">
@@ -203,28 +194,11 @@
                                         </button>
                                     </p>
 
-                                    <p class="control px-1">
-                                        
-                                        <button class="button is-normal is-link has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" v-on:click ="inputTestset = true; tempTrainFilename = dataset.filename;">
-                                        
-                                            <input class="file-input" v-bind:id="dataset.filename" type="file" accept=".csv" v-if="inputTestset"  v-on:input="fileValidation(dataset.filename); testsetUploadable = true;">
-                                            
-                                            <span class="icon is-normal">
-                                                <i class="fas fa-upload"></i>
-                                            </span>
-                                            
 
-                                            <!-- <span><strong>Download</strong></span> -->
-                                            <!-- <span>Download</span> -->
-
-                                        </button>
-
-                                        
-                                    </p>
 
                                     <p class="control px-1">
 
-                                        <button class="button is-normal is-dark has-tooltip-arrow has-tooltip-info" data-tooltip="Make Dataset Public" type="button" v-on:click ="MakeDatasetPublic(dataset.filename)">
+                                        <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="Make Dataset Public" type="button" v-on:click ="MakeDatasetPublic(dataset.filename)">
 
                                             <span class="icon is-normal">
                                                 <i class="fa fa-users"></i>
@@ -541,7 +515,7 @@
                         
                         var Type;
                         if (resp == 'Successfully uploaded test data.'){
-                            Type = 'is-success';
+                            Type = 'is-warning';
                             this.uploadedTestData=true;
                             //this.uploadedTestFilename = `${testFile.name}`
                             // Not sure if the next two lines are necesssary just yet
@@ -552,7 +526,7 @@
                                 type: Type,
                                 dismissible: true,
                                 pauseOnHover: true,
-                                duration: 1000,
+                                duration: 2000,
                                 position: 'bottom-center',
                             }) 
                         }
@@ -564,7 +538,7 @@
                                 type: Type,
                                 dismissible: true,
                                 pauseOnHover: true,
-                                duration: 1000,
+                                duration: 2000,
                                 position: 'bottom-center',
                             })  
                         }

@@ -18,7 +18,6 @@ def TrainingLinearRegression(userid, filename, learningrate, tolerance, datafr):
     x=np.array([])
     y=np.array([])
     datafr =  datafr.dropna()
-    print(np.shape(datafr))
     data = datafr.to_numpy()
     data=data.transpose()
     #populating x and y
@@ -71,7 +70,6 @@ def linearRegression(userid, filename, learningrate, tolerance, datafr,testdata)
     y=np.array([])
     datafr =  datafr.dropna()
     ##testdata = testdata.dropna()
-    print(np.shape(datafr))
     data = datafr.to_numpy()
     data=data.transpose()
     

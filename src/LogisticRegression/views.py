@@ -67,7 +67,6 @@ def TestLogisticRegression(data,testdata,id,filename):
     x=data
     xtest=testdata
     x_original_size = x.shape[0]
-    print(x_original_size)
     xtemp=x.append(xtest)
     
     xtemp = encodeFeatures(xtemp)
@@ -87,7 +86,6 @@ def TestLogisticRegression(data,testdata,id,filename):
 
     cm = confusion_matrix(ytest, y_pred)
     f1=f1_score(ytest, y_pred, average=None)
-    print(f1)
     json_f1 = f1ToJSON(class_names,f1)
 
     try:
@@ -99,7 +97,6 @@ def TestLogisticRegression(data,testdata,id,filename):
     ROC_curves = ROC_TO_JSON(tpr,fpr,class_names)
   
     # auc=ArrToJson(auc)
-    print(cm)
     json_cm=ConfusionToJson(class_names,cm)
     UploadTestResults(id,filename,ac,json_f1,json_auc)
 
@@ -194,7 +191,6 @@ def PerformLogisticRegression(request):
     try:
         ##get the respective dataset they want to train on
         dataset = Dataset.objects.get(UserId = UserId, filename=json.dumps(filename),model = "Logistic Regression")
-        print('testing')
         # response['response']="success"
         # return Response(response)
         
@@ -203,13 +199,11 @@ def PerformLogisticRegression(request):
             # response['response'] = "testing"
             # return Response(response)
             try:
-                print("mark 1")
                 json_cm, f1,auc,ROC_curves = TestLogisticRegression(pd.read_json(dataset.data),pd.read_json(dataset.testData),UserId,filename)
                 response['cm'] = json_cm
                 response['f1'] = f1
                 response['auc'] =auc
                 response['ROC'] = ROC_curves
-                print("from test")
                 return Response(response)
             except:
                 response['message'] ="testing failure"
@@ -290,11 +284,6 @@ def UploadTrainingResults(userid,filename,trainingacc,f1Sc,auc):
     try:
         ## create new object in db and pass it all the necessary info
         DataInstance = LogisticTrainedModel(UserId=userid,filename=json.dumps(filename),TrainingAccuracy=trainingacc,f1score = f1Sc,AUCScore=auc)
-        print(DataInstance.UserId)
-        print(DataInstance.f1score)
-        print(DataInstance.filename)
-        print(DataInstance.TrainingAccuracy)
-        print(DataInstance.AUCScore)
         DataInstance.save()
     except:
         ## if the object already exists, get the object an update all the data. Once upated save it
@@ -307,11 +296,11 @@ def UploadTrainingResults(userid,filename,trainingacc,f1Sc,auc):
 def UploadTestResults(userid,filename,testingacc,f1Sc,AUC):
     try:
         ## create new object in db and pass it all the necessary info
-        DataInstance = LogisticTrainedModel(UserId=userid,filename=filename,TestingAccuracy=testingacc,f1score = f1Sc,AUCScore=AUC)
+        DataInstance = LogisticTrainedModel(UserId=userid,filename=json.dumps(filename),TestingAccuracy=testingacc,f1score = f1Sc,AUCScore=AUC)
         DataInstance.save()
     except:
         ## if the object already exists, get the object an update all the data. Once upated save it
-        obj = LogisticTrainedModel.objects.get(UserId=userid, filename=filename)
+        obj = LogisticTrainedModel.objects.get(UserId=userid, filename=json.dumps(filename))
         obj.TestingAccuracy = testingacc
         obj.f1score = f1Sc
         obj.AUCScore=AUC

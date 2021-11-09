@@ -3,7 +3,7 @@
         <div class="navbar-brand">
             <!-- <a class="navbar-item" href="http://getdrawings.com/confused-icon"> -->
             <a class="navbar-item" href="">
-                <img src="@/assets/images/confused-icon-6-yellow.png" alt="Logo">
+                <img src="@/assets/images/confused-robot-light-outline-64.png" alt="Logo">
             </a>
             
         </div>

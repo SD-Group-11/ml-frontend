@@ -99,7 +99,6 @@ def TestNaiveBayes(data,testdata,id,filename):
     x=data
     xtest=testdata
     x_original_size = x.shape[0]
-    print(x_original_size)
     xtemp=x.append(xtest)
     # x = xtemp.iloc[:x_original_size, :]
     # print(x)
@@ -111,8 +110,6 @@ def TestNaiveBayes(data,testdata,id,filename):
     xtemp = findAndFillNullValues(xtemp)
     x = xtemp.iloc[:x_original_size, :]
     xtest=xtemp.iloc[x_original_size:,:]
-
-    print(xtemp.shape)
     # x = encodeFeatures(x)
     # xtest=encodeFeatures(xtest)
     # x = findAndFillNullValues(x)
@@ -129,17 +126,12 @@ def TestNaiveBayes(data,testdata,id,filename):
     y_pred = model.predict(xtest)
 
 
-    print("mark 3")
-
     # Making the Confusion Matrix
     ac = accuracy_score(ytest,y_pred)
-    print("mark 4")
 
     cm = confusion_matrix(ytest, y_pred)
     f1=f1_score(ytest, y_pred, average=None)
-    print(f1)
     json_f1 = f1ToJSON(class_names,f1)
-    print("mark 5")
 
     try:
         y_pred_proba = model.predict_proba(xtest)
@@ -259,7 +251,6 @@ def PerformNaiveBayes(request):
             # response['response'] = "testing"
             # return Response(response)
             try:
-                print("mark 1")
                 json_cm, f1,auc,ROC_curves = TestNaiveBayes(pd.read_json(dataset.data),pd.read_json(dataset.testData),UserId,filename)
                 # print("json_cm",json_cm)
                 # print("f1",f1)
@@ -269,7 +260,6 @@ def PerformNaiveBayes(request):
                 response['f1'] = f1
                 response['auc'] =auc
                 response['ROC'] = ROC_curves
-                print("from test")
                 return Response(response)
             except:
                 response['message'] ="testing failure"
@@ -367,11 +357,11 @@ def UploadTrainingResults(userid,filename,trainingacc,f1Sc,auc):
 def UploadTestResults(userid,filename,testingacc,f1Sc,AUC):
     try:
         ## create new object in db and pass it all the necessary info
-        DataInstance = NBTrainedModel(UserId=userid,filename=filename,TestingAccuracy=testingacc,f1score = f1Sc,AUCScore=AUC)
+        DataInstance = NBTrainedModel(UserId=userid,filename=json.dumps(filename),TestingAccuracy=testingacc,f1score = f1Sc,AUCScore=AUC)
         DataInstance.save()
     except:
         ## if the object already exists, get the object an update all the data. Once upated save it
-        obj = NBTrainedModel.objects.get(UserId=userid, filename=filename)
+        obj = NBTrainedModel.objects.get(UserId=userid, filename=json.dumps(filename))
         obj.TestingAccuracy = testingacc
         obj.f1score = f1Sc
         obj.AUCScore=AUC
