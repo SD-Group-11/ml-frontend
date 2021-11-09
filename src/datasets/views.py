@@ -53,7 +53,6 @@ def receiveData(request):
 
     resp = {}
     if request.method == "POST":
-        print(request.body)
         dataset = str(request.body)
         ## check dataset is not empty
         if(dataset != ''):
@@ -382,8 +381,6 @@ def getPublicDatasetTestData(request):
     filename = request.data.get('filename')
     ModelName = request.data.get('ModelName')
     resp = {}
-    print(filename)
-    print(ModelName)
     try:
         data = Dataset.objects.get(UserId=-1, filename=json.dumps(filename),model =ModelName)
         dataframe = pd.read_json(data.testData)
