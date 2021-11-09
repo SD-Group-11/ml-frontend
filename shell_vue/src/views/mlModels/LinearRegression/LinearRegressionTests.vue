@@ -483,7 +483,7 @@
                         // you can loop from 1 to number_of_datasets+1 and use that to index response.data[i] to get a dataset and its summary
                         var number_of_datasets = Object.keys(response.data).length
                         for(var i=1;i<number_of_datasets+1;i++){
-                            this.userFiles.push(response.data[i])
+                            this.userFiles.push(response.data[i].split(".")[0])
                         }
                         console.log(this.userFiles)
                     }
