@@ -367,11 +367,11 @@ def UploadTrainingResults(userid,filename,trainingacc,f1Sc,auc):
 def UploadTestResults(userid,filename,testingacc,f1Sc,AUC):
     try:
         ## create new object in db and pass it all the necessary info
-        DataInstance = NBTrainedModel(UserId=userid,filename=filename,TestingAccuracy=testingacc,f1score = f1Sc,AUCScore=AUC)
+        DataInstance = NBTrainedModel(UserId=userid,filename=json.dumps(filename),TestingAccuracy=testingacc,f1score = f1Sc,AUCScore=AUC)
         DataInstance.save()
     except:
         ## if the object already exists, get the object an update all the data. Once upated save it
-        obj = NBTrainedModel.objects.get(UserId=userid, filename=filename)
+        obj = NBTrainedModel.objects.get(UserId=userid, filename=json.dumps(filename))
         obj.TestingAccuracy = testingacc
         obj.f1score = f1Sc
         obj.AUCScore=AUC
