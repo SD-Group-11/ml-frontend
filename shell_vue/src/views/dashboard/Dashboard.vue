@@ -2,7 +2,8 @@
 <div class = "container is-centered">
 
   <div class="columns is-mobile is-centered is-vcentered m-0 p-0">
-  <div class="column is-one-fifth is-pulled-left">
+  <div class="column is-one-fifth is-pulled-right">
+    <div class="block"></div>
   </div>
   <div class="column is-one-fifth is-pulled-right m-0 p-0">
     <div class="image p-0">

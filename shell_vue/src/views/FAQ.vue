@@ -51,7 +51,7 @@
               <transition name="dropdown">
               <div class="message-body" v-show='toggle1'>
                 <div class="notification is-info  is-light">
-                  If you have not received an email to change your password try checking your spam folder. Otherwise please contact mlfframework@gmail.com.
+                  If you have not received an email to change your password try checking your spam folder. Otherwise please contact leftframe.ml@gmail.com.
 
                 </div>
                 </div>
@@ -114,7 +114,7 @@
               </div>
                <transition name="dropdown">
               <div class="message-body" v-show='toggle4'>
-                <div class="notification is-info  is-light ml-5">
+                <div class="notification is-info  is-light ml-0">
                   <ol type="1">
                     <li>Click on "Choose File".</li>
                     <li>Select a .csv file from your local device.</li>

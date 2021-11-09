@@ -1,14 +1,19 @@
 <template>
 <div class = "container">
 
-  <div class="columns is-mobile is-centered is-vcentered">
-  <div class="column is-one-fifth">
-    <img src="@/assets/images/confused-robot-256.png" alt="Logo">
+  <div class="columns is-mobile is-centered is-vcentered m-0 p-0">
+  <div class="column is-one-fifth is-pulled-right">
+    <div class="block"></div>
   </div>
-  <div class="column">
-    <span class="title is-1">LeftFrame</span><br>
-    <div class="block"/>
-    <span class="subtitle is-info">Making machine learning quick and easy</span>
+  <div class="column is-one-fifth is-pulled-right m-0 p-0">
+    <div class="image p-0">
+          <img src="@/assets/images/confused-robot-extra-light-200.png" alt="Logo">
+    </div>
+  </div>
+  <div class="column mt-6 pb-0 pl-0 ml-0 ">
+    <span class="title is-1 "><strong>LeftFrame</strong></span><br>
+    <!-- <div class="block"/> -->
+    <span class="subtitle is-info"><i>Making machine learning quick and easy.</i></span>
   </div>
   </div>
 
