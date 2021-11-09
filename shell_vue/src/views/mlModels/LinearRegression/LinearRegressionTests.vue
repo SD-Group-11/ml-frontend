@@ -380,6 +380,18 @@
                     this.uploadable=false    
                     var fileInput = document.getElementById(elementID).files[0];
                     var fileName = fileInput.name;
+                     if (fileName.includes("_")) {
+                        toast({
+                            message: 'Uh-oh! Please do not upload a file whose name contains an underscore.',
+                            type: 'is-danger',
+                            dismissible: true,
+                            pauseOnHover: true,
+                            duration: 2000,
+                            position: 'bottom-center',
+                        })
+                        this.$store.commit('setIsLoading',false)
+                        return false;
+                    }
                     const allowedExtensions =  ['csv']
                     const fileExtension = fileName.split(".").pop();
                     if(!allowedExtensions.includes(fileExtension)){
