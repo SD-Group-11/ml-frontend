@@ -167,6 +167,16 @@
                                         </template>
                                     </p> -->
 
+                                    <p class="control px-1">
+                                        
+                                        <button class="button is-success is-normal is-inverse has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" style="width:40px;">                                         
+                                            <input class="file-input" v-bind:id="dataset.filename" type="file" accept=".csv"  v-on:input="fileValidation(dataset.filename); testsetUploadable = true; tempTrainFilename = dataset.filename" >
+                                               
+                                             <span class="file-icon is-normal ">
+                                                <i class="fas fa-upload"></i>
+                                            </span> 
+                                      </button>
+                                   </p>
 
                                     <p class="control px-1">
                                         <button class="button is-normal is-danger is-inverted has-tooltip-arrow has-tooltip-info" data-tooltip="Delete dataset" type="button" v-on:click ="DeleteDataset(dataset.filename)">
@@ -178,20 +188,11 @@
                                         </button>
                                     </p>
 
-                                    <p class="control px-1">
-                                        
-                                        <button class="button is-link is-normal is-inverse has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" style="width:40px;">                                         
-                                            <input class="file-input" v-bind:id="dataset.filename" type="file" accept=".csv"  v-on:input="fileValidation(dataset.filename); testsetUploadable = true; tempTrainFilename = dataset.filename" >
-                                               
-                                             <span class="file-icon is-normal ">
-                                                <i class="fas fa-upload"></i>
-                                            </span> 
-                                      </button>
-                                   </p>
+                                    
 
                                     <p class="control px-1">
 
-                                        <button class="button is-normal is-dark has-tooltip-arrow has-tooltip-info" data-tooltip="Make Dataset Public" type="button" v-on:click ="MakeDatasetPublic(dataset.filename)">
+                                        <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="Make Dataset Public" type="button" v-on:click ="MakeDatasetPublic(dataset.filename)">
 
                                             <span class="icon is-normal">
                                                 <i class="fa fa-users"></i>
