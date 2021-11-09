@@ -40,7 +40,7 @@
 
             <form @submit.prevent="submitForm"> 
                 <div class="columns">
-                    <div class="column is-one-fifth">
+                    <div class="column is-one-quarter">
                         <!-- Selecting a dataset -->
                         <div class="field ">
                             <label class="label">Dataset</label>
@@ -68,7 +68,7 @@
 
             <!-- Train model button -->
             <div>
-                <button style="text-align: center;" class="button is-info has-text-black"  v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false'><strong>Train Model</strong></button>
+                <button style="text-align: center;" class="button is-info has-text-black" v-if="selected" v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false'><strong>Train Model</strong></button>
             </div>
             <div class="block"></div>
         
@@ -487,7 +487,7 @@
                     var Type;
                     //indicates successful deleting of the data
                     if(resp == "Results discarded."){
-                         Type = 'is-success';
+                         Type = 'is-warning';
                          //Toast to give user indication of outcome of action
                         toast({
                             message: "Results successfully discarded.",
@@ -529,7 +529,7 @@
                     var Type;
                     //indicates successful deleting of the data
                     if(resp == "Results discarded."){
-                         Type = 'is-success';
+                         Type = 'is-warning';
                          //Toast to give user indication of outcome of action
                         toast({
                             message: "Results successfully discarded.",

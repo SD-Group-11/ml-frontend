@@ -93,7 +93,7 @@
 
             <!-- Train model button -->
             <div>
-                <button style="text-align: center;" class="button is-info has-text-black"  v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false'><strong>Train Model</strong></button>
+                <button style="text-align: center;" class="button is-info has-text-black" v-if="selected" v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false'><strong>Train Model</strong></button>
             </div>
             <div class="block"></div>
         
@@ -399,14 +399,14 @@
                     var Type;
                     //indicates successful deleting of the data
                     if(resp == "Results discarded."){
-                         Type = 'is-success';
+                         Type = 'is-warning';
                          //Toast to give user indication of outcome of action
                         toast({
                             message: "Results successfully discarded.",
                             type: Type,
                             dismissible: true,
                             pauseOnHover: true,
-                            duration: 1000,
+                            duration: 2000,
                             position: 'bottom-center',
                         })  
                     }
@@ -441,14 +441,14 @@
                     var Type;
                     //indicates successful deleting of the data
                     if(resp == "Results discarded."){
-                         Type = 'is-success';
+                         Type = 'is-warning';
                          //Toast to give user indication of outcome of action
                         toast({
                             message: "Results successfully discarded.",
                             type: Type,
                             dismissible: true,
                             pauseOnHover: true,
-                            duration: 1000,
+                            duration: 2000,
                             position: 'bottom-center',
                         })  
                     }
@@ -460,7 +460,7 @@
                                 type: Type,
                                 dismissible: true,
                                 pauseOnHover: true,
-                                duration: 1000,
+                                duration: 2000,
                                 position: 'bottom-center',
                             })  
                     }
