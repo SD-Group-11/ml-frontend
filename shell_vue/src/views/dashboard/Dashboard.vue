@@ -1,13 +1,19 @@
 <template>
-<div class = "container">
+<div class = "container is-centered">
 
-  <div class="columns is-mobile is-centered is-vcentered">
-  <div class="column is-one-fifth">
-    <img src="@/assets/images/confused-icon-6-yellow.png" alt="Logo">
+ <div class="columns is-mobile is-centered is-vcentered m-0 p-0">
+  <div class="column is-one-fifth is-pulled-right">
+    <div class="block"></div>
   </div>
-  <div class="column">
-    <span class="title is-1">Machine Learning Front-End Framework</span><br>
-    <span class="subtitle is-info">Making machine learning quick and easy</span>
+  <div class="column is-one-fifth is-pulled-right m-0 p-0">
+    <div class="image p-0">
+          <img src="@/assets/images/confused-robot-extra-light-200.png" alt="Logo">
+    </div>
+  </div>
+  <div class="column mt-6 pb-0 pl-0 ml-0 ">
+    <span class="title is-1 "><strong>LeftFrame</strong></span><br>
+    <!-- <div class="block"/> -->
+    <span class="subtitle is-info"><i>Making machine learning quick and easy.</i></span>
   </div>
   </div>
 
@@ -22,11 +28,11 @@
   <div class="card has-background-info-light">
   <div class="card-content has-text-centered is-3">
     <p>
-      Recently machine learning models have become popular at performing automatic 
-       classification. However, researchers have to constantly code up the training procedure 
-       of common networks such as Naive Bayes or Logistic Regression which can be tedious.
-       We streamline this process by providing the frontend application where the user
-       can choose an existing network and can receive and interpret results instantly. 
+      For many newcomers to machine learning, one of the most tedious tasks is coding the training procedure 
+      for your desired model.<br/>
+      LeftFrame streamlines this process by providing a front-end interface
+      to train and test some of the common machine learning models<br/> like Linear Regression, Naive Bayes, and Logistic Regression.
+      <br/><br/>Just provide a dataset and LeftFrame will handle the computations!
     </p>
   </div>
 
@@ -113,8 +119,8 @@
 <style scoped>
   img 
   { 
-    max-width:75%;
-    height:75%;
+    max-width:60%;
+    height:60%;
     /* resizing robot for landing page */
   }
 
