@@ -156,6 +156,7 @@ def TestNaiveBayes(data,testdata,id,filename):
     json_cm=ConfusionToJson(class_names,cm)
     # json_fpr=ArrToJson(false_positive_rate)
     # json_tpr=ArrToJson(true_positive_rate)
+    print("filename: ",filename)
     UploadTestResults(id,filename,ac,json_f1,json_auc)
     
     # return "test success"
@@ -367,11 +368,11 @@ def UploadTrainingResults(userid,filename,trainingacc,f1Sc,auc):
 def UploadTestResults(userid,filename,testingacc,f1Sc,AUC):
     try:
         ## create new object in db and pass it all the necessary info
-        DataInstance = NBTrainedModel(UserId=userid,filename=filename,TestingAccuracy=testingacc,f1score = f1Sc,AUCScore=AUC)
+        DataInstance = NBTrainedModel(UserId=userid,filename=json.dumps(filename),TestingAccuracy=testingacc,f1score = f1Sc,AUCScore=AUC)
         DataInstance.save()
     except:
         ## if the object already exists, get the object an update all the data. Once upated save it
-        obj = NBTrainedModel.objects.get(UserId=userid, filename=filename)
+        obj = NBTrainedModel.objects.get(UserId=userid, filename=json.dumps(filename))
         obj.TestingAccuracy = testingacc
         obj.f1score = f1Sc
         obj.AUCScore=AUC
@@ -388,9 +389,11 @@ def trained_datasets(request):
         i = 1
         ##get queryset of all datasets where they occur in the TrainedModel db
         AllTrained = NBTrainedModel.objects.filter(UserId=UserId)
+        print(AllTrained)
         for Obj in AllTrained:
             response[i] = json.loads(Obj.filename)
             i+=1
+        
         return Response(response)
     
     except:

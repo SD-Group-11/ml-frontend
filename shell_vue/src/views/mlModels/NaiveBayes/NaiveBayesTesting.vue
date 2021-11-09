@@ -48,11 +48,11 @@
                             <label class="label">Dataset</label>
                             <select v-model="selected" id = "files" class="select is-normal is-size-6 is-info" style="width: 100%;">
                                 <option  disabled value="">Select trained model</option>
-                                <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
+                                <option  v-for="dataset in userFilesNoextension" v-bind:key="dataset" >{{dataset}}</option>
                             </select>
                         </div>
                         <!-- U -->
-                      <button class="button" id="selectButton" v-on:click='checkTestingData()'>Select</button>
+                      <!-- <button class="button" id="selectButton" v-on:click='checkTestingData()'>Select</button> -->
 
                     </div>
 
@@ -100,12 +100,14 @@
 
             <!-- test model button U - unsure about onclick statement-->
             <div>
-                <button style="text-align: center;" class="button is-info is light has-text-black "  v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false'><strong>Test Model</strong></button>
+                <button style="text-align: center;" class="button is-info is light has-text-black "  v-on:click='checkTestingData(); showTestButton = true; showTestingGraphs = false'><strong>Test Model</strong></button>
             </div>
             <div class="block"></div>
         
         </div> 
 
+               
+               
         <!-- Training Results -->
         <div class="container is-fluid" v-if="showTrainingResults">
             <span><h2 v-if="showTrainingResults">Results:<span class="accuracy"></span></h2></span>
@@ -116,7 +118,7 @@
                         <strong>F1 Scores: </strong>
                         <li v-for="f1 in f1Score" v-bind:key="f1.class">
                                 Class {{ f1.class }}:
-                                     {{ (f1.score).toFixed(2) }}
+                                    - {{ (f1.score).toFixed(2) }}
                         </li>
                     </div>
                     
@@ -127,20 +129,14 @@
                         <strong>AUC </strong>
                         <li v-for="auc in AUC" v-bind:key="auc.class">
                                 Class {{ auc.class }}:
-                                     {{ (auc.value) }}
+                                    - {{ (auc.value) }}
                         </li>
                     </div>
                 </div>
             </div>
         </div>
         <div class="block"></div>
-        <!-- Download results  -->
-        <div class="columns is-centered">
-            <div class="column">
-                <button class="button has-tooltip-arrow has-tooltip-info is-pulled-right" data-tooltip="Download model results" type="button" v-if="showTrainingResults" v-on:click ="download()">Download Results</button>
-            </div>
-        </div>
-
+                  
         <!-- confusion Matrix for Training Data-->
         <!-- GRAPH TABS FOR TESTING -->
         <div class="tabs is-toggle is-toggle-rounded is-centered" v-if="showTrainingResults">
@@ -171,8 +167,6 @@
                 <!-- testing predicted vs actual-->
             <apexchart v-if="showROC&&tabsInitialized"  height="600" type="line" :options="ROCOptions" :series="ROCSeries"></apexchart>
         </div>
-        <!-- Discard Results Button -->
-        <!-- <button class="button is-danger is-pulled-right"  v-if="showTrainingResults" v-on:click='DiscardTrainResults'><strong>Discard Results</strong></button> -->
         
  
           
@@ -226,12 +220,13 @@
                 // Variables involving the files and user details
                 userDetails: [],
                 userFiles: [],
+                userFilesNoextension:[],
                 uploadedName: '',
                 uploadable: false,
                 hasDatasets: false,
                 selected: '',
                 // Response data
-                f1Score:[],
+                f1Socre:[],
                 AUC:-1,
                 numberFeatures:-1,
                 confusionMatrix:[],
@@ -425,7 +420,8 @@
                     .get('/api/v1/users/me')
                     .then(response => {
                         this.userDetails=response.data
-                        this.getUserDatasets()
+                        this.getTrainedDatasets()
+                        // this.getUserDatasets()
                     })
                     .catch(error => {
                         console.log(error)
@@ -454,7 +450,7 @@
                         // you can loop from 1 to number_of_datasets+1 and use that to index response.data[i] to get a dataset and its summary
                         var number_of_datasets = Object.keys(response.data).length
                         for(var i=1;i<number_of_datasets+1;i++){
-                            this.userFiles.push(response.data[i])
+                            this.userFiles.push(response.data[i]);
                         }
                         console.log(this.userFiles)
                     }
@@ -465,11 +461,11 @@
                 this.$store.commit('setIsLoading',false)
             },
             // Call this method when the user clicks Train Model 
-            async TrainModel(){
+            async TrainModel(file){
                 this.$store.commit('setIsLoading',true)
                 var id = this.userDetails.id;
                 //Please get the filename from the dropdown and set it here 
-                var filename = this.selected;
+                var filename = file;
                 var data ={"UserId":id,"filename":filename}
                 console.log('data: ',data)
                 await axios
@@ -588,13 +584,13 @@
 
             //test page upload button - this
             async uploadTestDataset(trainsetFilename){
-                console.log('trainsetFilename',trainsetFilename)
+                var filename = trainsetFilename.split("_")[0] +".csv";
                 this.$store.commit('setIsLoading',true)
                 var testFile = document.getElementById(trainsetFilename).files[0];
                 var testFormData = new FormData();
                 testFormData.append("dataset",testFile);
                 testFormData.append("id",this.userDetails.id);
-                testFormData.append("TrainingFileName", trainsetFilename);
+                testFormData.append("TrainingFileName", filename);
                 testFormData.append("model","Naive Bayes");
                 await axios
                     .post('/datasets/uploadTestData',testFormData)
@@ -630,6 +626,40 @@
                         }
                     });
                     this.uploadedName = '';
+                this.$store.commit('setIsLoading',false)
+            },
+            async getTrainedDatasets(){
+                this.$store.commit('setIsLoading',true)
+                this.userFiles=[] 
+                var data ={"UserID":this.userDetails.id}
+                await axios
+                .post('/NaiveBayes/trainedDatasets',data)
+                .then(response =>{
+                    if(response.data['response']=="No trained datasets"){
+                        console.log("has no datasets")
+                        console.log(response.data)
+                        this.hasDatasets = false
+                    }
+                    else{
+                        //console.log(response.data[0])
+                        this.hasDatasets = true
+                        //idk why but accessing UserFiles out of this scope returns empty. Please check what im doing wrong
+                        // response.data though holds all the datasets of a user and their respective summary details
+                        //this.userFiles = response.data;
+                        // Tell us how many datasets are associated with the user 
+                        // you can loop from 1 to number_of_datasets+1 and use that to index response.data[i] to get a dataset and its summary
+                        var number_of_datasets = Object.keys(response.data).length
+                        for(var i=1;i<number_of_datasets+1;i++){
+                            this.userFiles.push(response.data[i])
+                            this.userFilesNoextension.push(response.data[i].split(".")[0]+"_NaiveBayes_Model")
+                        }
+                        console.log(this.userFilesNoextension)
+                        console.log(this.userFiles)
+                    }
+                })
+                .catch(error => {
+                    console.log(error)
+                })
                 this.$store.commit('setIsLoading',false)
             },
 		
@@ -703,7 +733,8 @@
 
             // from LR testing page
             async checkTestingData() {
-                var filename = this.selected;
+                var filename = this.selected.split("_")[0]+".csv";
+                console.log(filename);
                 var model = "Naive Bayes";
                 var data ={"UserID":this.userDetails.id,"Filename":filename,"ModelName":model};
                 await axios
@@ -736,51 +767,14 @@
                         })
 
                         console.log(this.userFiles)
-                        //console.log("SUCCESS MY GUY LETS GOOOO")
-
+                        console.log("SUCCESS MY GUY LETS GOOOO")
+                        this.TrainModel(filename)
                     }
                 })
                 .catch(error => {
                     console.log(error)
                 })
 
-            },
-
-            download() {
-                var element = document.createElement('a');
-                let filename = 'Naive_Bayes_Results.txt';
-                //Text to be inside results text file
-                let text = "Naive Bayes Results:\n"
-                text += "\nF1 Score: "
-                for(let i=0; i<this.f1Score.length; i++) {
-                   text += "{" + this.f1Score[i].class + ": " + this.f1Score[i].score + "}"
-                   if (i < this.f1Score.length-1) text += ", "
-                }
-
-                text += "\nAUC score: "
-                for(let i=0; i<this.AUC.length; i++) {
-                   text += "{" + this.AUC[i].class + ": " + this.AUC[i].value + "}"
-                   if (i < this.AUC.length-1) text += ", "
-                }
-
-                text += "\nConfusion matrix: ["
-                for(let i=0; i<this.confusionMatrix.length; i++) {
-                   // class : confusion matrix row
-                   let confusion_matrix_row = this.confusionMatrix[i].predictions
-                    text += "[" + String(confusion_matrix_row) + "]"
-                    if (i < this.confusionMatrix.length-1) text += ", "
-                }
-                text += "]"
-                
-
-                
-                
-                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-                element.setAttribute('download', filename);
-                element.style.display = 'none';
-                document.body.appendChild(element);
-                element.click();
-                document.body.removeChild(element);
             }
         }
     }

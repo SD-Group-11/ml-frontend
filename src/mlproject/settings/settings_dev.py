@@ -141,7 +141,7 @@ EMAIL_HOST_PASSWORD = 'fr0nt3nd$987'
 AUTH_USER_MODEL = 'users.User'
 
 DOMAIN = 'localhost:8080'
-SITE_NAME = 'Machine Learning Front-End Framework'
+SITE_NAME = 'LeftFrame'
 
 DJOSER = {
     'LOGIN_FIELD': 'email',

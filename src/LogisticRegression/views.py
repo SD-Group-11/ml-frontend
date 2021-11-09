@@ -307,11 +307,11 @@ def UploadTrainingResults(userid,filename,trainingacc,f1Sc,auc):
 def UploadTestResults(userid,filename,testingacc,f1Sc,AUC):
     try:
         ## create new object in db and pass it all the necessary info
-        DataInstance = LogisticTrainedModel(UserId=userid,filename=filename,TestingAccuracy=testingacc,f1score = f1Sc,AUCScore=AUC)
+        DataInstance = LogisticTrainedModel(UserId=userid,filename=json.dumps(filename),TestingAccuracy=testingacc,f1score = f1Sc,AUCScore=AUC)
         DataInstance.save()
     except:
         ## if the object already exists, get the object an update all the data. Once upated save it
-        obj = LogisticTrainedModel.objects.get(UserId=userid, filename=filename)
+        obj = LogisticTrainedModel.objects.get(UserId=userid, filename=json.dumps(filename))
         obj.TestingAccuracy = testingacc
         obj.f1score = f1Sc
         obj.AUCScore=AUC

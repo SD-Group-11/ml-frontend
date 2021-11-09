@@ -12,7 +12,11 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+import environ
 
+env = environ.Env()
+
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,17 +26,28 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-in1yu^7jbhhd)o*i5dg6l!*-a)$&5l-h*m*l+t30*b!6-e!b+y'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY','django-insecure-in1yu^7jbhhd)o*i5dg6l!*-a)$&5l-h*m*l+t30*b!6-e!b+y')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = []
+
+
+# Set this to True to avoid transmitting the CSRF cookie over HTTP accidentally
+CSRF_COOKIE_SECURE = env('CSRF_COOKIE_SECURE')
+# Set this to True to avoid transmitting the session cookie over HTTP accidentally.
+SESSION_COOKIE_SECURE = env('SESSION_COOKIE_SECURE')
+# If True, the SecurityMiddleware redirects all non-HTTPS requests to HTTPS
+# (except for those URLs matching a regular expression listed in SECURE_REDIRECT_EXEMPT).
+SECURE_SSL_REDIRECT = env('SECURE_SSL_REDIRECT')
+
+
+
+ALLOWED_HOSTS = ['mlfe-django-app.herokuapp.com']
 
 #CORS_ORIGIN_ALLOW_ALL = True
-
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8080',
+    'https://mlfe-vue-app.herokuapp.com'
 ]
 
 REST_FRAMEWORK = {
@@ -60,18 +75,20 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'djoser',
+
     # any app you  make needs to be added here so that django actually uses it and all it's files
     'users',
     'datasets',
     'LinearRegression',
     'NaiveBayes',
     'LogisticRegression',
-    
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     
     'corsheaders.middleware.CorsMiddleware',
 
@@ -81,6 +98,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'mlproject.urls'
 
@@ -100,10 +118,15 @@ TEMPLATES = [
         },
     },
 ]
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR,'/static')
-]
-STATIC_URL = '/static'
+
+# Serve Django static files in production 
+
+# The absolute path to the directory where collectstatic will collect static files for deployment.
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+# The URL to use when referring to static files (where they will be served from)
+STATIC_URL = '/static/'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 WSGI_APPLICATION = 'mlproject.wsgi.application'
 
@@ -113,35 +136,35 @@ WSGI_APPLICATION = 'mlproject.wsgi.application'
 
 # This will be in Jeremy's doc. It just enables us to use Postgres instead of Djangos default sqlite
 
+# In production the database variables will be read from the Heroku os environment
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME':'ml-frontend',
-        'USER': 'dev',
-        'PASSWORD': 'abc123',
-        'HOST':'localhost',
-        'PORT': '5432',
+        'NAME': env('POSTGRES_DB_NAME'),
+        'USER': env('POSTGRES_USER'),
+        'PASSWORD': env('POSTGRES_PASSWORD'),
+        'HOST': env('POSTGRES_HOST'),
+        'PORT': env('POSTGRES_PORT'),
     }
 }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
 
+# SENDGRID_API_KEY = env('SENDGRID_API_KEY')
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'mlfframework@gmail.com'
-EMAIL_HOST_PASSWORD = 'fr0nt3nd$987'
+
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_USE_TLS = env('EMAIL_USE_TLS')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('SENDGRID_API_KEY')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
 
 AUTH_USER_MODEL = 'users.User'
 
-DOMAIN = 'localhost:8080'
-SITE_NAME = 'Machine Learning Front-End Framework'
+# django email template setting needed for reset password link
+DOMAIN = 'leftframe.herokuapp.com'
+SITE_NAME = 'LeftFrame'
 
 DJOSER = {
     'LOGIN_FIELD': 'email',
@@ -207,15 +230,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.2/howto/static-files/
-
-STATIC_URL = '/static/'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-  

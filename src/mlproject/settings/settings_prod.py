@@ -163,8 +163,8 @@ DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 AUTH_USER_MODEL = 'users.User'
 
 # django email template setting needed for reset password link
-DOMAIN = 'mlfe-vue-app.herokuapp.com'
-SITE_NAME = 'Machine Learning Front-End Framework'
+DOMAIN = 'leftframe.herokuapp.com'
+SITE_NAME = 'LeftFrame'
 
 DJOSER = {
     'LOGIN_FIELD': 'email',

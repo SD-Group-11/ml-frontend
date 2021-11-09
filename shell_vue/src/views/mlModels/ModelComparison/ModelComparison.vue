@@ -17,14 +17,27 @@
                     <div class="column is-one-fifth">
                         <!-- Selecting a dataset -->
                         <div class="field ">
-                            <label class="label">Dataset</label>
+                            <label class="label">Naive Bayes Model</label>
                             <select v-model="selected" id = "files" class="select is-normal is-size-6 is-info" style="width: 100%;">
                                 <option  disabled value="">Select trained model</option>
-                                <option  v-for="dataset in userFiles" v-bind:key="dataset.id" >{{dataset.filename}}</option>
+                                <option  v-for="dataset in userFilesNoextensionNB" v-bind:key="dataset.fileName" >{{dataset.displayName}}</option>
                             </select>
                         </div>
                         <!-- U -->
-                      <button class="button" id="selectButton" :disabled="!selected" v-on:click='checkTestingData()'>Select</button>
+                      <!-- <button class="button" id="selectButton" :disabled="!selected" v-on:click='checkTestingData()'>Select</button> -->
+
+                    </div>
+                    <div class="column is-one-fifth">
+                        <!-- Selecting a dataset -->
+                        <div class="field ">
+                            <label class="label">Logistic Model</label>
+                            <select v-model="selected2" id = "files" class="select is-normal is-size-6 is-info" style="width: 100%;">
+                                <option  disabled value="">Select trained model</option>
+                                <option  v-for="dataset in userFilesNoextensionLR" v-bind:key="dataset.fileName" >{{dataset.displayName}}</option>
+                            </select>
+                        </div>
+                        <!-- U -->
+                      <!-- <button class="button" id="selectButton" :disabled="!selected" v-on:click='checkTestingData()'>Select</button> -->
 
                     </div>
 
@@ -33,7 +46,7 @@
                         
                         <div class="file has-name is-right">
                             <label class="file-label">
-                                <input class="file-input" v-bind:id="selected" type="file" accept=".csv"  v-on:input="fileValidation(selected); tempTrainFilename = selected" >
+                                <input class="file-input" v-bind:id="selected" type="file" accept=".csv"  v-on:input="fileValidation(selected); tempTrainFilename = selected; tempTrainFilename2 = selected2">
                                         <span class="file-cta">
                                             <span class="file-icon">
                                                 <i class="fas fa-upload"></i>
@@ -50,7 +63,7 @@
 
                         <div class="field" style="padding-top:10px">
                             <div class="control is-pulled-right  ml-3">
-                                <button  class="button is-medium  is-info is-outlined " id = 'uploadFile' type="submit" v-if="uploadable && uploadedName != '' && selected != ''" v-on:click = 'uploadTestDataset(tempTrainFilename)'><strong>Upload</strong></button>
+                                <button  class="button is-medium  is-info is-outlined " id = 'uploadFile' type="submit" v-if="uploadable && uploadedName != '' && selected != '' && selected2 != '' " v-on:click = 'fileValidation(selected); tempTrainFilename = selected; tempTrainFilename2 = selected2; uploadTestDataset(tempTrainFilename,tempTrainFilename2); '><strong>Upload</strong></button>
                             </div>
                         </div> 
                         <!-- here -->
@@ -72,7 +85,7 @@
 
             <!-- test model button U - unsure about onclick statement-->
             <div>
-                <button style="text-align: center;" class="button is-info is light has-text-black"  :disabled='!modelSelected'  v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false'><strong>Compare</strong></button>
+                <button style="text-align: center;" class="button is-info is light has-text-black"  v-if='selected && selected2'  v-on:click='checkTestingData(); showTestButton = true; showTestingGraphs = false'><strong>Compare</strong></button>
             </div>
             <div class="block"></div>
         
@@ -219,11 +232,14 @@
                 userDetails: [],
                 userNBFiles:[],
                 userLRFiles:[],
+                userFilesNoextensionLR:[],
+                userFilesNoextensionNB:[],
                 userFiles: [],
                 uploadedName: '',
                 uploadable: false,
                 hasDatasets: false,
                 selected: '',
+                selected2: '',
                 // Response data
                 f1Score:[],
                 AUC:[],
@@ -425,6 +441,8 @@
                     .then(response => {
                         this.userDetails=response.data
                         this.getUserDatasets()
+                        this.getTrainedNaiveDatasets()
+                        this.getTrainedLogisticDatasets()
                     })
                     .catch(error => {
                         console.log(error)
@@ -504,12 +522,79 @@
                 
 
             },
+            async getTrainedNaiveDatasets(){
+                this.$store.commit('setIsLoading',true)
+                var data ={"UserID":this.userDetails.id}
+                await axios
+                .post('/NaiveBayes/trainedDatasets',data)
+                .then(response =>{
+                    if(response.data['response']=="No trained datasets"){
+                        console.log("has no datasets")
+                        console.log(response.data)
+                        this.hasDatasets = false
+                    }
+                    else{
+                        //console.log(response.data[0])
+                        this.hasDatasets = true
+                        //idk why but accessing UserFiles out of this scope returns empty. Please check what im doing wrong
+                        // response.data though holds all the datasets of a user and their respective summary details
+                        //this.userFiles = response.data;
+                        // Tell us how many datasets are associated with the user 
+                        // you can loop from 1 to number_of_datasets+1 and use that to index response.data[i] to get a dataset and its summary
+                        var number_of_datasets = Object.keys(response.data).length
+                        for(var i=1;i<number_of_datasets+1;i++){
+                            this.userFilesNoextensionNB.push(
+                                {fileName: response.data[i],
+                                displayName: response.data[i].split(".")[0]+"_NaiveBayes_Model"})
+                        }
+                        console.log(this.userFiles)
+                    }
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+                this.$store.commit('setIsLoading',false)
+            },
+             async getTrainedLogisticDatasets(){
+                this.$store.commit('setIsLoading',true)
+                var data ={"UserID":this.userDetails.id}
+                await axios
+                .post('/LogisticRegression/trainedDatasets',data)
+                .then(response =>{
+                    if(response.data['response']=="No trained datasets"){
+                        console.log("has no datasets")
+                        console.log(response.data)
+                        this.hasDatasets = false
+                    }
+                    else{
+                        //console.log(response.data[0])
+                        this.hasDatasets = true
+                        //idk why but accessing UserFiles out of this scope returns empty. Please check what im doing wrong
+                        // response.data though holds all the datasets of a user and their respective summary details
+                        //this.userFiles = response.data;
+                        // Tell us how many datasets are associated with the user 
+                        // you can loop from 1 to number_of_datasets+1 and use that to index response.data[i] to get a dataset and its summary
+                        var number_of_datasets = Object.keys(response.data).length
+                        for(var i=1;i<number_of_datasets+1;i++){
+                            this.userFilesNoextensionLR.push({
+                                fileName: response.data[i],
+                                displayName:response.data[i].split(".")[0]+"_LogisticRegression_Model"
+                                })
+                        }
+                        console.log(this.userFiles)
+                    }
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+                this.$store.commit('setIsLoading',false)
+            },
             // Call this method when the user clicks Train Model 
-            async TrainModel(){
+            async TrainModel(file){
                 this.$store.commit('setIsLoading',true)
                 var id = this.userDetails.id;
                 //Please get the filename from the dropdown and set it here 
-                var filename = this.selected;
+                var filename = file;
                 var data ={"UserId":id,"filename":filename}
                 console.log('data: ',data)
                 await axios
@@ -598,94 +683,114 @@
             
 
             //test page upload button - this
-            async uploadTestDataset(trainsetFilename){
-                var NBTestDataUploaded = false;
-                this.$store.commit('setIsLoading',true)
-                var testFile = document.getElementById(trainsetFilename).files[0];
-                var testFormDataNB = new FormData();
-                testFormDataNB.append("dataset",testFile);
-                testFormDataNB.append("id",this.userDetails.id);
-                testFormDataNB.append("TrainingFileName", trainsetFilename);
-                testFormDataNB.append("model","Naive Bayes");
-                await axios
-                    .post('/datasets/uploadTestData',testFormDataNB)
-                    .then(response => {
-                        var resp =  response.data['response'];
-                        
-                        var Type;
-                        if (resp == 'Successfully uploaded test data.'){
-                            Type = 'is-success';
-                            //this.uploadedTestFilename = `${testFile.name}`
-                            // Not sure if the next two lines are necesssary just yet
-                            // this.getUploaded(this.uploadedTestFilename) 
-                            // this.getUserDatasets() 
-                            // toast({
-                            //     message: resp,
-                            //     type: Type,
-                            //     dismissible: true,
-                            //     pauseOnHover: true,
-                            //     duration: 1000,
-                            //     position: 'bottom-center',
-                            // }) 
-                            NBTestDataUploaded = true
+            async uploadTestDataset(trainsetFilename,trainsetFilename2){
+                
+                // hopefully this doesnt need to uncommented because yooorrrhhhh
+                var filename = trainsetFilename.split("_")[0] +".csv";
+                var file2 = trainsetFilename2.split("_")[0] +".csv";
+                console.log(filename)
+                console.log(file2)
 
-                        }
-                        else{
-                            Type = 'is-danger';
-                            toast({
-                                message: resp,
-                                type: Type,
-                                dismissible: true,
-                                pauseOnHover: true,
-                                duration: 1000,
-                                position: 'bottom-center',
-                            })  
-                        }
-                    });
-            if(NBTestDataUploaded){
-                var testFormDataLR = new FormData();
-                testFormDataLR.append("dataset",testFile);
-                testFormDataLR.append("id",this.userDetails.id);
-                testFormDataLR.append("TrainingFileName", trainsetFilename);
-                testFormDataLR.append("model","Logistic Regression");
-                await axios
-                    .post('/datasets/uploadTestData',testFormDataLR)
-                    .then(response => {
-                        var resp =  response.data['response'];
-                        var Type;
-                        if (resp == 'Successfully uploaded test data.'){
-                            Type = 'is-success';
-                            //this.uploadedTestFilename = `${testFile.name}`
-                            // Not sure if the next two lines are necesssary just yet
-                            // this.getUploaded(this.uploadedTestFilename) 
-                            // this.getUserDatasets() 
-                            toast({
-                                message: resp,
-                                type: Type,
-                                dismissible: true,
-                                pauseOnHover: true,
-                                duration: 1000,
-                                position: 'bottom-center',
-                            }) 
-                        }
-                        else{
-                            Type = 'is-danger';
-                            toast({
-                                message: resp,
-                                type: Type,
-                                dismissible: true,
-                                pauseOnHover: true,
-                                duration: 1000,
-                                position: 'bottom-center',
-                            })  
-                        }
-                    });
+                
+                if(filename != file2){
+                    toast({
+                            message: "Please upload test data for the models that were trained with the same dataset!",
+                            type: 'is-danger',
+                            dismissible: true,
+                            pauseOnHover: true,
+                            duration: 1500,
+                            position: 'bottom-center',
+                        })
+                }
+                else{
+                    var NBTestDataUploaded = false;
+                    this.$store.commit('setIsLoading',true)
+                    var testFile = document.getElementById(trainsetFilename).files[0];
+                    var testFormDataNB = new FormData();
+                    testFormDataNB.append("dataset",testFile);
+                    testFormDataNB.append("id",this.userDetails.id);
+                    testFormDataNB.append("TrainingFileName", filename);
+                    testFormDataNB.append("model","Naive Bayes");
+                    await axios
+                        .post('/datasets/uploadTestData',testFormDataNB)
+                        .then(response => {
+                            var resp =  response.data['response'];
+                            
+                            var Type;
+                            if (resp == 'Successfully uploaded test data.'){
+                                Type = 'is-success';
+                                //this.uploadedTestFilename = `${testFile.name}`
+                                // Not sure if the next two lines are necesssary just yet
+                                // this.getUploaded(this.uploadedTestFilename) 
+                                // this.getUserDatasets() 
+                                // toast({
+                                //     message: resp,
+                                //     type: Type,
+                                //     dismissible: true,
+                                //     pauseOnHover: true,
+                                //     duration: 1000,
+                                //     position: 'bottom-center',
+                                // }) 
+                                NBTestDataUploaded = true
 
-            }
+                            }
+                            else{
+                                Type = 'is-danger';
+                                toast({
+                                    message: resp,
+                                    type: Type,
+                                    dismissible: true,
+                                    pauseOnHover: true,
+                                    duration: 1000,
+                                    position: 'bottom-center',
+                                })  
+                            }
+                        });
+                if(NBTestDataUploaded){
+                    var testFormDataLR = new FormData();
+                    testFormDataLR.append("dataset",testFile);
+                    testFormDataLR.append("id",this.userDetails.id);
+                    testFormDataLR.append("TrainingFileName", filename);
+                    testFormDataLR.append("model","Logistic Regression");
+                    await axios
+                        .post('/datasets/uploadTestData',testFormDataLR)
+                        .then(response => {
+                            var resp =  response.data['response'];
+                            var Type;
+                            if (resp == 'Successfully uploaded test data.'){
+                                Type = 'is-success';
+                                //this.uploadedTestFilename = `${testFile.name}`
+                                // Not sure if the next two lines are necesssary just yet
+                                // this.getUploaded(this.uploadedTestFilename) 
+                                // this.getUserDatasets() 
+                                toast({
+                                    message: resp,
+                                    type: Type,
+                                    dismissible: true,
+                                    pauseOnHover: true,
+                                    duration: 1000,
+                                    position: 'bottom-center',
+                                }) 
+                            }
+                            else{
+                                Type = 'is-danger';
+                                toast({
+                                    message: resp,
+                                    type: Type,
+                                    dismissible: true,
+                                    pauseOnHover: true,
+                                    duration: 1000,
+                                    position: 'bottom-center',
+                                })  
+                            }
+                        });
+
+                }
             
-                this.uploadedName = '';
+                    this.uploadedName = '';
 
-                this.$store.commit('setIsLoading',false)
+                    this.$store.commit('setIsLoading',false)
+                }
             },
 
             async fileValidation(elementID){
@@ -761,79 +866,95 @@
             async checkTestingData() {
                 this.$store.commit('setIsLoading',true)
                 var NBTestDataFound = false
-                var filename = this.selected;
-                console.log("fname" ,filename)
-                var model = "Naive Bayes"
-                var data ={"UserID":this.userDetails.id,"Filename":filename,"ModelName":model}
-                await axios
-                .post('/datasets/checkTestData',data)
-                .then(response =>{
-                    if( response.data['response'] == "Test Data does not exist"){
-                        console.log("no testing data for Naive Bayes")
-                        // Type = 'is-danger';
-                        console.log(data)
-
-                        toast({
-                            message: "No test dataset uploaded for Naive Bayes",
+                //again hopefully this doesnt need to get uncommented
+                var filename = this.selected.split("_")[0]+".csv";
+                var f2 = this.selected2.split("_")[0]+".csv";
+                if(filename != f2){
+                    this.$store.commit('setIsLoading',false)
+                    toast({
+                            message: "Please compare the models that were trained with the same dataset!",
                             type: 'is-danger',
                             dismissible: true,
                             pauseOnHover: true,
-                            duration: 15000,
+                            duration: 1500,
                             position: 'bottom-center',
                         })
-                        //have the pop-up come here
-                        //WORK HERE - toast message
-                    }
-                    else{
-                        NBTestDataFound = true
-                        
-                    }
-                })
-                .catch(error => {
-                    console.log(error)
-                })
-                if(NBTestDataFound){
-                    var model = "Logistic Regression";
-                    var data ={"UserID":this.userDetails.id,"Filename":filename,"ModelName":model};
+                }
+                else{
+                    console.log("fname" ,filename)
+                    var model = "Naive Bayes"
+                    var data ={"UserID":this.userDetails.id,"Filename":filename,"ModelName":model}
                     await axios
                     .post('/datasets/checkTestData',data)
                     .then(response =>{
                         if( response.data['response'] == "Test Data does not exist"){
-                            console.log("no testing data for Logistic Regression")
+                            console.log("no testing data for Naive Bayes")
                             // Type = 'is-danger';
                             console.log(data)
 
                             toast({
-                                message: "No test dataset uploaded for Logistic Regression",
+                                message: "No test dataset uploaded for Naive Bayes",
                                 type: 'is-danger',
                                 dismissible: true,
                                 pauseOnHover: true,
-                                duration: 3000,
+                                duration: 15000,
                                 position: 'bottom-center',
                             })
                             //have the pop-up come here
                             //WORK HERE - toast message
                         }
                         else{
-                            toast({
-                                message: "Dataset selected",
-                                type: 'is-success',
-                                dismissible: true,
-                                pauseOnHover: true,
-                                duration: 3000,
-                                position: 'bottom-center',
-                            })
-                            this.modelSelected = true
+                            NBTestDataFound = true
+                            
                         }
                     })
                     .catch(error => {
                         console.log(error)
                     })
+                    if(NBTestDataFound){
+                        var model = "Logistic Regression";
+                        var data ={"UserID":this.userDetails.id,"Filename":filename,"ModelName":model};
+                        await axios
+                        .post('/datasets/checkTestData',data)
+                        .then(response =>{
+                            if( response.data['response'] == "Test Data does not exist"){
+                                console.log("no testing data for Logistic Regression")
+                                // Type = 'is-danger';
+                                console.log(data)
+
+                                toast({
+                                    message: "No test dataset uploaded for Logistic Regression",
+                                    type: 'is-danger',
+                                    dismissible: true,
+                                    pauseOnHover: true,
+                                    duration: 3000,
+                                    position: 'bottom-center',
+                                })
+                                //have the pop-up come here
+                                //WORK HERE - toast message
+                            }
+                            else{
+                                toast({
+                                    message: "Dataset selected",
+                                    type: 'is-success',
+                                    dismissible: true,
+                                    pauseOnHover: true,
+                                    duration: 3000,
+                                    position: 'bottom-center',
+                                })
+                                this.modelSelected = true
+                                this.TrainModel(filename)
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
+                    }
+                    
+                    this.$store.commit('setIsLoading',false)
+
+
                 }
-                
-                this.$store.commit('setIsLoading',false)
-
-
             }
         }
     }
