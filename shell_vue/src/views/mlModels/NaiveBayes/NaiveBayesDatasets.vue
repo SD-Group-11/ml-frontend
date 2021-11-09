@@ -137,32 +137,20 @@
                             <td class="is-actions-cell">                       
                                 <!-- <div class="buttons"> -->
                                 <div class="field has-addons">
-                                    
+                            
                                     <p class="control px-1">
-                                        <template v-if="dataset.Info">
-                
-                                            <!-- <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" @click="showNoReportModal = true">
-                                        
+                                        <button class="button is-normal is-success has-tooltip-arrow has-tooltip-info" data-tooltip="Download dataset" type="button" v-on:click ="getDatasetData(dataset.filename)">
                                             
-                                                <span class="icon is-normal">
-                                                    <i class="fas fa-lg fa-file-medical-alt"></i>
-                                                </span>
+                                            <span class="icon is-normal">
+                                                <i class="fas fa-lg fa-file-download"></i>
+                                            </span>
+                                            
 
+                                            <!-- <span><strong>Download</strong></span> -->
+                                            <!-- <span>Download</span> -->
 
-                                            </button> -->
-                                        </template>
-                                        <!-- <template v-else>
-                                            <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="View trained model report" type="button" v-on:click ="getReport(dataset.MSE, dataset.TrainAccuracy, dataset.TestAccuracy)">
-                                        
-                                                <span class="icon is-normal">
-                                                    <i class="fas fa-lg fa-file-medical-alt"></i>
-                                                </span>
-
-
-                                            </button>
-                                        </template> -->
+                                        </button>
                                     </p>
-
 
                                     <p class="control px-1">
                                         <button class="button is-normal is-info is-inverted has-tooltip-arrow has-tooltip-info" data-tooltip="View dataset" type="button" v-on:click ="getData(dataset.filename)">
@@ -180,36 +168,8 @@
 
 
                                     <p class="control px-1">
-                                        <button class="button is-normal is-link has-tooltip-arrow has-tooltip-info" data-tooltip="Download dataset" type="button" v-on:click ="getDatasetData(dataset.filename)">
-                                            
-                                            <span class="icon is-normal">
-                                                <i class="fas fa-lg fa-file-download"></i>
-                                            </span>
-                                            
-
-                                            <!-- <span><strong>Download</strong></span> -->
-                                            <!-- <span>Download</span> -->
-
-                                        </button>
-                                    </p>
-
-                                    <p class="control px-1">
-                                        <button class="button is-normal is-danger is-dark has-tooltip-arrow has-tooltip-info" data-tooltip="Delete dataset" type="button" v-on:click ="DeleteDataset(dataset.filename)">
-                                            
-                                            <span class="icon is-normal ">
-                                                <i class="fas fa-trash-alt " style="color: #ff9999"></i>
-                                            </span>
-                                            
-
-                                            <!-- <span><strong>Download</strong></span> -->
-                                            <!-- <span>Download</span> -->
-
-                                        </button>
-                                    </p>
-
-                                    <p class="control px-1">
                                         
-                                        <button class="button is-link is-normal is-inverse has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" style="width:40px;">
+                                        <button class="button is-success is-normal is-inverse has-tooltip-arrow has-tooltip-info" data-tooltip="Add test dataset" type="button" style="width:40px;">
                                         
                                             <input class="file-input" v-bind:id="dataset.filename" type="file" accept=".csv"  v-on:input="fileValidation(dataset.filename); testsetUploadable = true;tempTrainFilename = dataset.filename;">
                                             
@@ -227,8 +187,24 @@
                                     </p>
 
                                     <p class="control px-1">
+                                        <button class="button is-normal is-danger is-inverted has-tooltip-arrow has-tooltip-info" data-tooltip="Delete dataset" type="button" v-on:click ="DeleteDataset(dataset.filename)">
+                                            
+                                            <span class="icon is-normal ">
+                                                <i class="fas fa-trash-alt "></i>
+                                            </span>
+                                            
 
-                                        <button class="button is-normal is-dark has-tooltip-arrow has-tooltip-info" data-tooltip="Make Dataset Public" type="button" v-on:click ="MakeDatasetPublic(dataset.filename)">
+                                            <!-- <span><strong>Download</strong></span> -->
+                                            <!-- <span>Download</span> -->
+
+                                        </button>
+                                    </p>
+
+
+
+                                    <p class="control px-1">
+
+                                        <button class="button is-normal is-primary has-tooltip-arrow has-tooltip-info" data-tooltip="Make Dataset Public" type="button" v-on:click ="MakeDatasetPublic(dataset.filename)">
 
                                             <span class="icon is-normal">
                                                 <i class="fa fa-users"></i>

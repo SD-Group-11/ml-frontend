@@ -124,8 +124,8 @@
 <style scoped>
   img 
   { 
-    max-width:75%;
-    height:75%;
+    max-width:60%;
+    height:60%;
     /* resizing robot for landing page */
   }
 
