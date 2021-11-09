@@ -43,7 +43,7 @@
                     <!-- should be one or the other, need to sort out the logic -->
                     <!-- add the upload test data here  -->
 
-                    <div class="column is-one-fifth">
+                    <div class="column is-one-quarter">
                         <!-- Selecting trained model -->
                         <div class="field ">
                             <label class="label">Trained Model</label>

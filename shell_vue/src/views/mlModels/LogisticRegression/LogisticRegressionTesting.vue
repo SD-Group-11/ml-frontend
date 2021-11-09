@@ -42,7 +42,7 @@
 
             <form @submit.prevent="submitForm"> 
                 <div class="columns">
-                    <div class="column is-one-fifth">
+                    <div class="column is-one-quarter">
                         <!-- Selecting a dataset -->
                         <div class="field ">
                             <label class="label">Dataset</label>

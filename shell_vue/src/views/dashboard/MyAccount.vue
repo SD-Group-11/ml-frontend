@@ -1,9 +1,10 @@
 <template>
     <div class="card column is-half is-offset-one-quarter" style="padding: 0px">
         <div class="card-image">
-            <figure class="image is-3by3">
-            <img src="https://i.ibb.co/1sfHctK/yello-blue-robots.jpg" alt="Placeholder image">
-            </figure>
+            <div class="image is-3by3">
+
+             <img src="@/assets/images/yello-blue-robots.jpg" alt="Placeholder image">
+            </div>
         </div>
         <header class="card-header">
             <p class="card-header-title is-centered" style="font-size:30px;">
