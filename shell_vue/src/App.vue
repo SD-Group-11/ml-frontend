@@ -77,7 +77,7 @@
 
 // change bulma variables variables
 @import "../node_modules/bulma/sass/utilities/initial-variables";
-  $yellow: #ffdd57;
+  $yellow: #ffde38;
   // $warning-light: #fff280;
   // $cyan: #00b7ff; 
   // $pink: #ff57bf;
