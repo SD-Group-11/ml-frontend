@@ -349,13 +349,13 @@ export default {
                         this.rowData=[]
                         const tableData = response.data.data
                         const tableHeadings = Object.keys(tableData[0])
-                        console.log(tableHeadings)
+                        // console.log(tableHeadings)
                         for(var i=0;i<tableHeadings.length;i++){
                            this.columnDefs.push({ field: tableHeadings[i], sortable: true, filter: true })  
                         }
                         console.log(this.columnDefs)
                         this.rowData=tableData
-                        console.log(this.rowData)
+                        // console.log(this.rowData)
                         this.showDatasetModal = true
                     } 
                 })

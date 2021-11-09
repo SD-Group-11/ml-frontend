@@ -515,7 +515,7 @@
                         
                         var Type;
                         if (resp == 'Successfully uploaded test data.'){
-                            Type = 'is-success';
+                            Type = 'is-warning';
                             this.uploadedTestData=true;
                             //this.uploadedTestFilename = `${testFile.name}`
                             // Not sure if the next two lines are necesssary just yet
@@ -526,7 +526,7 @@
                                 type: Type,
                                 dismissible: true,
                                 pauseOnHover: true,
-                                duration: 1000,
+                                duration: 2000,
                                 position: 'bottom-center',
                             }) 
                         }
@@ -538,7 +538,7 @@
                                 type: Type,
                                 dismissible: true,
                                 pauseOnHover: true,
-                                duration: 1000,
+                                duration: 2000,
                                 position: 'bottom-center',
                             })  
                         }

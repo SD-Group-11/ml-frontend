@@ -506,7 +506,7 @@
                     var Type;
                     //indicates successful deleting of the data
                     if(resp == "Results discarded."){
-                         Type = 'is-success';
+                         Type = 'is-warning';
                          //Toast to give user indication of outcome of action
                         toast({
                             message: "Results successfully discarded.",
@@ -546,7 +546,7 @@
                     var Type;
                     //indicates successful deleting of the data
                     if(resp == "Results discarded."){
-                         Type = 'is-success';
+                         Type = 'is-warning';
                          //Toast to give user indication of outcome of action
                         toast({
                             message: "Results successfully discarded.",
@@ -607,7 +607,7 @@
                         
                         var Type;
                         if (resp == 'Successfully uploaded test data.'){
-                            Type = 'is-success';
+                            Type = 'is-warning';
                             //this.uploadedTestFilename = `${testFile.name}`
                             // Not sure if the next two lines are necesssary just yet
                             // this.getUploaded(this.uploadedTestFilename) 
@@ -776,14 +776,14 @@
                         //WORK HERE - toast message
                     }
                     else{
-                        toast({
-                            message: "Dataset selected",
-                            type: 'is-warning',
-                            dismissible: true,
-                            pauseOnHover: true,
-                            duration: 3000,
-                            position: 'bottom-center',
-                        })
+                        // toast({
+                        //     message: "Dataset selected",
+                        //     type: 'is-warning',
+                        //     dismissible: true,
+                        //     pauseOnHover: true,
+                        //     duration: 3000,
+                        //     position: 'bottom-center',
+                        // })
 
                         console.log(this.userFiles)
                         console.log("SUCCESS MY GUY LETS GOOOO")

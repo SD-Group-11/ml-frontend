@@ -487,7 +487,7 @@
                     var Type;
                     //indicates successful deleting of the data
                     if(resp == "Results discarded."){
-                         Type = 'is-success';
+                         Type = 'is-warning';
                          //Toast to give user indication of outcome of action
                         toast({
                             message: "Results successfully discarded.",
@@ -529,7 +529,7 @@
                     var Type;
                     //indicates successful deleting of the data
                     if(resp == "Results discarded."){
-                         Type = 'is-success';
+                         Type = 'is-warning';
                          //Toast to give user indication of outcome of action
                         toast({
                             message: "Results successfully discarded.",
