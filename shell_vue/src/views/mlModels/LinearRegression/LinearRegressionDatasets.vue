@@ -104,7 +104,7 @@
 
                             <td class="is-image-cell">
                                 <div class="image">
-                                    <img src="@/assets/images/confused-icon-6-yellow.png">
+                                    <img src="@/assets/images/confused-ball-outline-thick-32.png">
                                 </div>
                             </td>
 

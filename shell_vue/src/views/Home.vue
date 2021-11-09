@@ -3,7 +3,7 @@
 
   <div class="columns is-mobile is-centered is-vcentered">
   <div class="column is-one-fifth">
-    <img src="@/assets/images/confused-icon-6-yellow.png" alt="Logo">
+    <img src="@/assets/images/confused-robot-256.png" alt="Logo">
   </div>
   <div class="column">
     <span class="title is-1">Machine Learning Front-End Framework</span><br>
