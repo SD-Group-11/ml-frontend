@@ -32,4 +32,4 @@ pnpm-debug.log*
 *.sw?
 
 #django app
-__pycache__/
+**/__pycache__/
