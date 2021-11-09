@@ -82,6 +82,7 @@
   // $cyan: #00b7ff; 
   // $pink: #ff57bf;
   // $warning: $pink;
+  $blue: #024091;
 
 //import bulma
 @import '../node_modules/bulma';
