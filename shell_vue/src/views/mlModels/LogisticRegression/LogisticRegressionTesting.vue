@@ -100,7 +100,7 @@
 
             <!-- test model button U - unsure about onclick statement-->
             <div>
-                <button style="text-align: center;" class="button is-info is light has-text-black "  v-on:click='checkTestingData(); showTestButton = true; showTestingGraphs = false'><strong>Test Model</strong></button>
+                <button style="text-align: center;" class="button is-info is light has-text-black " v-if="selected"  v-on:click='checkTestingData(); showTestButton = true; showTestingGraphs = false'><strong>Test Model</strong></button>
             </div>
             <div class="block"></div>
         
@@ -136,6 +136,13 @@
             </div>
         </div>
         <div class="block"></div>
+
+        <!-- Download results  -->
+        <div class="columns is-centered">
+            <div class="column">
+                <button class="button has-tooltip-arrow has-tooltip-info is-pulled-right" data-tooltip="Download model results" type="button" v-if="showTrainingResults" v-on:click ="download()">Download Results</button>
+            </div>
+        </div>
                   
         <!-- confusion Matrix for Training Data-->
         <!-- GRAPH TABS FOR TESTING -->
@@ -788,7 +795,42 @@
                     console.log(error)
                 })
 
+            },
+            download() {
+                var element = document.createElement('a');
+                let filename = 'Logistic_Regression_Results.txt';
+                //Text to be inside results text file
+                let text = "Logistic Regression Results:\n"
+                text += "\nF1 Score: "
+                for(let i=0; i<this.f1Score.length; i++) {
+                   text += "{" + this.f1Score[i].class + ": " + this.f1Score[i].score + "}"
+                   if (i < this.f1Score.length-1) text += ", "
+                }
+                text += "\nAUC score: "
+                for(let i=0; i<this.AUC.length; i++) {
+                   text += "{" + this.AUC[i].class + ": " + this.AUC[i].value + "}"
+                   if (i < this.AUC.length-1) text += ", "
+                }
+                text += "\nConfusion matrix: ["
+                for(let i=0; i<this.confusionMatrix.length; i++) {
+                   // class : confusion matrix row
+                   let confusion_matrix_row = this.confusionMatrix[i].predictions
+                    text += "[" + String(confusion_matrix_row) + "]"
+                    if (i < this.confusionMatrix.length-1) text += ", "
+                }
+                text += "]"
+                
+                
+                
+                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+                element.setAttribute('download', filename);
+                element.style.display = 'none';
+                document.body.appendChild(element);
+                element.click();
+                document.body.removeChild(element);
             }
+
+
         }
     }
 </script>

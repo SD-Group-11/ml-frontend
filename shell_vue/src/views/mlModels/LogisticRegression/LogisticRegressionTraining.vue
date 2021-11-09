@@ -68,7 +68,7 @@
 
             <!-- Train model button -->
             <div>
-                <button style="text-align: center;" class="button is-info has-text-black"  v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false'><strong>Train Model</strong></button>
+                <button style="text-align: center;" class="button is-info has-text-black" v-if="selected"  v-on:click='TrainModel(); showTestButton = true; showTestingGraphs = false'><strong>Train Model</strong></button>
             </div>
             <div class="block"></div>
         

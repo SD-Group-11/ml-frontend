@@ -173,7 +173,7 @@
                                         
                                             <input class="file-input" v-bind:id="dataset.filename" type="file" accept=".csv"  v-on:input="fileValidation(dataset.filename); testsetUploadable = true;tempTrainFilename = dataset.filename;">
                                             
-                                            <span class="icon is-normal">
+                                            <span class="file-icon is-normal">
                                                 <i class="fas fa-upload"></i>
                                             </span>
                                             
